@@ -1,0 +1,19 @@
+/* Sekmeler kapakla aynı dille açılsın: panel sol kenarından
+   sayfa çevrilir gibi dönerek gelir. */
+@keyframes sayfaCevir{
+  from{opacity:0;transform:perspective(1500px) rotateY(-34deg)}
+  to{opacity:1;transform:none}
+}
+#sk1:checked ~ .sk-panel[data-p="1"],
+#sk2:checked ~ .sk-panel[data-p="2"],
+#sk3:checked ~ .sk-panel[data-p="3"],
+#sk4:checked ~ .sk-panel[data-p="4"]{
+  transform-origin:left center;
+  animation:sayfaCevir .62s cubic-bezier(.5,0,.2,1) both;
+}
+@media (prefers-reduced-motion:reduce){
+  #sk1:checked ~ .sk-panel[data-p="1"],
+  #sk2:checked ~ .sk-panel[data-p="2"],
+  #sk3:checked ~ .sk-panel[data-p="3"],
+  #sk4:checked ~ .sk-panel[data-p="4"]{animation:none}
+}
