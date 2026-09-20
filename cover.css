@@ -37,12 +37,15 @@ html.katlanir .cover{
   box-shadow:inset 18px 0 30px -20px rgba(0,0,0,.7);
   transition:transform 1.15s cubic-bezier(.5,0,.2,1), opacity .45s ease .62s;
 }
+/* içerik sığmazsa kapağın ortası kendi içinde kayar; sığdığında
+   dikeyde ortalanır, ta\şarken üstten kırpılmaz */
 html.katlanir .cover-body{
   min-height:0;
   overflow-y:auto;
   scrollbar-width:none;
   align-self:stretch;
-  align-content:center;
+  align-content:safe center;
+  padding-block:clamp(20px,4vh,52px);
 }
 html.katlanir .cover-body::-webkit-scrollbar{display:none}
 
