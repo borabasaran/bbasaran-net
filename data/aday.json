@@ -1,5 +1,48 @@
 {
   "aciklama": "OpenAlex'te bulunan ama yayinlar.json icinde gorunmeyen kayitlar. Siteye YANSIMAZ. Gozden gecirip gercekten yeni olanlari dogru kunyesiyle yayinlar.json icine tasiyin.",
-  "guncellendi": "",
-  "adaylar": []
+  "guncellendi": "2026-09-20",
+  "adaylar": [
+    {
+      "yil": 2026,
+      "baslik": "INTEGRATING ARTIFICIAL INTELLIGENCE INTO COMPARATIVE BIBLIOMETRIC STUDIES: FAMILY REPRESENTATIONS IN DOCTORAL RESEARCH (TURKEY–GERMANY, 2019–2024)",
+      "kaynak": "PUPIL International Journal of Teaching Education and Learning",
+      "doi": "https://doi.org/10.20319/ictel.2026.170171"
+    },
+    {
+      "yil": 2026,
+      "baslik": "Social cognitive agency in AI adoption: critical thinking as the cognitive amplifier for self-regulation in building AI self-efficacy",
+      "kaynak": "Interactive Learning Environments",
+      "doi": "https://doi.org/10.1080/10494820.2026.2651861"
+    },
+    {
+      "yil": 2025,
+      "baslik": "Enhancing Readability Assessment for Language Learners: A Comparative Study of AI and Traditional Metrics in German Textbooks",
+      "kaynak": "European Journal of Educational Research",
+      "doi": "https://doi.org/10.12973/eu-jer.15.1.101"
+    },
+    {
+      "yil": 2025,
+      "baslik": "Smart Graders? Exploring the Potential of Language Models in Foreign Language Evaluation",
+      "kaynak": "DergiPark (Istanbul University)",
+      "doi": ""
+    },
+    {
+      "yil": 2023,
+      "baslik": "Die Lesbarkeit; noch ein weiterer Indikator für DaF-Lehrwerke?",
+      "kaynak": "Diyalog Interkulturelle Zeitschrift Für Germanistik",
+      "doi": "https://doi.org/10.37583/diyalog.1407754"
+    },
+    {
+      "yil": 2022,
+      "baslik": "ATTITUDES AND PERCEPTION OF LANGUAGE LEARNERS REGARDING MOBILE LEARNING",
+      "kaynak": "Nevşehir Hacı Bektaş Veli Üniversitesi SBE Dergisi",
+      "doi": "https://doi.org/10.30783/nevsosbilen.1082453"
+    },
+    {
+      "yil": 2020,
+      "baslik": "A Descriptive Analysis of Online Seminars Attended by Turkish Teachers in Germany during the Covid-19 Epidemic Period",
+      "kaynak": "DergiPark (Istanbul University)",
+      "doi": ""
+    }
+  ]
 }
