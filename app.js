@@ -2,20 +2,51 @@
   // Supabase uc noktasi baglandiginda buraya adresi yazilacak
   var ENDPOINT = null;
 
+  var azHareket = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var cover = document.getElementById('cover');
-  var tab = document.getElementById('tab');
-  var target = document.getElementById('icerik');
 
-  if(tab){
-    tab.addEventListener('click', function(){
-      cover.classList.add('opened');
-      setTimeout(function(){
-        target.scrollIntoView({behavior:'smooth', block:'start'});
-      }, 320);
-      setTimeout(function(){ cover.classList.remove('opened'); }, 1600);
+  /* ---- kapak katmanlari: fare ve kaydirma ---- */
+  if(cover && !azHareket){
+    var mx = 0, my = 0, hedefX = 0, hedefY = 0, sy = 0, bekleyen = false;
+
+    function ciz(){
+      bekleyen = false;
+      mx += (hedefX - mx) * 0.08;
+      my += (hedefY - my) * 0.08;
+      cover.style.setProperty('--mx', mx.toFixed(4));
+      cover.style.setProperty('--my', my.toFixed(4));
+      cover.style.setProperty('--sy', sy.toFixed(4));
+      if(Math.abs(hedefX - mx) > 0.001 || Math.abs(hedefY - my) > 0.001){ istek(); }
+    }
+    function istek(){
+      if(!bekleyen){ bekleyen = true; requestAnimationFrame(ciz); }
+    }
+
+    window.addEventListener('pointermove', function(e){
+      if(e.pointerType === 'touch') return;
+      var h = window.innerHeight, g = window.innerWidth;
+      hedefX = (e.clientX / g) * 2 - 1;
+      hedefY = (e.clientY / h) * 2 - 1;
+      istek();
+    }, {passive:true});
+
+    window.addEventListener('scroll', function(){
+      var y = window.scrollY || 0;
+      sy = Math.min(y / Math.max(cover.offsetHeight, 1), 1);
+      istek();
+    }, {passive:true});
+  }
+
+  /* ---- icerige in ---- */
+  var cue = document.getElementById('cue');
+  var hedef = document.getElementById('icerik');
+  if(cue && hedef){
+    cue.addEventListener('click', function(){
+      hedef.scrollIntoView({behavior: azHareket ? 'auto' : 'smooth', block:'start'});
     });
   }
 
+  /* ---- iletisim formu ---- */
   var form = document.getElementById('mesaj');
   var durum = document.getElementById('f-durum');
   var gonder = document.getElementById('f-gonder');
@@ -82,13 +113,14 @@
     });
   }
 
+  /* ---- tema ---- */
   var btn = document.getElementById('theme');
   if(btn){
     btn.addEventListener('click', function(){
       var root = document.documentElement;
       var cur = root.getAttribute('data-theme');
-      var isDark = cur === 'dark' || (!cur && window.matchMedia('(prefers-color-scheme: dark)').matches);
-      root.setAttribute('data-theme', isDark ? 'light' : 'dark');
+      var koyu = cur === 'dark' || (!cur && window.matchMedia('(prefers-color-scheme: dark)').matches);
+      root.setAttribute('data-theme', koyu ? 'light' : 'dark');
     });
   }
 })();
