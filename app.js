@@ -2,9 +2,59 @@
   // Supabase uc noktasi baglandiginda buraya adresi yazilacak
   var ENDPOINT = null;
 
+  var kok = document.documentElement;
   var azHareket = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var inceImlec = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
   var cover = document.getElementById('cover');
+
+  /* ==================== KATLANAN KAPAK ==================== */
+  var katlanir = !!cover && !azHareket;
+  var acik = false;
+
+  if(katlanir){
+    kok.classList.add('katlanir');
+    document.body.classList.add('kapali');
+  }
+
+  function kapagiAc(){
+    if(!katlanir || acik) return;
+    acik = true;
+    cover.classList.add('acildi');
+    document.body.classList.remove('kapali');
+    window.scrollTo(0, 0);
+    setTimeout(function(){
+      cover.classList.add('gizli');
+      var ilk = document.querySelector('nav.bar a');
+      if(ilk) ilk.focus({preventScroll:true});
+    }, 1250);
+  }
+
+  var cue = document.getElementById('cue');
+  if(cue) cue.addEventListener('click', kapagiAc);
+
+  if(katlanir){
+    // kaydirma, dokunma ve klavye ile de acilsin
+    window.addEventListener('wheel', function(e){
+      if(!acik && e.deltaY > 6) kapagiAc();
+    }, {passive:true});
+
+    var dokunusY = null;
+    window.addEventListener('touchstart', function(e){
+      dokunusY = e.touches[0].clientY;
+    }, {passive:true});
+    window.addEventListener('touchmove', function(e){
+      if(acik || dokunusY === null) return;
+      if(dokunusY - e.touches[0].clientY > 28) kapagiAc();
+    }, {passive:true});
+
+    window.addEventListener('keydown', function(e){
+      if(acik) return;
+      if(e.key === 'ArrowDown' || e.key === 'PageDown' || e.key === ' ' || e.key === 'Enter'){
+        if(document.activeElement && document.activeElement.id === 'probe-in') return;
+        kapagiAc();
+      }
+    });
+  }
 
   /* ==================== ACILIS PERDESI ==================== */
   var perde = document.getElementById('perde');
@@ -15,10 +65,8 @@
       perde.remove();
     } else {
       try { sessionStorage.setItem('perde','1'); } catch(e){}
-      document.body.style.overflow = 'hidden';
       setTimeout(function(){
         perde.classList.add('bitti');
-        document.body.style.overflow = '';
         setTimeout(function(){ if(perde.parentNode){ perde.remove(); } }, 950);
       }, 1150);
     }
@@ -114,57 +162,26 @@
 
   /* ==================== KAPAK KATMANLARI ==================== */
   if(cover && !azHareket){
-    var mx = 0, my = 0, hx = 0, hy = 0, sy = 0, bekleyen = false;
+    var mx = 0, my = 0, hx = 0, hy = 0, bekleyen = false;
     function katmanCiz(){
       bekleyen = false;
       mx += (hx - mx) * 0.08;
       my += (hy - my) * 0.08;
       cover.style.setProperty('--mx', mx.toFixed(4));
       cover.style.setProperty('--my', my.toFixed(4));
-      cover.style.setProperty('--sy', sy.toFixed(4));
       if(Math.abs(hx - mx) > 0.001 || Math.abs(hy - my) > 0.001){ katmanIstek(); }
     }
     function katmanIstek(){ if(!bekleyen){ bekleyen = true; requestAnimationFrame(katmanCiz); } }
     window.addEventListener('pointermove', function(e){
-      if(e.pointerType === 'touch') return;
+      if(e.pointerType === 'touch' || acik) return;
       hx = (e.clientX / window.innerWidth) * 2 - 1;
       hy = (e.clientY / window.innerHeight) * 2 - 1;
       katmanIstek();
     }, {passive:true});
-    window.addEventListener('scroll', function(){
-      sy = Math.min((window.scrollY || 0) / Math.max(cover.offsetHeight, 1), 1);
-      katmanIstek();
-    }, {passive:true});
   }
 
-  /* ==================== OZEL IMLEC + MIKNATIS ==================== */
+  /* ==================== MIKNATIS ==================== */
   if(inceImlec && !azHareket){
-    document.documentElement.classList.add('ince-imlec');
-    var imlec = document.getElementById('imlec');
-    if(imlec){
-      var ix = -100, iy = -100, hix = -100, hiy = -100, ibek = false;
-      function imlecCiz(){
-        ibek = false;
-        ix += (hix - ix) * 0.18;
-        iy += (hiy - iy) * 0.18;
-        imlec.style.transform = 'translate3d(' + ix.toFixed(1) + 'px,' + iy.toFixed(1) + 'px,0)';
-        if(Math.abs(hix - ix) > 0.4 || Math.abs(hiy - iy) > 0.4){ imlecIstek(); }
-      }
-      function imlecIstek(){ if(!ibek){ ibek = true; requestAnimationFrame(imlecCiz); } }
-      window.addEventListener('pointermove', function(e){
-        if(e.pointerType === 'touch') return;
-        hix = e.clientX; hiy = e.clientY;
-        imlec.classList.add('acik');
-        imlecIstek();
-      }, {passive:true});
-      document.addEventListener('pointerover', function(e){
-        var hedef = e.target.closest('a, button, input, select, textarea, .card, .field');
-        imlec.classList.toggle('buyuk', !!hedef);
-      });
-      window.addEventListener('blur', function(){ imlec.classList.remove('acik'); });
-    }
-
-    // kartlarin imlece yaslanmasi
     Array.prototype.forEach.call(document.querySelectorAll('.card'), function(k){
       k.addEventListener('pointermove', function(e){
         var r = k.getBoundingClientRect();
@@ -210,10 +227,8 @@
       });
       var asw = toplamHece / sozcukler.length;
 
-      // Amstad (Almanca Flesch)
       var fre = 180 - asl - (58.5 * asw);
       fre = Math.max(0, Math.min(100, fre));
-      // LIX
       var lix = asl + (100 * uzun / sozcukler.length);
 
       var band;
@@ -231,15 +246,6 @@
 
     girdi.addEventListener('input', olc);
     olc();
-  }
-
-  /* ==================== ICERIGE IN ==================== */
-  var cue = document.getElementById('cue');
-  var hedefBolum = document.getElementById('icerik');
-  if(cue && hedefBolum){
-    cue.addEventListener('click', function(){
-      hedefBolum.scrollIntoView({behavior: azHareket ? 'auto' : 'smooth', block:'start'});
-    });
   }
 
   /* ==================== ACILMALAR ==================== */
@@ -378,10 +384,9 @@
   var btn = document.getElementById('theme');
   if(btn){
     btn.addEventListener('click', function(){
-      var root = document.documentElement;
-      var cur = root.getAttribute('data-theme');
+      var cur = kok.getAttribute('data-theme');
       var koyu = cur === 'dark' || (!cur && window.matchMedia('(prefers-color-scheme: dark)').matches);
-      root.setAttribute('data-theme', koyu ? 'light' : 'dark');
+      kok.setAttribute('data-theme', koyu ? 'light' : 'dark');
       tik();
     });
   }
