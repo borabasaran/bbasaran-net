@@ -1,62 +1,106 @@
 /* ===== KİTAP KURGUSU =====
-   JavaScript varsa ve hareket kısıtlı değilse aynı anda tek bölüm görünür,
-   geçişler sayfa çevrilir gibi olur. Aksi halde sayfa uzun bir belge gibi
-   yukarıdan aşağı okunur. */
+   Her bölüm tam ekran bir sayfadır. Aşağı kaydırmak, sayfanın sonuna
+   gelindiğinde bir sonraki bölüme çevirir. Uzun bölümler kendi içinde kayar.
+   JavaScript yoksa veya hareket kısıtlıysa sayfa düz bir belge gibi okunur. */
 
-html.kitap .sayfa{display:none}
+html.kitap, html.kitap body{height:100%}
+html.kitap body{
+  overflow:hidden;
+  display:flex;flex-direction:column;
+  height:100svh;
+}
+
+html.kitap nav.bar{position:static;flex:none}
+html.kitap .guncel{flex:none}
+html.kitap .progress{z-index:40}
+
+/* sayfa sahnesi */
+html.kitap .sahne{
+  flex:1;min-height:0;
+  position:relative;
+  perspective:1800px;
+}
+html.kitap .sayfa{
+  position:absolute;inset:0;
+  display:none;
+  overflow-y:auto;
+  overscroll-behavior:contain;
+  scrollbar-width:thin;
+  padding-block:clamp(26px,5vh,54px);
+  border-top:0;
+}
 html.kitap .sayfa.aktif{
   display:block;
   transform-origin:left center;
-  animation:sayfaIleri .64s cubic-bezier(.5,0,.2,1) both;
+  animation:sayfaIleri .6s cubic-bezier(.5,0,.2,1) both;
 }
 html.kitap .sayfa.aktif.geri{
   transform-origin:right center;
   animation-name:sayfaGeri;
 }
 @keyframes sayfaIleri{
-  from{opacity:0;transform:perspective(1700px) rotateY(-40deg)}
+  from{opacity:0;transform:rotateY(-36deg)}
   to{opacity:1;transform:none}
 }
 @keyframes sayfaGeri{
-  from{opacity:0;transform:perspective(1700px) rotateY(40deg)}
+  from{opacity:0;transform:rotateY(36deg)}
   to{opacity:1;transform:none}
 }
 
-/* kitap kurgusunda bölüm çizgileri gereksiz */
-html.kitap .sayfa.ruled{border-top:0}
-html.kitap .sayfa{padding-block:clamp(40px,6vh,68px) clamp(30px,5vh,52px)}
+/* kitap kurgusunda gereksiz öğeler */
+html.kitap .ticker{display:none}
+html.kitap footer{display:none}
 
-/* çalışmalar şeridi kitap kurgusunda kaydırmaya bağlı değil */
-html.kitap .pin{height:auto;border-top:0}
-html.kitap .pin-stage{position:static;height:auto;overflow:visible;padding-top:0;gap:26px}
+/* çalışmalar şeridi kaydırmaya bağlı değil */
+html.kitap .pin{height:auto;border-top:0;padding:0}
+html.kitap .pin-stage{position:static;height:auto;overflow:visible;padding-top:0;gap:24px}
 html.kitap .pin-rail{overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none}
 html.kitap .pin-rail::-webkit-scrollbar{display:none}
 html.kitap .pin-track{transform:none!important;padding-block:4px}
 html.kitap .card{scroll-snap-align:center;min-height:0}
 html.kitap .pin-meter{display:none}
-html.kitap .pin-head{padding-inline:0;max-width:none}
+html.kitap .pin-head{padding-inline:20px;max-width:1020px;margin:0 auto;width:100%}
 
-/* sayfa denetimi */
+/* alt denetim çubuğu */
 .kitap-kontrol[hidden]{display:none}
-.kitap-kontrol{
-  display:flex;align-items:center;gap:18px;
-  max-width:1020px;margin:0 auto;
-  padding:22px 20px 40px;
+html.kitap .kitap-kontrol{
+  flex:none;
+  display:flex;align-items:center;gap:14px;
   border-top:1px solid var(--line);
+  padding:10px 20px;
+  max-width:1020px;margin:0 auto;width:100%;
 }
 .kitap-kontrol button{
-  font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;
+  font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;
   background:none;border:1px solid var(--line);color:var(--ink);
-  padding:10px 16px;border-radius:2px;cursor:pointer;
+  padding:8px 13px;border-radius:2px;cursor:pointer;
   transition:border-color .25s,color .25s;
 }
 .kitap-kontrol button:hover:not(:disabled){border-color:var(--accent);color:var(--accent)}
-.kitap-kontrol button:disabled{opacity:.35;cursor:default}
+.kitap-kontrol button:disabled{opacity:.3;cursor:default}
 .kitap-no{
   flex:1;text-align:center;
-  font-family:var(--mono);font-size:10.5px;letter-spacing:.2em;
+  font-family:var(--mono);font-size:10px;letter-spacing:.2em;
   color:var(--muted);font-variant-numeric:tabular-nums;
 }
+.kitap-alt{
+  font-family:var(--mono);font-size:9.5px;letter-spacing:.12em;
+  color:var(--muted);white-space:nowrap;
+}
+@media (max-width:620px){
+  .kitap-alt{display:none}
+  html.kitap .kitap-kontrol{gap:10px;padding:9px 16px}
+}
+
+/* sayfa sonu ipucu */
+.sayfa-son{
+  margin-top:34px;
+  font-family:var(--mono);font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--muted);
+  display:flex;align-items:center;gap:10px;
+}
+.sayfa-son i{display:block;flex:1;height:1px;background:var(--line)}
+html:not(.kitap) .sayfa-son{display:none}
 
 @media (prefers-reduced-motion:reduce){
   html.kitap .sayfa.aktif{animation:none}
