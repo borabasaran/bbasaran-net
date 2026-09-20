@@ -4,9 +4,8 @@
 // Ilke: yayin listesine OTOMATIK EKLEME YAPILMAZ.
 // OpenAlex'te bulunup listede gorunmeyen kayitlar data/aday.json icine yazilir,
 // siteye yansimaz. Insan gozden gecirip dogru kunyesiyle yayinlar.json'a tasir.
-// Boylece ceviri baslikli mukerrer kayitlar siteye hic girmez.
 //
-// Tam otomatik olan tek sey guncel kitap basligidir.
+// Tam otomatik olan tek sey guncel kitap cagrisi bandidir.
 
 import { readFile, writeFile } from 'node:fs/promises';
 
@@ -93,6 +92,20 @@ function grup(baslik, liste) {
     + '    </div>';
 }
 
+function bantHtml(kitap) {
+  if (!kitap) return '';
+  const ad = kacis(kitap);
+  const metin = '<b>' + ad + '</b> · Kitap bölümü çağrısı · '
+    + 'Ayrıntılar ve başvuru için tıklayın <span class="ok">→</span> &nbsp;&nbsp;·&nbsp;&nbsp; ';
+  return '  <a class="bant" href="' + KITAP_URL + '">\n'
+    + '    <span class="bant-et">Güncel çağrı</span>\n'
+    + '    <span class="bant-akis">\n'
+    + '      <span>' + metin + '</span>\n'
+    + '      <span aria-hidden="true">' + metin + '</span>\n'
+    + '    </span>\n'
+    + '  </a>';
+}
+
 function blokDegistir(html, ad, icerik) {
   const bas = '<!-- ' + ad + ':BASLA -->';
   const son = '<!-- ' + ad + ':BITTI -->';
@@ -110,7 +123,6 @@ const yayinlar = JSON.parse(await oku('data/yayinlar.json'));
 const guncel = JSON.parse(await oku('data/guncel.json'));
 const adayDosya = JSON.parse(await oku('data/aday.json'));
 
-// 1) aday listesi (siteye yansimaz)
 try {
   const bulunan = await openAlex();
   const basliklar = new Set(
@@ -124,7 +136,6 @@ try {
   console.warn('OpenAlex atlandi: ' + e.message);
 }
 
-// 2) guncel kitap (tam otomatik)
 try {
   const kitap = await guncelKitap();
   if (kitap) guncel.kitap = kitap;
@@ -139,19 +150,12 @@ adayDosya.guncellendi = bugun;
 await yaz('data/guncel.json', JSON.stringify(guncel, null, 2) + '\n');
 await yaz('data/aday.json', JSON.stringify(adayDosya, null, 2) + '\n');
 
-// 3) sayfayi kuratorlu listeden uret
 let html = await oku('index.html');
 
 html = blokDegistir(html, 'YAYINLAR',
   grup('Makaleler', yayinlar.makaleler) + '\n\n' + grup('Kitap bölümleri', yayinlar.bolumler));
 
-const guncelHtml = guncel.kitap
-  ? '  <div class="wrap guncel-ic">\n'
-    + '    <span class="guncel-et">Şu an</span>\n'
-    + '    <span class="guncel-me">' + kacis(guncel.kitap) + '</span>\n'
-    + '  </div>'
-  : '';
-html = blokDegistir(html, 'GUNCEL', guncelHtml);
+html = blokDegistir(html, 'GUNCEL', bantHtml(guncel.kitap));
 
 await yaz('index.html', html);
 
