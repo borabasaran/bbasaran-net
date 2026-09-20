@@ -14,285 +14,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,400;6..96,700;6..96,900&family=IBM+Plex+Mono:wght@400;500&family=Source+Sans+3:wght@400;600;700&display=swap">
-
-<style>
-:root{
-  --paper:#F6F5F2;
-  --surface:#FFFFFF;
-  --ink:#16232B;
-  --muted:#5D6B73;
-  --line:#DEDCD5;
-  --accent:#1F6F6B;
-  --ribbon:#B5442F;
-  --ochre:#C08A2E;
-  --cover-a:#0D3336;
-  --cover-b:#1D5F58;
-  --cover-ink:#F4F1E9;
-  --cover-dim:#A9C4BE;
-  --shadow:0 24px 60px -24px rgba(13,51,54,.45);
-  --serif:"Bodoni Moda", "Playfair Display", Georgia, serif;
-  --sans:"Source Sans 3", "Segoe UI", system-ui, sans-serif;
-  --mono:"IBM Plex Mono", ui-monospace, "SFMono-Regular", monospace;
-}
-@media (prefers-color-scheme: dark){
-  :root:not([data-theme="light"]){
-    --paper:#0F161A;
-    --surface:#161F24;
-    --ink:#E9E7E1;
-    --muted:#98A7AE;
-    --line:#26333A;
-    --accent:#59A8A1;
-    --ribbon:#C9563F;
-    --ochre:#D6A44A;
-    --cover-a:#0A2629;
-    --cover-b:#164A45;
-    --shadow:0 24px 60px -24px rgba(0,0,0,.7);
-  }
-}
-:root[data-theme="dark"]{
-  --paper:#0F161A;
-  --surface:#161F24;
-  --ink:#E9E7E1;
-  --muted:#98A7AE;
-  --line:#26333A;
-  --accent:#59A8A1;
-  --ribbon:#C9563F;
-  --ochre:#D6A44A;
-  --cover-a:#0A2629;
-  --cover-b:#164A45;
-  --shadow:0 24px 60px -24px rgba(0,0,0,.7);
-}
-
-*{box-sizing:border-box}
-html,body{margin:0;padding:0}
-img{max-width:100%}
-body{
-  background:var(--paper);
-  color:var(--ink);
-  font-family:var(--sans);
-  font-size:16px;
-  line-height:1.6;
-  -webkit-font-smoothing:antialiased;
-}
-a{color:inherit}
-h1,h2,h3{text-wrap:balance;margin:0}
-
-.wrap{max-width:1020px;margin:0 auto;padding-inline:20px}
-
-/* ---------- KAPAK ---------- */
-.cover-stage{
-  padding-block:48px 40px;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  gap:22px;
-}
-.cover{
-  position:relative;
-  width:min(420px,100%);
-  border-radius:4px;
-  background:linear-gradient(155deg,var(--cover-a),var(--cover-b));
-  color:var(--cover-ink);
-  box-shadow:var(--shadow);
-  overflow:hidden;
-  transform-origin:left center;
-  transition:transform .7s cubic-bezier(.22,.8,.26,1), box-shadow .7s;
-}
-.cover.opened{transform:perspective(1400px) rotateY(-16deg) translateX(-6px)}
-.cover::before{
-  content:"";
-  position:absolute;inset:0 auto 0 0;width:11px;
-  background:linear-gradient(90deg,rgba(0,0,0,.42),rgba(0,0,0,0));
-  z-index:3;
-}
-.glyph{
-  position:absolute;
-  right:-.14em;bottom:-.30em;
-  font-family:var(--serif);
-  font-weight:900;
-  font-size:clamp(300px,74vw,340px);
-  line-height:.8;
-  color:#FFFFFF;
-  opacity:.07;
-  pointer-events:none;
-  user-select:none;
-}
-.cover-inner{position:relative;z-index:2;padding:34px 30px 0 34px}
-.kicker{
-  font-family:var(--mono);
-  font-size:11px;letter-spacing:.18em;text-transform:uppercase;
-  color:var(--cover-dim);
-}
-.masthead{
-  font-family:var(--serif);
-  font-weight:900;
-  font-size:clamp(38px,9.2vw,50px);
-  line-height:.94;
-  letter-spacing:-.01em;
-  margin-top:14px;
-}
-.tagline{
-  font-size:14.5px;
-  color:var(--cover-dim);
-  margin-top:10px;
-  padding-bottom:22px;
-  border-bottom:1px solid rgba(244,241,233,.18);
-}
-.facts{margin-top:22px;display:grid;gap:17px;padding-bottom:30px}
-.fact-k{
-  font-family:var(--mono);
-  font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;
-  color:var(--ochre);
-}
-.fact-v{font-size:16px;color:#EDEAE2;margin-top:2px}
-.cover-strip{
-  position:relative;z-index:2;
-  margin-top:8px;
-  background:rgba(255,255,255,.94);
-  color:#20313A;
-  display:flex;align-items:center;gap:11px;
-  padding:11px 16px 11px 20px;
-  font-size:12.5px;
-  flex-wrap:wrap;
-}
-.cover-strip .dot{
-  width:22px;height:22px;border-radius:50%;
-  background:var(--cover-b);color:#fff;
-  display:grid;place-items:center;
-  font-family:var(--mono);font-size:9px;font-weight:500;
-  flex:none;
-}
-.cover-strip a{color:var(--cover-b);text-decoration:none;border-bottom:1px solid rgba(29,95,88,.35)}
-.cover-strip .ago{color:#7A8890;margin-left:auto;font-family:var(--mono);font-size:10.5px}
-
-.tab{
-  position:absolute;z-index:4;
-  right:0;top:56%;
-  transform:translateX(38%);
-  background:var(--ribbon);color:#fff;
-  border:0;cursor:pointer;
-  font-family:var(--mono);
-  font-size:10.5px;letter-spacing:.17em;
-  padding:9px 15px;
-  border-radius:2px 0 0 2px;
-  box-shadow:-2px 3px 10px rgba(0,0,0,.3);
-  transition:transform .3s ease;
-}
-.tab:hover,.tab:focus-visible{transform:translateX(18%)}
-.hint{font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:var(--muted);text-transform:uppercase}
-
-/* ---------- İÇERİK ---------- */
-nav.bar{
-  position:sticky;top:env(safe-area-inset-top,0px);z-index:20;
-  background:color-mix(in srgb,var(--paper) 88%,transparent);
-  backdrop-filter:blur(8px);
-  border-block:1px solid var(--line);
-}
-nav.bar .wrap{display:flex;gap:26px;padding-block:13px;overflow-x:auto}
-nav.bar a{
-  font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;
-  color:var(--muted);text-decoration:none;white-space:nowrap;
-}
-nav.bar a:hover{color:var(--accent)}
-
-section{padding-block:56px;border-bottom:1px solid var(--line)}
-section:last-of-type{border-bottom:0}
-.eyebrow{
-  font-family:var(--mono);font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;
-  color:var(--accent);margin-bottom:14px;
-}
-h2{font-family:var(--serif);font-weight:700;font-size:clamp(26px,4.4vw,34px);line-height:1.15;letter-spacing:-.01em}
-.lede{max-width:62ch;margin-top:18px;font-size:17px}
-.lede + .lede{margin-top:14px}
-.muted{color:var(--muted)}
-
-.grid{display:grid;gap:18px;margin-top:30px}
-@media (min-width:640px){.grid.two{grid-template-columns:1fr 1fr}}
-@media (min-width:860px){.grid.three{grid-template-columns:repeat(3,1fr)}}
-
-.field{border-top:2px solid var(--ink);padding-top:14px}
-.field h3{font-size:17px;font-weight:700;letter-spacing:-.005em}
-.field p{margin:8px 0 0;font-size:15px;color:var(--muted);max-width:42ch}
-
-.proj{
-  background:var(--surface);
-  border:1px solid var(--line);
-  border-radius:3px;
-  padding:20px;
-  display:flex;flex-direction:column;gap:9px;
-}
-.proj h3{font-size:16.5px;font-weight:700}
-.proj p{margin:0;font-size:14.5px;color:var(--muted)}
-.chip{
-  align-self:flex-start;
-  font-family:var(--mono);font-size:10px;letter-spacing:.13em;text-transform:uppercase;
-  padding:3px 8px;border-radius:2px;
-  background:color-mix(in srgb,var(--accent) 13%,transparent);
-  color:var(--accent);
-}
-.chip.warn{background:color-mix(in srgb,var(--ochre) 18%,transparent);color:var(--ochre)}
-.proj a.go{
-  margin-top:auto;font-family:var(--mono);font-size:11px;letter-spacing:.1em;
-  color:var(--accent);text-decoration:none;
-}
-.proj a.go:hover{text-decoration:underline}
-
-ol.pubs{list-style:none;margin:28px 0 0;padding:0;display:grid;gap:0}
-ol.pubs li{
-  display:grid;grid-template-columns:70px 1fr;gap:18px;
-  padding-block:18px;border-top:1px solid var(--line);
-}
-ol.pubs li:last-child{border-bottom:1px solid var(--line)}
-.yr{font-family:var(--mono);font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums;padding-top:2px}
-.pub-t{font-size:16px;line-height:1.45}
-.pub-m{font-size:13.5px;color:var(--muted);margin-top:4px;font-style:italic}
-.placeholder{opacity:.62}
-
-.contact{display:grid;gap:14px;margin-top:26px;max-width:46ch}
-.contact div{display:grid;grid-template-columns:96px 1fr;gap:14px;align-items:baseline}
-.contact dt,.ck{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
-.contact dd{margin:0}
-
-/* form */
-.form{margin-top:30px;max-width:640px;display:grid;gap:18px}
-.row{display:grid;gap:7px}
-.two-col{display:grid;gap:18px}
-@media (min-width:620px){.two-col{grid-template-columns:1fr 1fr}}
-.form label{display:grid;gap:7px}
-.form input,.form select,.form textarea{
-  font-family:var(--sans);font-size:15.5px;color:var(--ink);
-  background:var(--surface);
-  border:1px solid var(--line);
-  border-radius:3px;
-  padding:11px 13px;
-  width:100%;
-  transition:border-color .18s;
-}
-.form textarea{resize:vertical;line-height:1.55;font-family:var(--sans)}
-.form input:focus,.form select:focus,.form textarea:focus{border-color:var(--accent);outline:none}
-.form input[aria-invalid="true"],.form textarea[aria-invalid="true"]{border-color:var(--ribbon)}
-#f-tuzak{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
-.form-foot{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
-.send{
-  font-family:var(--mono);font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;
-  background:var(--accent);color:#fff;border:0;border-radius:3px;
-  padding:13px 26px;cursor:pointer;transition:opacity .18s;
-}
-.send:hover{opacity:.87}
-.send[disabled]{opacity:.5;cursor:default}
-.form-msg{margin:0;font-size:14px;color:var(--muted)}
-.form-msg.ok{color:var(--accent)}
-.form-msg.err{color:var(--ribbon)}
-
-footer{padding-block:34px 44px;font-size:13px;color:var(--muted);display:flex;gap:16px;flex-wrap:wrap;align-items:center}
-footer .sep{flex:1}
-
-:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
-@media (prefers-reduced-motion:reduce){
-  *{transition:none!important;animation:none!important;scroll-behavior:auto!important}
-}
-html{scroll-behavior:smooth}
-</style>
+<link rel="stylesheet" href="/styles.css">
 </head>
 <body>
 
@@ -365,11 +87,11 @@ html{scroll-behavior:smooth}
       </div>
       <div class="field">
         <h3>Derlem dilbilim</h3>
-        <p>Öğrenici derlemleri, hata etiketleme çerçeveleri ve biçimbirim düzeyinde çözümleme.</p>
+        <p>Öğrenici derlemleri, sözcük sıklığı, hata etiketleme çerçeveleri ve sözlükbilim.</p>
       </div>
       <div class="field">
         <h3>Dil eğitiminde yapay zekâ</h3>
-        <p>Büyük dil modellerinin öğretmen ve öğrenci rollerine etkisi, ölçme geçerliği, epistemik bağımlılık.</p>
+        <p>Büyük dil modelleriyle yazılı anlatım puanlaması, ölçme geçerliği, öğretmen rolünün dönüşümü.</p>
       </div>
       <div class="field">
         <h3>Karşılaştırmalı eğitim</h3>
@@ -380,79 +102,206 @@ html{scroll-behavior:smooth}
 
   <section id="projeler">
     <p class="eyebrow">Projeler</p>
-    <h2>Yürüttüğüm ve katkı verdiğim çalışmalar</h2>
+    <h2>Yürüttüğüm çalışmalar</h2>
     <div class="grid three">
       <article class="proj">
         <span class="chip">TÜBİTAK 4008</span>
         <h3>Almanca Öğretiminde Kapsayıcı Sınıflar</h3>
         <p>Kapsayıcı Almanca öğretimi üzerine öğretmen eğitimi projesi, Eskişehir.</p>
-        <a class="go" href="#">Proje sayfası →</a>
+        <a class="go" href="https://4008.bbasaran.net">Etkinlik programı →</a>
       </article>
       <article class="proj">
-        <span class="chip">BAP</span>
-        <h3>Yabancı Dil Eğitiminde Yapay Zekâ</h3>
-        <p>Ulusal yapay zekâ strateji belgelerinin dil eğitimi açısından taranması.</p>
-        <a class="go" href="#">Ayrıntı →</a>
+        <span class="chip">TÜBİTAK 3005-B</span>
+        <h3>Almanca Yazma Puanlama Platformu</h3>
+        <p>Almanca yazma performanslarının çevrim içi puanlanması için geliştirilen platform.</p>
+        <a class="go" href="https://puanlama.bbasaran.net">Platforma git →</a>
       </article>
       <article class="proj">
-        <span class="chip warn">Devam ediyor</span>
-        <h3>Derlem tabanlı okunabilirlik</h3>
-        <p>Almanca ders kitaplarından oluşturulan geniş ölçekli okunabilirlik derlemi.</p>
-        <a class="go" href="#">Ayrıntı →</a>
+        <span class="chip warn">Başvuru açık</span>
+        <h3>Editörlü Kitap Platformu</h3>
+        <p>Akademik editörlü kitap bölümü başvurularının alındığı ve yönetildiği sistem.</p>
+        <a class="go" href="https://kitap.bbasaran.net">Başvuru sistemi →</a>
       </article>
     </div>
   </section>
 
   <section id="araclar">
     <p class="eyebrow">Araçlar</p>
-    <h2>Geliştirdiğim açık uygulamalar</h2>
-    <p class="lede muted">Araştırma ve öğretim sürecinde ihtiyaç duyduğum işleri otomatikleştirmek için yazdığım, herkesin kullanımına açık web uygulamaları.</p>
+    <h2>Geliştirdiğim uygulamalar</h2>
+    <p class="lede muted">Araştırma ve öğretim sürecinde ihtiyaç duyduğum işleri otomatikleştirmek için yazdığım web uygulamaları.</p>
     <div class="grid three">
       <article class="proj">
-        <h3>ArSi · Araştırma Sihirbazı</h3>
-        <p>Doktora öğrencileri için on bir aşamalı araştırma tasarımı rehberi.</p>
-        <a class="go" href="#">Aç →</a>
-      </article>
-      <article class="proj">
-        <h3>Almanca İlan Radarı</h3>
-        <p>Almanca alanındaki akademik kadro ilanlarını toplayan izleme paneli.</p>
-        <a class="go" href="#">Aç →</a>
-      </article>
-      <article class="proj">
-        <h3>Bibliyometri Platformu</h3>
-        <p>TR Dizin, DergiPark ve OpenAlex verisiyle bibliyometrik çözümleme.</p>
-        <a class="go" href="#">Aç →</a>
+        <h3>DaF Konuşma Asistanı</h3>
+        <p>B2 düzeyinde Almanca konuşma pratiği için yapay zekâ destekli asistan.</p>
+        <a class="go" href="https://asistan.bbasaran.net">Aç →</a>
       </article>
     </div>
   </section>
 
   <section id="yayinlar">
     <p class="eyebrow">Yayınlar</p>
-    <h2>Seçilmiş çalışmalar</h2>
-    <ol class="pubs">
-      <li class="placeholder">
-        <span class="yr">2026</span>
-        <div>
-          <p class="pub-t">Makale başlığı buraya gelecek</p>
-          <p class="pub-m">Dergi adı, cilt(sayı), sayfa aralığı</p>
-        </div>
-      </li>
-      <li class="placeholder">
-        <span class="yr">2025</span>
-        <div>
-          <p class="pub-t">Makale başlığı buraya gelecek</p>
-          <p class="pub-m">Dergi adı, cilt(sayı), sayfa aralığı</p>
-        </div>
-      </li>
-      <li class="placeholder">
-        <span class="yr">2025</span>
-        <div>
-          <p class="pub-t">Kitap bölümü başlığı buraya gelecek</p>
-          <p class="pub-m">Editörlü kitap adı, yayınevi</p>
-        </div>
-      </li>
-    </ol>
-    <p class="lede muted" style="font-size:14.5px">Bu bölüm yayın kayıtları girildikçe güncellenmektedir.</p>
+    <h2>Makaleler ve kitap bölümleri</h2>
+
+    <div class="pubgroup">
+      <h3>Makaleler <span class="count">14</span></h3>
+      <ol class="pubs">
+        <li>
+          <span class="yr">2026</span>
+          <div>
+            <p class="pub-t">Yapay zekâ benimsenmesinde sosyal bilişsel özneleşme: Öz-düzenleme sürecinde yapay zekâ öz-yeterliğinin inşası için bilişsel güçlendirici olarak eleştirel düşünme</p>
+            <p class="pub-m"><em>Interactive Learning Environments</em>, 1(1), 1–19<span class="idx ssci">SSCI</span></p>
+          </div>
+        </li>
+        <li>
+          <span class="yr">2026</span>
+          <div>
+            <p class="pub-t">Human Reliability vs. Machine Consistency: Evaluating AI-Based Grading in Language Education</p>
+            <p class="pub-m"><em>SN Computer Science</em>, 7(270), 1–15<span class="idx">Scopus</span></p>
+          </div>
+        </li>
+        <li>
+          <span class="yr">2026</span>
+          <div>
+            <p class="pub-t">Evaluating Large Language Models for Educational Measurement: Insights from Automated and Human Scoring of Language Exams</p>
+            <p class="pub-m"><em>Journal of Artificial Intelligence and Technology</em><span class="idx">Scopus</span></p>
+          </div>
+        </li>
+        <li>
+          <span class="yr">2025</span>
+          <div>
+            <p class="pub-t">Smart Graders? Untersuchung des Potenzials von Sprachmodellen in der Fremdsprachenevaluation</p>
+            <p class="pub-m">Başaran, B. &amp; Sarkıler, Y. A. · <em>Diyalog. Interkulturelle Zeitschrift für Germanistik</em>, 501–525<span class="idx">TR Dizin</span></p>
+          </div>
+        </li>
+        <li>
+          <span class="yr">2025</span>
+          <div>
+            <p class="pub-t">Dil Öğrencileri için Okunabilirlik Değerlendirmesinin Geliştirilmesi: Almanca Ders Kitaplarında Yapay Zekâ ve Geleneksel Metriklerin Karşılaştırmalı Bir Çalışması</p>
+            <p class="pub-m"><em>European Journal of Educational Research</em>, 15(1), 101–109<span class="idx">Scopus</span></p>
+          </div>
+        </li>
+        <li>
+          <span class="yr">2025</span>
+          <div>
+            <p class="pub-t">1940–2023 Yılları Arasında Türkiye'de Basılan Almanca Ders Kitapları Envanteri</p>
+            <p class="pub-m"><em>Tarih Okulu Dergisi</em>, 18(75), 1310–1338<span class="idx">TR Dizin</span></p>
+          </div>
+        </li>
+        <li>
+          <span class="yr">2023</span>
+          <div>
+            <p class="pub-t">Okunabilirlik; Almanca Öğretim Kitapları için Başka Bir Gösterge mi?</p>
+            <p class="pub-m"><em>Diyalog. Interkulturelle Zeitschrift für Germanistik</em>, 2023(3), 590–609<span class="idx">TR Dizin</span></p>
+          </div>
+        </li>
+        <li>
+          <span class="yr">2022</span>
+          <div>
+            <p class="pub-t">Dil Öğrenenlerin Mobil Öğrenme ile İlgili Tutumları ve Algıları</p>
+            <p class="pub-m"><em>Nevşehir Hacı Bektaş Veli Üniversitesi SBE Dergisi</em>, 12(1), 579–590<span class="idx">TR Dizin</span></p>
+          </div>
+        </li>
+        <li>
+          <span class="yr">2022</span>
+          <div>
+            <p class="pub-t">Measuring Word Frequency in Language Teaching Textbooks using Lexitürk</p>
+            <p class="pub-m"><em>International Online Journal of Education and Teaching</em>, 9(1), 572–583<span class="idx">Scopus</span></p>
+          </div>
+        </li>
+        <li>
+          <span class="yr">2020</span>
+          <div>
+            <p class="pub-t">Almanya'daki Türkçe Öğretmenlerinin Covid-19 Salgını Döneminde Katıldığı Çevrim içi Seminerlerle İlgili Betimsel Bir Analiz</p>
+            <p class="pub-m">Çakır, M., Yıldız, C., Başaran, B. &amp; Kaptı, Ü. · <em>Diyalog. Interkulturelle Zeitschrift für Germanistik</em>, 8(2), 457–487<span class="idx">TR Dizin</span></p>
+          </div>
+        </li>
+        <li>
+          <span class="yr">2017</span>
+          <div>
+            <p class="pub-t">Between the technological development and research: a critical abysm for foreign language teaching</p>
+            <p class="pub-m"><em>Journal of Turkish Studies</em>, 12, 49–63<span class="idx">TR Dizin</span></p>
+          </div>
+        </li>
+        <li>
+          <span class="yr">2017</span>
+          <div>
+            <p class="pub-t">Diyakronik Perspektiften Türkiye'de Yabancı Dil Olarak Almanca Örneğinde Ders Kitapları Sorunsalı</p>
+            <p class="pub-m"><em>Kafkas Üniversitesi Sosyal Bilimler Enstitüsü Dergisi</em>, 19, 23–37<span class="idx">TR Dizin</span></p>
+          </div>
+        </li>
+        <li>
+          <span class="yr">2017</span>
+          <div>
+            <p class="pub-t">Yabancı Dil Öğretiminde Teknoloji Kullanımına İlişkin Hazırlanmış Lisansüstü Tezlerin İncelenmesi</p>
+            <p class="pub-m"><em>Journal of Turkish Studies</em>, 12(23), 15–40<span class="idx">TR Dizin</span></p>
+          </div>
+        </li>
+        <li>
+          <span class="yr">2016</span>
+          <div>
+            <p class="pub-t">Word Frequency Measuring Dictionary: A solution?</p>
+            <p class="pub-m"><em>Contemporary Online Language Education</em>, 5(1), 26–32</p>
+          </div>
+        </li>
+      </ol>
+    </div>
+
+    <div class="pubgroup">
+      <h3>Kitap bölümleri <span class="count">7</span></h3>
+      <ol class="pubs">
+        <li>
+          <span class="yr">2023</span>
+          <div>
+            <p class="pub-t">Diplomatik Üstünlük: Almanca Dil Yeterliği ile Yabancı İlişkileri Geliştirmek</p>
+            <p class="pub-m"><em>Eğitim Bilimlerinde Uluslararası Teori, Araştırma ve İncelemeler</em>, Ed. B. Pekdağ · Serüven Yayınevi, Ankara, 1–14</p>
+          </div>
+        </li>
+        <li>
+          <span class="yr">2022</span>
+          <div>
+            <p class="pub-t">Will Artificial Intelligence Replace German as Foreign Language Teachers?</p>
+            <p class="pub-m"><em>New Trends in Educational Sciences</em>, Ed. P. Ünvar · Duvar Publishing, Ankara, 41–50</p>
+          </div>
+        </li>
+        <li>
+          <span class="yr">2022</span>
+          <div>
+            <p class="pub-t">Türkiye'de bir İkinci Yabancı Dil olarak Almanca Ders Kitabına Yönelik Kelime Haznesi Oluşturmak</p>
+            <p class="pub-m">Başaran, B. &amp; Kucher, P. · <em>Eğitim Bilimleri Alanında Uluslararası Araştırmalar IX</em>, Ed. A. Kurnaz · Eğitim Yayınevi, Konya, 41–71</p>
+          </div>
+        </li>
+        <li>
+          <span class="yr">2022</span>
+          <div>
+            <p class="pub-t">Comparison of the German Textbooks Netzwerk A1 and Netzwerk A1 Neu in Terms of the Number of Language Skill Activities</p>
+            <p class="pub-m">Üstün, B. &amp; Başaran, B. · <em>Academic Studies in Educational Sciences</em>, Ed. A. Çetin · Duvar Publishing, Ankara, 15–24</p>
+          </div>
+        </li>
+        <li>
+          <span class="yr">2022</span>
+          <div>
+            <p class="pub-t">Uzaktan Yabancı Dil Öğretimine Yönelik Öğrenci Görüşlerinin Araştırıldığı Çalışmaların Sonuçlarına Yönelik Bir İnceleme</p>
+            <p class="pub-m"><em>Eğitim Bilimleri Alanındaki Gelişmeler</em>, Ed. R. E. Demirbatır · Duvar Yayınları, İzmir, 43–53</p>
+          </div>
+        </li>
+        <li>
+          <span class="yr">2021</span>
+          <div>
+            <p class="pub-t">Die Erwartungen der Studierenden an die studienvorbereitende Ausbildung Deutsch nach der Pandemie</p>
+            <p class="pub-m">Üstün, B. &amp; Başaran, B. · <em>Disiplinler Arası Dil ve Edebiyat Çalışmaları 2</em> · Aybil Yayınları, Konya, 18–25</p>
+          </div>
+        </li>
+        <li>
+          <span class="yr">2017</span>
+          <div>
+            <p class="pub-t">Lexikografi und Korpus – Zu einem computergestützten Alternativverfahren zur lexikalischen Datensammlung für DaF-Lehrer/innen</p>
+            <p class="pub-m"><em>Lexikografische Innovation – Innovative Lexikografie</em>, Eds. D. Scheller-Boltz &amp; H. Weinberger · Olms, Hildesheim, 19–33</p>
+          </div>
+        </li>
+      </ol>
+    </div>
+
+    <p class="pubnote">Bu listeye ek olarak, 2003'ten bu yana ulusal ve uluslararası hakemli bilimsel toplantılarda 24 bildiri sundum.</p>
   </section>
 
   <section id="iletisim">
@@ -506,95 +355,6 @@ html{scroll-behavior:smooth}
   </footer>
 </main>
 
-<script>
-(function(){
-  // Supabase uc noktasi baglandiginda buraya adresi yazilacak
-  var ENDPOINT = null;
-
-  var cover = document.getElementById('cover');
-  var tab = document.getElementById('tab');
-  var target = document.getElementById('icerik');
-
-  tab.addEventListener('click', function(){
-    cover.classList.add('opened');
-    setTimeout(function(){
-      target.scrollIntoView({behavior:'smooth', block:'start'});
-    }, 320);
-    setTimeout(function(){ cover.classList.remove('opened'); }, 1600);
-  });
-
-  var form = document.getElementById('mesaj');
-  var durum = document.getElementById('f-durum');
-  var gonder = document.getElementById('f-gonder');
-
-  function isaretle(el, hatali){
-    if(hatali){ el.setAttribute('aria-invalid','true'); }
-    else { el.removeAttribute('aria-invalid'); }
-  }
-
-  form.addEventListener('submit', function(e){
-    e.preventDefault();
-    var ad = document.getElementById('f-ad');
-    var mail = document.getElementById('f-mail');
-    var mesaj = document.getElementById('f-mesaj');
-    var tuzak = document.getElementById('f-tuzak');
-
-    var hatalar = [];
-    isaretle(ad, !ad.value.trim());
-    if(!ad.value.trim()) hatalar.push('adınızı');
-    var mailGecerli = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(mail.value.trim());
-    isaretle(mail, !mailGecerli);
-    if(!mailGecerli) hatalar.push('geçerli bir e-posta adresi');
-    isaretle(mesaj, mesaj.value.trim().length < 10);
-    if(mesaj.value.trim().length < 10) hatalar.push('en az birkaç cümlelik mesaj');
-
-    if(hatalar.length){
-      durum.className = 'form-msg err';
-      durum.textContent = 'Lütfen ' + hatalar.join(', ') + ' girin.';
-      return;
-    }
-    if(tuzak.value){ return; }
-
-    if(!ENDPOINT){
-      durum.className = 'form-msg err';
-      durum.textContent = 'İletişim formu şu anda hazırlanıyor. Kısa süre içinde etkin olacaktır.';
-      return;
-    }
-
-    gonder.disabled = true;
-    durum.className = 'form-msg';
-    durum.textContent = 'Gönderiliyor...';
-
-    fetch(ENDPOINT, {
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({
-        ad: ad.value.trim(),
-        eposta: mail.value.trim(),
-        konu: document.getElementById('f-konu').value,
-        mesaj: mesaj.value.trim()
-      })
-    }).then(function(r){
-      if(!r.ok) throw new Error('durum ' + r.status);
-      durum.className = 'form-msg ok';
-      durum.textContent = 'Mesajınız alındı. Birkaç iş günü içinde dönüş yapacağım.';
-      form.reset();
-    }).catch(function(){
-      durum.className = 'form-msg err';
-      durum.textContent = 'Mesaj gönderilemedi. Lütfen biraz sonra tekrar deneyin.';
-    }).then(function(){
-      gonder.disabled = false;
-    });
-  });
-
-  var btn = document.getElementById('theme');
-  btn.addEventListener('click', function(){
-    var root = document.documentElement;
-    var cur = root.getAttribute('data-theme');
-    var isDark = cur === 'dark' || (!cur && window.matchMedia('(prefers-color-scheme: dark)').matches);
-    root.setAttribute('data-theme', isDark ? 'light' : 'dark');
-  });
-})();
-</script>
+<script src="/app.js"></script>
 </body>
 </html>
