@@ -37,8 +37,6 @@ html.katlanir .cover{
   box-shadow:inset 18px 0 30px -20px rgba(0,0,0,.7);
   transition:transform 1.15s cubic-bezier(.5,0,.2,1), opacity .45s ease .62s;
 }
-/* içerik sığmazsa kapağın ortası kendi içinde kaysın,
-   üstteki şerit ve alttaki "Kapağı aç" her zaman görünür kalsın */
 html.katlanir .cover-body{
   min-height:0;
   overflow-y:auto;
@@ -61,15 +59,55 @@ html.katlanir .cover.gizli{display:none}
 /* ===== harf alanı ===== */
 #alan{z-index:1;width:100%;height:100%;display:block}
 
-/* ===== güncel şerit ===== */
-.guncel:empty{display:none}
-.guncel{border-bottom:1px solid var(--line);background:color-mix(in srgb,var(--accent) 6%,transparent)}
-.guncel-ic{display:flex;align-items:baseline;gap:14px;padding-block:11px;flex-wrap:wrap}
-.guncel-et{
-  font-family:var(--mono);font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;
-  color:var(--accent);flex:none;
+/* ===== GÜNCEL ÇAĞRI BANDI ===== */
+.guncel{
+  border-bottom:1px solid var(--line);
+  background:color-mix(in srgb,var(--accent) 7%,transparent);
+  overflow:hidden;
 }
-.guncel-me{font-size:14.5px;color:var(--ink)}
+.guncel:empty{display:none}
+
+.bant{
+  display:flex;align-items:stretch;
+  text-decoration:none;color:inherit;
+  max-width:1020px;margin:0 auto;
+}
+.bant-et{
+  flex:none;
+  display:flex;align-items:center;
+  padding:0 16px 0 20px;
+  font-family:var(--mono);font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--accent);
+  border-right:1px solid color-mix(in srgb,var(--accent) 25%,transparent);
+  white-space:nowrap;
+}
+.bant-akis{
+  flex:1;min-width:0;
+  display:flex;
+  overflow:hidden;
+  padding-block:11px;
+  mask-image:linear-gradient(90deg,transparent,#000 24px,#000 calc(100% - 40px),transparent);
+}
+.bant-akis span{
+  flex:none;white-space:nowrap;
+  padding-inline:18px 0;
+  font-size:14.5px;color:var(--ink);
+  animation:bantAk 26s linear infinite;
+}
+.bant-akis b{font-weight:600}
+.bant-akis .ok{color:var(--accent);font-family:var(--mono);font-size:12px;letter-spacing:.1em}
+@keyframes bantAk{to{transform:translateX(-100%)}}
+
+.bant:hover .bant-akis span,
+.bant:focus-visible .bant-akis span{animation-play-state:paused}
+.bant:hover .bant-akis{background:color-mix(in srgb,var(--accent) 6%,transparent)}
+.bant:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+
+@media (prefers-reduced-motion:reduce){
+  .bant-akis span{animation:none}
+  .bant-akis{mask-image:none}
+  .bant-akis span[aria-hidden="true"]{display:none}
+}
 
 /* ===== YÖNTEM SEKMELERİ ===== */
 .sekmeler{margin-top:34px;position:relative}
