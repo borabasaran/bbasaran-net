@@ -3,6 +3,10 @@
 // 1) OpenAlex'ten ORCID ile yeni yayinlari ceker, data/yayinlar.json icine EKLER (asla silmez)
 // 2) kitap.bbasaran.net sayfasindan guncel kitap basligini ceker
 // 3) index.html icindeki isaretli bloklari yeniden yazar
+//
+// Mukerrer kontrolu iki asamalidir: once normalize edilmis baslik,
+// sonra yil + dergi adi. Ikincisi, ayni calismanin ceviri baslikla
+// ikinci kez eklenmesini onler.
 
 import { readFile, writeFile } from 'node:fs/promises';
 
@@ -23,6 +27,10 @@ const sadelestir = (s) => String(s)
   .replace(/&[a-z]+;/g, ' ')
   .replace(/[^\p{L}\p{N}]+/gu, '')
   .slice(0, 90);
+
+// dergi adlarini kabaca esler: "Diyalog. Interkulturelle Zeitschrift fur Germanistik"
+// ile "Diyalog Interkulturelle Zeitschrift Fur Germanistik" ayni sayilir
+const dergiAnahtari = (k) => k.yil + '|' + sadelestir(k.kaynak).slice(0, 40);
 
 async function getir(url, tip = 'json') {
   const y = await fetch(url, {
@@ -111,19 +119,27 @@ const yayinlar = JSON.parse(await oku('data/yayinlar.json'));
 const guncel = JSON.parse(await oku('data/guncel.json'));
 
 let eklenen = 0;
+let atlanan = 0;
 try {
   const bulunan = await openAlex();
-  const mevcut = new Set(
-    [...yayinlar.makaleler, ...yayinlar.bolumler].map((k) => sadelestir(k.baslik))
-  );
+  const tumu = [...yayinlar.makaleler, ...yayinlar.bolumler];
+  const basliklar = new Set(tumu.map((k) => sadelestir(k.baslik)));
+  const dergiler = new Set(tumu.filter((k) => k.kaynak).map(dergiAnahtari));
+
   for (const k of bulunan) {
     const anahtar = sadelestir(k.baslik);
-    if (anahtar && !mevcut.has(anahtar)) {
-      yayinlar.makaleler.push(k);
-      mevcut.add(anahtar);
-      eklenen++;
-      console.log('yeni yayin: ' + k.yil + ' - ' + k.baslik);
+    if (!anahtar) continue;
+    if (basliklar.has(anahtar)) { atlanan++; continue; }
+    if (k.kaynak && dergiler.has(dergiAnahtari(k))) {
+      console.log('mukerrer sayildi (ayni yil + dergi): ' + k.baslik);
+      atlanan++;
+      continue;
     }
+    yayinlar.makaleler.push(k);
+    basliklar.add(anahtar);
+    if (k.kaynak) dergiler.add(dergiAnahtari(k));
+    eklenen++;
+    console.log('YENI YAYIN: ' + k.yil + ' - ' + k.baslik);
   }
 } catch (e) {
   console.warn('OpenAlex atlandi: ' + e.message);
@@ -158,4 +174,4 @@ html = blokDegistir(html, 'GUNCEL', guncelHtml);
 
 await yaz('index.html', html);
 
-console.log('bitti - yeni yayin: ' + eklenen + ' - kitap: ' + (guncel.kitap || '-'));
+console.log('bitti - yeni: ' + eklenen + ' - atlanan: ' + atlanan + ' - kitap: ' + (guncel.kitap || '-'));
