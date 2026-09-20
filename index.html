@@ -12,12 +12,15 @@
 <meta property="og:url" content="https://bbasaran.net/">
 <link rel="canonical" href="https://bbasaran.net/">
 <title>Bora Başaran</title>
+<script>document.documentElement.classList.add('js');</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,400;6..96,700;6..96,900&family=IBM+Plex+Mono:wght@400;500&family=Source+Sans+3:wght@400;600;700&display=swap">
 <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
+
+<div class="progress" id="progress" aria-hidden="true"></div>
 
 <header class="cover" id="cover">
   <div class="layer mesh" aria-hidden="true"></div>
@@ -76,174 +79,205 @@
   </div>
 </nav>
 
-<main class="wrap">
+<section id="hakkinda">
+  <div class="wrap">
+    <p class="eyebrow reveal"><span class="no">01</span> Hakkımda</p>
+    <h2 class="mask">Bir dilin nasıl öğretildiğini ölçülebilir hale getirmek</h2>
+    <p class="lede reveal" style="--i:1">Anadolu Üniversitesi Eğitim Fakültesi Alman Dili Eğitimi bölümünde öğretim üyesiyim. Çalışmalarım Almancanın yabancı dil olarak öğretimi, derlem dilbilim, dil eğitiminde yapay zekâ uygulamaları ve Türkiye ile Almanya arasındaki karşılaştırmalı eğitim araştırmaları çevresinde yoğunlaşıyor.</p>
+    <p class="lede muted reveal" style="--i:2">Almanya'da eğitim ataşeliği görevinde bulundum. Bu deneyim, iki ülkenin eğitim yapılarını karşılaştırmalı olarak ele aldığım çalışmaların çıkış noktasını oluşturuyor. Doktora düzeyinde tez danışmanlığı yürütüyor, TÜBİTAK ve BAP destekli projelerde yürütücü ve araştırmacı olarak yer alıyorum.</p>
+  </div>
+</section>
 
-  <section id="hakkinda">
-    <p class="eyebrow">Hakkımda</p>
-    <h2>Bir dilin nasıl öğretildiğini ölçülebilir hale getirmek</h2>
-    <p class="lede">Anadolu Üniversitesi Eğitim Fakültesi Alman Dili Eğitimi bölümünde öğretim üyesiyim. Çalışmalarım Almancanın yabancı dil olarak öğretimi, derlem dilbilim, dil eğitiminde yapay zekâ uygulamaları ve Türkiye ile Almanya arasındaki karşılaştırmalı eğitim araştırmaları çevresinde yoğunlaşıyor.</p>
-    <p class="lede muted">Almanya'da eğitim ataşeliği görevinde bulundum. Bu deneyim, iki ülkenin eğitim yapılarını karşılaştırmalı olarak ele aldığım çalışmaların çıkış noktasını oluşturuyor. Doktora düzeyinde tez danışmanlığı yürütüyor, TÜBİTAK ve BAP destekli projelerde yürütücü ve araştırmacı olarak yer alıyorum.</p>
-  </section>
-
-  <section id="arastirma">
-    <p class="eyebrow">Araştırma alanları</p>
-    <h2>Dört bağlantılı hat</h2>
+<section id="arastirma" class="ruled">
+  <div class="wrap">
+    <p class="eyebrow reveal"><span class="no">02</span> Araştırma alanları</p>
+    <h2 class="mask">Dört bağlantılı hat</h2>
     <div class="grid two">
-      <div class="field">
+      <div class="field reveal" style="--i:0">
         <h3>DaF öğretim bilgisi</h3>
         <p>Ders kitabı çözümlemesi, okunabilirlik, düzey uygunluğu ve öğretmen eğitimi.</p>
       </div>
-      <div class="field">
+      <div class="field reveal" style="--i:1">
         <h3>Derlem dilbilim</h3>
         <p>Öğrenici derlemleri, sözcük sıklığı, hata etiketleme çerçeveleri ve sözlükbilim.</p>
       </div>
-      <div class="field">
+      <div class="field reveal" style="--i:2">
         <h3>Dil eğitiminde yapay zekâ</h3>
         <p>Büyük dil modelleriyle yazılı anlatım puanlaması, ölçme geçerliği, öğretmen rolünün dönüşümü.</p>
       </div>
-      <div class="field">
+      <div class="field reveal" style="--i:3">
         <h3>Karşılaştırmalı eğitim</h3>
         <p>Türkiye ve Almanya eğitim politikaları, kapsayıcılık ve öğretmen yetiştirme.</p>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <section id="calismalar">
-    <p class="eyebrow">Çalışmalar</p>
-    <h2>Yürüttüğüm projeler ve geliştirdiğim sistemler</h2>
-    <div class="grid three">
-      <article class="proj">
-        <span class="chip">TÜBİTAK 4008</span>
-        <h3>Almanca Öğretiminde Kapsayıcı Sınıflar</h3>
-        <p>Kapsayıcı Almanca öğretimi üzerine öğretmen eğitimi projesi.</p>
-      </article>
-      <article class="proj">
-        <span class="chip">TÜBİTAK 3005-B</span>
-        <h3>Almanca Yazma Puanlama Platformu</h3>
-        <p>Yazılı anlatım performanslarının çevrim içi puanlanması için geliştirilen değerlendirme ortamı.</p>
-      </article>
-      <article class="proj">
-        <span class="chip">BAP</span>
-        <h3>Yabancı Dil Eğitiminde Yapay Zekâ</h3>
-        <p>Ulusal yapay zekâ strateji belgelerinin dil eğitimi açısından taranması.</p>
-      </article>
-      <article class="proj">
-        <span class="chip warn">Geliştirme</span>
-        <h3>DaF Konuşma Asistanı</h3>
-        <p>B2 düzeyinde Almanca konuşma pratiği için yapay zekâ destekli asistan.</p>
-      </article>
-      <article class="proj">
-        <span class="chip warn">Geliştirme</span>
-        <h3>Okunabilirlik Derlemi</h3>
-        <p>Almanca ders kitaplarından oluşturulan geniş ölçekli okunabilirlik derlemi ve kodlama hattı.</p>
-      </article>
-      <article class="proj">
-        <span class="chip warn">Geliştirme</span>
-        <h3>Editörlü Kitap Sistemi</h3>
-        <p>Akademik editörlü kitap bölümü başvurularının alındığı ve yönetildiği platform.</p>
-      </article>
+<div class="ticker" aria-hidden="true">
+  <ul>
+    <li>Lesbarkeit</li><li>Okunabilirlik</li><li>Korpuslinguistik</li><li>Sözcük sıklığı</li><li>Fehlerannotation</li><li>Ölçme geçerliği</li><li>Sprachmodelle</li><li>Lehrwerkanalyse</li><li>Kapsayıcılık</li><li>Wortschatz</li><li>Derlem</li><li>Bewertung</li>
+  </ul>
+  <ul>
+    <li>Lesbarkeit</li><li>Okunabilirlik</li><li>Korpuslinguistik</li><li>Sözcük sıklığı</li><li>Fehlerannotation</li><li>Ölçme geçerliği</li><li>Sprachmodelle</li><li>Lehrwerkanalyse</li><li>Kapsayıcılık</li><li>Wortschatz</li><li>Derlem</li><li>Bewertung</li>
+  </ul>
+</div>
+
+<section id="calismalar" class="pin" aria-label="Çalışmalar">
+  <div class="pin-stage">
+    <div class="pin-head">
+      <p class="eyebrow reveal"><span class="no">03</span> Çalışmalar</p>
+      <h2 class="mask">Yürüttüğüm projeler ve geliştirdiğim sistemler</h2>
     </div>
-  </section>
 
-  <section id="yayinlar">
-    <p class="eyebrow">Yayınlar</p>
-    <h2>Makaleler ve kitap bölümleri</h2>
+    <div class="pin-rail" id="rail">
+      <div class="pin-track" id="track">
+        <article class="card">
+          <p class="no">01</p>
+          <h3>Almanca Öğretiminde Kapsayıcı Sınıflar</h3>
+          <p>Kapsayıcı Almanca öğretimi üzerine öğretmen eğitimi projesi. Farklı öğrenme ihtiyaçları olan sınıflarda uygulanabilir öğretim tasarımları.</p>
+          <span class="chip">TÜBİTAK 4008</span>
+        </article>
+        <article class="card">
+          <p class="no">02</p>
+          <h3>Almanca Yazma Puanlama Platformu</h3>
+          <p>Yazılı anlatım performanslarının çevrim içi puanlanması için geliştirilen değerlendirme ortamı. Puanlayıcılar arası tutarlılığın ölçülmesi.</p>
+          <span class="chip">TÜBİTAK 3005-B</span>
+        </article>
+        <article class="card">
+          <p class="no">03</p>
+          <h3>Yabancı Dil Eğitiminde Yapay Zekâ</h3>
+          <p>Ulusal yapay zekâ strateji belgelerinin dil eğitimi açısından taranması ve karşılaştırmalı çözümlenmesi.</p>
+          <span class="chip">BAP</span>
+        </article>
+        <article class="card">
+          <p class="no">04</p>
+          <h3>DaF Konuşma Asistanı</h3>
+          <p>B2 düzeyinde Almanca konuşma pratiği için yapay zekâ destekli asistan. Yerel modellerle çalışan konuşma ortamı.</p>
+          <span class="chip warn">Geliştirme</span>
+        </article>
+        <article class="card">
+          <p class="no">05</p>
+          <h3>Okunabilirlik Derlemi</h3>
+          <p>Almanca ders kitaplarından oluşturulan geniş ölçekli derlem ve kodlama hattı. Metin düzeyi kestiriminin ölçülmesi.</p>
+          <span class="chip warn">Geliştirme</span>
+        </article>
+        <article class="card">
+          <p class="no">06</p>
+          <h3>Editörlü Kitap Sistemi</h3>
+          <p>Akademik editörlü kitap bölümü başvurularının alındığı, hakem sürecinin ve yazışmaların yönetildiği platform.</p>
+          <span class="chip warn">Geliştirme</span>
+        </article>
+      </div>
+    </div>
+
+    <div class="pin-meter">
+      <span>Kaydırarak gezin</span>
+      <span class="track"><span class="fill" id="pinfill"></span></span>
+      <span>06</span>
+    </div>
+  </div>
+</section>
+
+<section id="yayinlar" class="ruled">
+  <div class="wrap">
+    <p class="eyebrow reveal"><span class="no">04</span> Yayınlar</p>
+    <h2 class="mask">Makaleler ve kitap bölümleri</h2>
 
     <div class="pubgroup">
       <h3>Makaleler <span class="count">14</span></h3>
       <ol class="pubs">
-        <li>
+        <li class="reveal">
           <span class="yr">2026</span>
           <div>
             <p class="pub-t">Yapay zekâ benimsenmesinde sosyal bilişsel özneleşme: Öz-düzenleme sürecinde yapay zekâ öz-yeterliğinin inşası için bilişsel güçlendirici olarak eleştirel düşünme</p>
             <p class="pub-m"><em>Interactive Learning Environments</em>, 1(1), 1–19<span class="idx ssci">SSCI</span></p>
           </div>
         </li>
-        <li>
+        <li class="reveal">
           <span class="yr">2026</span>
           <div>
             <p class="pub-t">Human Reliability vs. Machine Consistency: Evaluating AI-Based Grading in Language Education</p>
             <p class="pub-m"><em>SN Computer Science</em>, 7(270), 1–15<span class="idx">Scopus</span></p>
           </div>
         </li>
-        <li>
+        <li class="reveal">
           <span class="yr">2026</span>
           <div>
             <p class="pub-t">Evaluating Large Language Models for Educational Measurement: Insights from Automated and Human Scoring of Language Exams</p>
             <p class="pub-m"><em>Journal of Artificial Intelligence and Technology</em><span class="idx">Scopus</span></p>
           </div>
         </li>
-        <li>
+        <li class="reveal">
           <span class="yr">2025</span>
           <div>
             <p class="pub-t">Smart Graders? Untersuchung des Potenzials von Sprachmodellen in der Fremdsprachenevaluation</p>
             <p class="pub-m">Başaran, B. &amp; Sarkıler, Y. A. · <em>Diyalog. Interkulturelle Zeitschrift für Germanistik</em>, 501–525<span class="idx">TR Dizin</span></p>
           </div>
         </li>
-        <li>
+        <li class="reveal">
           <span class="yr">2025</span>
           <div>
             <p class="pub-t">Dil Öğrencileri için Okunabilirlik Değerlendirmesinin Geliştirilmesi: Almanca Ders Kitaplarında Yapay Zekâ ve Geleneksel Metriklerin Karşılaştırmalı Bir Çalışması</p>
             <p class="pub-m"><em>European Journal of Educational Research</em>, 15(1), 101–109<span class="idx">Scopus</span></p>
           </div>
         </li>
-        <li>
+        <li class="reveal">
           <span class="yr">2025</span>
           <div>
             <p class="pub-t">1940–2023 Yılları Arasında Türkiye'de Basılan Almanca Ders Kitapları Envanteri</p>
             <p class="pub-m"><em>Tarih Okulu Dergisi</em>, 18(75), 1310–1338<span class="idx">TR Dizin</span></p>
           </div>
         </li>
-        <li>
+        <li class="reveal">
           <span class="yr">2023</span>
           <div>
             <p class="pub-t">Okunabilirlik; Almanca Öğretim Kitapları için Başka Bir Gösterge mi?</p>
             <p class="pub-m"><em>Diyalog. Interkulturelle Zeitschrift für Germanistik</em>, 2023(3), 590–609<span class="idx">TR Dizin</span></p>
           </div>
         </li>
-        <li>
+        <li class="reveal">
           <span class="yr">2022</span>
           <div>
             <p class="pub-t">Dil Öğrenenlerin Mobil Öğrenme ile İlgili Tutumları ve Algıları</p>
             <p class="pub-m"><em>Nevşehir Hacı Bektaş Veli Üniversitesi SBE Dergisi</em>, 12(1), 579–590<span class="idx">TR Dizin</span></p>
           </div>
         </li>
-        <li>
+        <li class="reveal">
           <span class="yr">2022</span>
           <div>
             <p class="pub-t">Measuring Word Frequency in Language Teaching Textbooks using Lexitürk</p>
             <p class="pub-m"><em>International Online Journal of Education and Teaching</em>, 9(1), 572–583<span class="idx">Scopus</span></p>
           </div>
         </li>
-        <li>
+        <li class="reveal">
           <span class="yr">2020</span>
           <div>
             <p class="pub-t">Almanya'daki Türkçe Öğretmenlerinin Covid-19 Salgını Döneminde Katıldığı Çevrim içi Seminerlerle İlgili Betimsel Bir Analiz</p>
             <p class="pub-m">Çakır, M., Yıldız, C., Başaran, B. &amp; Kaptı, Ü. · <em>Diyalog. Interkulturelle Zeitschrift für Germanistik</em>, 8(2), 457–487<span class="idx">TR Dizin</span></p>
           </div>
         </li>
-        <li>
+        <li class="reveal">
           <span class="yr">2017</span>
           <div>
             <p class="pub-t">Between the technological development and research: a critical abysm for foreign language teaching</p>
             <p class="pub-m"><em>Journal of Turkish Studies</em>, 12, 49–63<span class="idx">TR Dizin</span></p>
           </div>
         </li>
-        <li>
+        <li class="reveal">
           <span class="yr">2017</span>
           <div>
             <p class="pub-t">Diyakronik Perspektiften Türkiye'de Yabancı Dil Olarak Almanca Örneğinde Ders Kitapları Sorunsalı</p>
             <p class="pub-m"><em>Kafkas Üniversitesi Sosyal Bilimler Enstitüsü Dergisi</em>, 19, 23–37<span class="idx">TR Dizin</span></p>
           </div>
         </li>
-        <li>
+        <li class="reveal">
           <span class="yr">2017</span>
           <div>
             <p class="pub-t">Yabancı Dil Öğretiminde Teknoloji Kullanımına İlişkin Hazırlanmış Lisansüstü Tezlerin İncelenmesi</p>
             <p class="pub-m"><em>Journal of Turkish Studies</em>, 12(23), 15–40<span class="idx">TR Dizin</span></p>
           </div>
         </li>
-        <li>
+        <li class="reveal">
           <span class="yr">2016</span>
           <div>
             <p class="pub-t">Word Frequency Measuring Dictionary: A solution?</p>
@@ -256,49 +290,49 @@
     <div class="pubgroup">
       <h3>Kitap bölümleri <span class="count">7</span></h3>
       <ol class="pubs">
-        <li>
+        <li class="reveal">
           <span class="yr">2023</span>
           <div>
             <p class="pub-t">Diplomatik Üstünlük: Almanca Dil Yeterliği ile Yabancı İlişkileri Geliştirmek</p>
             <p class="pub-m"><em>Eğitim Bilimlerinde Uluslararası Teori, Araştırma ve İncelemeler</em>, Ed. B. Pekdağ · Serüven Yayınevi, Ankara, 1–14</p>
           </div>
         </li>
-        <li>
+        <li class="reveal">
           <span class="yr">2022</span>
           <div>
             <p class="pub-t">Will Artificial Intelligence Replace German as Foreign Language Teachers?</p>
             <p class="pub-m"><em>New Trends in Educational Sciences</em>, Ed. P. Ünvar · Duvar Publishing, Ankara, 41–50</p>
           </div>
         </li>
-        <li>
+        <li class="reveal">
           <span class="yr">2022</span>
           <div>
             <p class="pub-t">Türkiye'de bir İkinci Yabancı Dil olarak Almanca Ders Kitabına Yönelik Kelime Haznesi Oluşturmak</p>
             <p class="pub-m">Başaran, B. &amp; Kucher, P. · <em>Eğitim Bilimleri Alanında Uluslararası Araştırmalar IX</em>, Ed. A. Kurnaz · Eğitim Yayınevi, Konya, 41–71</p>
           </div>
         </li>
-        <li>
+        <li class="reveal">
           <span class="yr">2022</span>
           <div>
             <p class="pub-t">Comparison of the German Textbooks Netzwerk A1 and Netzwerk A1 Neu in Terms of the Number of Language Skill Activities</p>
             <p class="pub-m">Üstün, B. &amp; Başaran, B. · <em>Academic Studies in Educational Sciences</em>, Ed. A. Çetin · Duvar Publishing, Ankara, 15–24</p>
           </div>
         </li>
-        <li>
+        <li class="reveal">
           <span class="yr">2022</span>
           <div>
             <p class="pub-t">Uzaktan Yabancı Dil Öğretimine Yönelik Öğrenci Görüşlerinin Araştırıldığı Çalışmaların Sonuçlarına Yönelik Bir İnceleme</p>
             <p class="pub-m"><em>Eğitim Bilimleri Alanındaki Gelişmeler</em>, Ed. R. E. Demirbatır · Duvar Yayınları, İzmir, 43–53</p>
           </div>
         </li>
-        <li>
+        <li class="reveal">
           <span class="yr">2021</span>
           <div>
             <p class="pub-t">Die Erwartungen der Studierenden an die studienvorbereitende Ausbildung Deutsch nach der Pandemie</p>
             <p class="pub-m">Üstün, B. &amp; Başaran, B. · <em>Disiplinler Arası Dil ve Edebiyat Çalışmaları 2</em> · Aybil Yayınları, Konya, 18–25</p>
           </div>
         </li>
-        <li>
+        <li class="reveal">
           <span class="yr">2017</span>
           <div>
             <p class="pub-t">Lexikografi und Korpus – Zu einem computergestützten Alternativverfahren zur lexikalischen Datensammlung für DaF-Lehrer/innen</p>
@@ -308,15 +342,17 @@
       </ol>
     </div>
 
-    <p class="pubnote">Bu listeye ek olarak, 2003'ten bu yana ulusal ve uluslararası hakemli bilimsel toplantılarda 24 bildiri sundum.</p>
-  </section>
+    <p class="pubnote reveal">Bu listeye ek olarak, 2003'ten bu yana ulusal ve uluslararası hakemli bilimsel toplantılarda 24 bildiri sundum.</p>
+  </div>
+</section>
 
-  <section id="iletisim">
-    <p class="eyebrow">İletişim</p>
-    <h2>Mesaj gönderin</h2>
-    <p class="lede muted">Formu doldurduğunuzda mesajınız bana iletilir. E-posta adresinizi yalnızca yanıt verebilmek için kullanırım.</p>
+<section id="iletisim" class="ruled">
+  <div class="wrap">
+    <p class="eyebrow reveal"><span class="no">05</span> İletişim</p>
+    <h2 class="mask">Mesaj gönderin</h2>
+    <p class="lede muted reveal" style="--i:1">Formu doldurduğunuzda mesajınız bana iletilir. E-posta adresinizi yalnızca yanıt verebilmek için kullanırım.</p>
 
-    <form class="form" id="mesaj" novalidate>
+    <form class="form reveal" id="mesaj" style="--i:2" novalidate>
       <div class="row two-col">
         <label>
           <span class="ck">Ad soyad</span>
@@ -348,19 +384,19 @@
       </div>
     </form>
 
-    <dl class="contact">
+    <dl class="contact reveal" style="--i:3">
       <div><dt>Kurum</dt><dd>Anadolu Üniversitesi, Eğitim Fakültesi, Alman Dili Eğitimi</dd></div>
       <div><dt>Şehir</dt><dd>Eskişehir, Türkiye</dd></div>
       <div><dt>Yanıt süresi</dt><dd>Genellikle birkaç iş günü içinde</dd></div>
     </dl>
-  </section>
+  </div>
+</section>
 
-  <footer>
-    <span>© 2026 Bora Başaran</span>
-    <span class="sep"></span>
-    <button id="theme" style="font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;background:none;border:1px solid var(--line);color:var(--muted);padding:6px 12px;border-radius:2px;cursor:pointer">Tema</button>
-  </footer>
-</main>
+<footer class="wrap">
+  <span>© 2026 Bora Başaran</span>
+  <span class="sep"></span>
+  <button id="theme" style="font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;background:none;border:1px solid var(--line);color:var(--muted);padding:6px 12px;border-radius:2px;cursor:pointer">Tema</button>
+</footer>
 
 <script src="/app.js"></script>
 </body>
