@@ -24,13 +24,11 @@
   if(kitapModu){
     kok.classList.add('kitap');
 
-    // sayfalari tek bir sahne icine al
     sahne = document.createElement('div');
     sahne.className = 'sahne';
     sayfalar[0].parentNode.insertBefore(sahne, sayfalar[0]);
     sayfalar.forEach(function(s){ sahne.appendChild(s); });
 
-    // her sayfanin sonuna ipucu satiri
     sayfalar.forEach(function(s, i){
       var ipucu = document.createElement('p');
       ipucu.className = 'sayfa-son';
@@ -43,7 +41,6 @@
       kap.appendChild(ipucu);
     });
 
-    // tema dugmesini ve telif satirini alt cubuga tasi
     var tema = document.getElementById('theme');
     if(tema && kontrol){
       var telif = document.createElement('span');
@@ -70,6 +67,8 @@
     document.body.classList.remove('kapali');
     if(kontrol) kontrol.hidden = false;
     kontroluGuncelle();
+    gecisKilidi = true;
+    setTimeout(function(){ gecisKilidi = false; }, 900);
     setTimeout(function(){ cover.classList.add('gizli'); }, 1250);
   }
 
@@ -119,11 +118,19 @@
     }
 
     gecisKilidi = true;
-    setTimeout(function(){ gecisKilidi = false; }, 620);
+    setTimeout(function(){ gecisKilidi = false; }, 640);
   }
 
   function ileri(){ sayfaGoster(etkinSayfa + 1, 'ileri'); }
   function geri(){ sayfaGoster(etkinSayfa - 1, 'geri'); }
+
+  function kenardaMi(){
+    var s = sayfalar[etkinSayfa];
+    return {
+      alt: s.scrollTop + s.clientHeight >= s.scrollHeight - 3,
+      ust: s.scrollTop <= 3
+    };
+  }
 
   if(kitapModu){
     baglar.forEach(function(a, i){
@@ -137,16 +144,21 @@
     if(oncekiDug) oncekiDug.addEventListener('click', geri);
     if(sonrakiDug) sonrakiDug.addEventListener('click', ileri);
 
-    /* --- tekerlek: sayfa sonuna gelince cevir --- */
-    sahne.addEventListener('wheel', function(e){
-      if(!acik || gecisKilidi) return;
-      var s = sayfalar[etkinSayfa];
-      var altta = s.scrollTop + s.clientHeight >= s.scrollHeight - 3;
-      var ustte = s.scrollTop <= 3;
-      if(e.deltaY > 0 && altta && etkinSayfa < sayfalar.length - 1){
+    /* --- tekerlek --- */
+    window.addEventListener('wheel', function(e){
+      if(gecisKilidi) return;
+
+      if(!acik && katlanir){
+        if(e.deltaY > 6) kapagiAc();
+        return;
+      }
+      if(!acik) return;
+
+      var k = kenardaMi();
+      if(e.deltaY > 0 && k.alt && etkinSayfa < sayfalar.length - 1){
         e.preventDefault();
         ileri();
-      } else if(e.deltaY < 0 && ustte && etkinSayfa > 0){
+      } else if(e.deltaY < 0 && k.ust && etkinSayfa > 0){
         e.preventDefault();
         geri();
       }
@@ -154,19 +166,24 @@
 
     /* --- dokunma --- */
     var baslangicY = null;
-    sahne.addEventListener('touchstart', function(e){
+    window.addEventListener('touchstart', function(e){
       baslangicY = e.touches[0].clientY;
     }, {passive:true});
-    sahne.addEventListener('touchend', function(e){
+
+    window.addEventListener('touchmove', function(e){
+      if(acik || baslangicY === null) return;
+      if(baslangicY - e.touches[0].clientY > 28) kapagiAc();
+    }, {passive:true});
+
+    window.addEventListener('touchend', function(e){
       if(!acik || gecisKilidi || baslangicY === null) return;
-      var fark = baslangicY - (e.changedTouches[0] ? e.changedTouches[0].clientY : baslangicY);
+      var son = e.changedTouches[0] ? e.changedTouches[0].clientY : baslangicY;
+      var fark = baslangicY - son;
       baslangicY = null;
       if(Math.abs(fark) < 60) return;
-      var s = sayfalar[etkinSayfa];
-      var altta = s.scrollTop + s.clientHeight >= s.scrollHeight - 3;
-      var ustte = s.scrollTop <= 3;
-      if(fark > 0 && altta) ileri();
-      else if(fark < 0 && ustte) geri();
+      var k = kenardaMi();
+      if(fark > 0 && k.alt) ileri();
+      else if(fark < 0 && k.ust) geri();
     }, {passive:true});
 
     /* --- klavye --- */
@@ -181,19 +198,6 @@
       if(e.key === 'ArrowRight' || e.key === 'PageDown'){ e.preventDefault(); ileri(); }
       else if(e.key === 'ArrowLeft' || e.key === 'PageUp'){ e.preventDefault(); geri(); }
     });
-
-    /* --- kapak kapaliyken kaydirma da acsin --- */
-    if(katlanir){
-      window.addEventListener('wheel', function(e){
-        if(!acik && e.deltaY > 6) kapagiAc();
-      }, {passive:true});
-      var kapakY = null;
-      window.addEventListener('touchstart', function(e){ kapakY = e.touches[0].clientY; }, {passive:true});
-      window.addEventListener('touchmove', function(e){
-        if(acik || kapakY === null) return;
-        if(kapakY - e.touches[0].clientY > 28) kapagiAc();
-      }, {passive:true});
-    }
 
     /* --- adres satirindaki bolum --- */
     var baslangic = 0;
@@ -233,7 +237,6 @@
     var zerreler = [];
     var G = 0, Y = 0, dpr = 1;
     var fx = -9999, fy = -9999;
-    var calisiyor = true;
 
     function olcuAl(){
       dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -263,7 +266,7 @@
     }
 
     function ciz(){
-      if(!calisiyor) return;
+      if(acik){ return; }
       ctx.clearRect(0, 0, G, Y);
       for(var i = 0; i < zerreler.length; i++){
         var z = zerreler[i];
@@ -296,7 +299,7 @@
     kur();
     requestAnimationFrame(ciz);
 
-    window.addEventListener('resize', function(){ kur(); }, {passive:true});
+    window.addEventListener('resize', function(){ if(!acik) kur(); }, {passive:true});
     window.addEventListener('pointermove', function(e){
       if(e.pointerType === 'touch' || acik) return;
       var k = cover.getBoundingClientRect();
