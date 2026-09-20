@@ -1,0 +1,30 @@
+name: İçeriği güncelle
+
+on:
+  schedule:
+    - cron: '0 6 1 * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  guncelle:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: node scripts/guncelle.mjs
+      - name: Değişiklik varsa işle
+        run: |
+          if [ -z "$(git status --porcelain)" ]; then
+            echo "değişiklik yok"
+            exit 0
+          fi
+          git config user.name "bbasaran-net-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Otomatik içerik güncellemesi"
+          git push
