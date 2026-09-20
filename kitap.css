@@ -1,0 +1,63 @@
+/* ===== KİTAP KURGUSU =====
+   JavaScript varsa ve hareket kısıtlı değilse aynı anda tek bölüm görünür,
+   geçişler sayfa çevrilir gibi olur. Aksi halde sayfa uzun bir belge gibi
+   yukarıdan aşağı okunur. */
+
+html.kitap .sayfa{display:none}
+html.kitap .sayfa.aktif{
+  display:block;
+  transform-origin:left center;
+  animation:sayfaIleri .64s cubic-bezier(.5,0,.2,1) both;
+}
+html.kitap .sayfa.aktif.geri{
+  transform-origin:right center;
+  animation-name:sayfaGeri;
+}
+@keyframes sayfaIleri{
+  from{opacity:0;transform:perspective(1700px) rotateY(-40deg)}
+  to{opacity:1;transform:none}
+}
+@keyframes sayfaGeri{
+  from{opacity:0;transform:perspective(1700px) rotateY(40deg)}
+  to{opacity:1;transform:none}
+}
+
+/* kitap kurgusunda bölüm çizgileri gereksiz */
+html.kitap .sayfa.ruled{border-top:0}
+html.kitap .sayfa{padding-block:clamp(40px,6vh,68px) clamp(30px,5vh,52px)}
+
+/* çalışmalar şeridi kitap kurgusunda kaydırmaya bağlı değil */
+html.kitap .pin{height:auto;border-top:0}
+html.kitap .pin-stage{position:static;height:auto;overflow:visible;padding-top:0;gap:26px}
+html.kitap .pin-rail{overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none}
+html.kitap .pin-rail::-webkit-scrollbar{display:none}
+html.kitap .pin-track{transform:none!important;padding-block:4px}
+html.kitap .card{scroll-snap-align:center;min-height:0}
+html.kitap .pin-meter{display:none}
+html.kitap .pin-head{padding-inline:0;max-width:none}
+
+/* sayfa denetimi */
+.kitap-kontrol[hidden]{display:none}
+.kitap-kontrol{
+  display:flex;align-items:center;gap:18px;
+  max-width:1020px;margin:0 auto;
+  padding:22px 20px 40px;
+  border-top:1px solid var(--line);
+}
+.kitap-kontrol button{
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;
+  background:none;border:1px solid var(--line);color:var(--ink);
+  padding:10px 16px;border-radius:2px;cursor:pointer;
+  transition:border-color .25s,color .25s;
+}
+.kitap-kontrol button:hover:not(:disabled){border-color:var(--accent);color:var(--accent)}
+.kitap-kontrol button:disabled{opacity:.35;cursor:default}
+.kitap-no{
+  flex:1;text-align:center;
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.2em;
+  color:var(--muted);font-variant-numeric:tabular-nums;
+}
+
+@media (prefers-reduced-motion:reduce){
+  html.kitap .sayfa.aktif{animation:none}
+}
