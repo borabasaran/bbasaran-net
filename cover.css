@@ -63,26 +63,9 @@ html:not(.js) .curtain{display:none}
 }
 .probe-note{font-family:var(--mono);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:rgba(159,190,184,.65)}
 
-/* ===== özel imleç ===== */
-.cursor{
-  position:fixed;top:0;left:0;width:24px;height:24px;
-  margin:-12px 0 0 -12px;
-  border:1px solid var(--accent);border-radius:50%;
-  pointer-events:none;z-index:50;opacity:0;
-  transition:width .28s var(--ease),height .28s var(--ease),margin .28s var(--ease),background .28s,opacity .3s;
-  will-change:transform;
-}
-html:not(.ince-imlec) .cursor{display:none}
-.cursor.acik{opacity:.85}
-.cursor.buyuk{
-  width:56px;height:56px;margin:-28px 0 0 -28px;
-  background:color-mix(in srgb,var(--accent) 15%,transparent);
-}
-
 /* mıknatıs */
 .card{will-change:transform}
 
 @media (prefers-reduced-motion:reduce){
   .curtain{display:none}
-  .cursor{display:none!important}
 }
