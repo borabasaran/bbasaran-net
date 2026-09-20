@@ -30,19 +30,31 @@ html.katlanir body.kapali{overflow:hidden}
 html.katlanir .cover{
   position:fixed;inset:0;z-index:30;
   min-height:0;height:100%;
+  grid-template-rows:auto minmax(0,1fr) auto;
   transform-origin:left center;
   backface-visibility:hidden;
   will-change:transform,opacity;
   box-shadow:inset 18px 0 30px -20px rgba(0,0,0,.7);
   transition:transform 1.15s cubic-bezier(.5,0,.2,1), opacity .45s ease .62s;
 }
+/* içerik sığmazsa kapağın ortası kendi içinde kaysın,
+   üstteki şerit ve alttaki "Kapağı aç" her zaman görünür kalsın */
+html.katlanir .cover-body{
+  min-height:0;
+  overflow-y:auto;
+  scrollbar-width:none;
+  align-self:stretch;
+  align-content:center;
+}
+html.katlanir .cover-body::-webkit-scrollbar{display:none}
+
 html.katlanir .cover.acildi{
   transform:perspective(1900px) rotateY(-105deg);
   opacity:0;
 }
 html.katlanir .cover.gizli{display:none}
 
-@media (max-height:700px){
+@media (max-height:640px){
   html.katlanir .facts{display:none}
 }
 
@@ -100,7 +112,6 @@ html.katlanir .cover.gizli{display:none}
 #sk3:checked ~ .sk-panel[data-p="3"],
 #sk4:checked ~ .sk-panel[data-p="4"]{display:block}
 
-.sekmeler > input:focus-visible ~ .sk-liste label[for]{outline:none}
 #sk1:focus-visible ~ .sk-liste label[for="sk1"],
 #sk2:focus-visible ~ .sk-liste label[for="sk2"],
 #sk3:focus-visible ~ .sk-liste label[for="sk3"],
