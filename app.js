@@ -75,6 +75,69 @@
   var cue = document.getElementById('cue');
   if(cue) cue.addEventListener('click', kapagiAc);
 
+  /* ==================== KAPAKTA AKAN BILGI SATIRLARI ==================== */
+  if(cover && !azHareket){
+    var akislar = [
+      [
+        'Almancanın yabancı dil olarak öğretimi',
+        'Öğretmen eğitimi ve kapsayıcı sınıflar',
+        'Ders kitabı çözümlemesi ve materyal tasarımı'
+      ],
+      [
+        'Sözcük sıklığı, derlem, ders materyali tasarımı',
+        'Okunabilirlik ve dil düzeyine uygunluk',
+        'Söz varlığı listeleri ve kapsam hesapları'
+      ],
+      [
+        'Dil eğitiminde teknoloji ve büyük dil modelleri',
+        'Yazılı anlatımın otomatik puanlanması',
+        'Ölçme geçerliği ve puanlayıcı tutarlılığı'
+      ],
+      [
+        'Türkiye ve Almanya eğitim sistemleri',
+        'Eğitim politikaları ve öğretmen yetiştirme',
+        'İki ülkede ders kitabı gelenekleri'
+      ]
+    ];
+
+    var satirlar = Array.prototype.slice.call(cover.querySelectorAll('.fact-v'));
+    if(satirlar.length === akislar.length){
+      var sira = 0;
+      var adimlar = satirlar.map(function(){ return 0; });
+
+      var degistir = function(el, metin){
+        if(!el.animate){ el.textContent = metin; return; }
+        var sure = 300;
+        var cik = el.animate(
+          [{opacity:1, transform:'translateY(0)'},
+           {opacity:0, transform:'translateY(-7px)'}],
+          {duration:sure, easing:'cubic-bezier(.5,0,.2,1)', fill:'forwards'}
+        );
+        cik.onfinish = function(){
+          el.textContent = metin;
+          el.animate(
+            [{opacity:0, transform:'translateY(9px)'},
+             {opacity:1, transform:'translateY(0)'}],
+            {duration:420, easing:'cubic-bezier(.16,1,.3,1)', fill:'forwards'}
+          );
+        };
+      };
+
+      var akisSaati = setInterval(function(){
+        if(acik || document.hidden) return;
+        var i = sira % satirlar.length;
+        adimlar[i] = (adimlar[i] + 1) % akislar[i].length;
+        degistir(satirlar[i], akislar[i][adimlar[i]]);
+        sira++;
+      }, 2600);
+
+      // kapak acilinca dur
+      var akisDurdur = setInterval(function(){
+        if(acik){ clearInterval(akisSaati); clearInterval(akisDurdur); }
+      }, 1000);
+    }
+  }
+
   /* ==================== SAYFA GECISI ==================== */
   function acilmalariTetikle(kap){
     var ogeler = kap.querySelectorAll('.reveal, .mask');
