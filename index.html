@@ -19,6 +19,7 @@
 <link rel="stylesheet" href="/styles.css">
 <link rel="stylesheet" href="/cover.css">
 <link rel="stylesheet" href="/sekme.css">
+<link rel="stylesheet" href="/kitap.css">
 </head>
 <body>
 
@@ -106,7 +107,7 @@
   </div>
 <!-- GUNCEL:BITTI --></div>
 
-<section id="hakkinda">
+<section id="hakkinda" class="sayfa">
   <div class="wrap">
     <p class="eyebrow reveal"><span class="no">01</span> Hakkımda</p>
     <h2 class="mask">Bir dilin nasıl öğretildiğini ölçülebilir hale getirmek</h2>
@@ -115,7 +116,7 @@
   </div>
 </section>
 
-<section id="arastirma" class="ruled">
+<section id="arastirma" class="sayfa ruled">
   <div class="wrap">
     <p class="eyebrow reveal"><span class="no">02</span> Araştırma alanları</p>
     <h2 class="mask">Dört bağlantılı hat</h2>
@@ -140,19 +141,9 @@
   </div>
 </section>
 
-<div class="ticker" aria-hidden="true">
-  <ul>
-    <li lang="de">Lesbarkeit</li><li>Okunabilirlik</li><li lang="de">Korpuslinguistik</li><li>Sözcük sıklığı</li><li lang="de">Fehlerannotation</li><li>Ölçme geçerliği</li><li lang="de">Sprachmodelle</li><li lang="de">Lehrwerkanalyse</li><li>Kapsayıcılık</li><li lang="de">Wortschatz</li><li>Derlem</li><li lang="de">Bewertung</li>
-  </ul>
-  <ul>
-    <li lang="de">Lesbarkeit</li><li>Okunabilirlik</li><li lang="de">Korpuslinguistik</li><li>Sözcük sıklığı</li><li lang="de">Fehlerannotation</li><li>Ölçme geçerliği</li><li lang="de">Sprachmodelle</li><li lang="de">Lehrwerkanalyse</li><li>Kapsayıcılık</li><li lang="de">Wortschatz</li><li>Derlem</li><li lang="de">Bewertung</li>
-  </ul>
-</div>
-
-<div id="calismalar" aria-hidden="true"></div>
-<section class="pin" id="pin" aria-label="Çalışmalar">
+<section class="sayfa pin" id="calismalar" aria-label="Çalışmalar">
   <div class="pin-stage">
-    <div class="pin-head">
+    <div class="pin-head wrap">
       <p class="eyebrow reveal"><span class="no">03</span> Çalışmalar</p>
       <h2 class="mask">Yürüttüğüm projeler ve geliştirdiğim sistemler</h2>
     </div>
@@ -206,7 +197,7 @@
   </div>
 </section>
 
-<section id="yontem" class="ruled">
+<section id="yontem" class="sayfa ruled">
   <div class="wrap">
     <p class="eyebrow reveal"><span class="no">04</span> Yöntem</p>
     <h2 class="mask">Başvurduğum araçlar ve ölçütler</h2>
@@ -311,7 +302,7 @@
   </div>
 </section>
 
-<section id="yayinlar" class="ruled">
+<section id="yayinlar" class="sayfa ruled">
   <div class="wrap">
     <p class="eyebrow reveal"><span class="no">05</span> Yayınlar</p>
     <h2 class="mask">Makaleler ve kitap bölümleri</h2>
@@ -488,7 +479,7 @@
   </div>
 </section>
 
-<section id="iletisim" class="ruled">
+<section id="iletisim" class="sayfa ruled">
   <div class="wrap">
     <p class="eyebrow reveal"><span class="no">06</span> İletişim</p>
     <h2 class="mask">Mesaj gönderin</h2>
@@ -533,6 +524,21 @@
     </dl>
   </div>
 </section>
+
+<div class="kitap-kontrol" id="sayfaKontrol" hidden>
+  <button type="button" id="onceki">← Önceki</button>
+  <span class="kitap-no" id="sayfaNo">01 / 06</span>
+  <button type="button" id="sonraki">Sonraki →</button>
+</div>
+
+<div class="ticker" aria-hidden="true">
+  <ul>
+    <li lang="de">Lesbarkeit</li><li>Okunabilirlik</li><li lang="de">Korpuslinguistik</li><li>Sözcük sıklığı</li><li lang="de">Fehlerannotation</li><li>Ölçme geçerliği</li><li lang="de">Sprachmodelle</li><li lang="de">Lehrwerkanalyse</li><li>Kapsayıcılık</li><li lang="de">Wortschatz</li><li>Derlem</li><li lang="de">Bewertung</li>
+  </ul>
+  <ul>
+    <li lang="de">Lesbarkeit</li><li>Okunabilirlik</li><li lang="de">Korpuslinguistik</li><li>Sözcük sıklığı</li><li lang="de">Fehlerannotation</li><li>Ölçme geçerliği</li><li lang="de">Sprachmodelle</li><li lang="de">Lehrwerkanalyse</li><li>Kapsayıcılık</li><li lang="de">Wortschatz</li><li>Derlem</li><li lang="de">Bewertung</li>
+  </ul>
+</div>
 
 <footer class="wrap">
   <span>© 2026 Bora Başaran</span>
