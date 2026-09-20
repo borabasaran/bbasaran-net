@@ -1,6 +1,10 @@
 (function(){
-  // Supabase uc noktasi baglandiginda buraya adresi yazilacak
-  var ENDPOINT = null;
+  /* İletişim formu: Supabase (editorial-books projesi, iletisim_mesajlari tablosu).
+     Buradaki anahtar yayımlanabilir anahtardır, herkese açık olması normaldir.
+     Tabloda yalnızca "ekleme" izni vardır; kimse kayıtları okuyamaz. */
+  var SB_URL = 'https://irrejwatbhmqbhibenmb.supabase.co';
+  var SB_KEY = 'sb_publishable_39jzvpMUx8qR8YUxtQdLKg_yxjjO0u-';
+  var ENDPOINT = SB_URL + '/rest/v1/iletisim_mesajlari';
 
   var kok = document.documentElement;
   var azHareket = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -107,11 +111,10 @@
 
       var degistir = function(el, metin){
         if(!el.animate){ el.textContent = metin; return; }
-        var sure = 300;
         var cik = el.animate(
           [{opacity:1, transform:'translateY(0)'},
            {opacity:0, transform:'translateY(-7px)'}],
-          {duration:sure, easing:'cubic-bezier(.5,0,.2,1)', fill:'forwards'}
+          {duration:300, easing:'cubic-bezier(.5,0,.2,1)', fill:'forwards'}
         );
         cik.onfinish = function(){
           el.textContent = metin;
@@ -131,7 +134,6 @@
         sira++;
       }, 2600);
 
-      // kapak acilinca dur
       var akisDurdur = setInterval(function(){
         if(acik){ clearInterval(akisSaati); clearInterval(akisDurdur); }
       }, 1000);
@@ -207,7 +209,6 @@
     if(oncekiDug) oncekiDug.addEventListener('click', geri);
     if(sonrakiDug) sonrakiDug.addEventListener('click', ileri);
 
-    /* --- tekerlek --- */
     window.addEventListener('wheel', function(e){
       if(gecisKilidi) return;
 
@@ -227,7 +228,6 @@
       }
     }, {passive:false});
 
-    /* --- dokunma --- */
     var baslangicY = null;
     window.addEventListener('touchstart', function(e){
       baslangicY = e.touches[0].clientY;
@@ -249,7 +249,6 @@
       else if(fark < 0 && k.ust) geri();
     }, {passive:true});
 
-    /* --- klavye --- */
     window.addEventListener('keydown', function(e){
       var et = document.activeElement;
       if(et && /^(INPUT|TEXTAREA|SELECT)$/.test(et.tagName)) return;
@@ -262,7 +261,6 @@
       else if(e.key === 'ArrowLeft' || e.key === 'PageUp'){ e.preventDefault(); geri(); }
     });
 
-    /* --- adres satirindaki bolum --- */
     var baslangic = 0;
     if(location.hash){
       sayfalar.forEach(function(s, i){ if('#' + s.id === location.hash) baslangic = i; });
@@ -520,19 +518,18 @@
       }
       if(tuzak.value){ return; }
 
-      if(!ENDPOINT){
-        durum.className = 'form-msg err';
-        durum.textContent = 'İletişim formu şu anda hazırlanıyor. Kısa süre içinde etkin olacaktır.';
-        return;
-      }
-
       gonder.disabled = true;
       durum.className = 'form-msg';
       durum.textContent = 'Gönderiliyor...';
 
       fetch(ENDPOINT, {
-        method:'POST',
-        headers:{'Content-Type':'application/json'},
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': SB_KEY,
+          'Authorization': 'Bearer ' + SB_KEY,
+          'Prefer': 'return=minimal'
+        },
         body: JSON.stringify({
           ad: ad.value.trim(),
           eposta: mail.value.trim(),
