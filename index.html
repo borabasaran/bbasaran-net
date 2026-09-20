@@ -17,14 +17,18 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,400;6..96,700;6..96,900&family=IBM+Plex+Mono:wght@400;500&family=Source+Sans+3:wght@400;600;700&display=swap">
 <link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/cover.css">
 </head>
 <body>
 
+<div class="curtain" id="perde" aria-hidden="true"><span>BORA<br>BAŞARAN</span></div>
+<div class="cursor" id="imlec" aria-hidden="true"></div>
 <div class="progress" id="progress" aria-hidden="true"></div>
 
 <header class="cover" id="cover">
   <div class="layer mesh" aria-hidden="true"></div>
   <div class="layer halo" aria-hidden="true"></div>
+  <canvas class="layer" id="alan" aria-hidden="true"></canvas>
   <div class="layer" aria-hidden="true"><span class="glyph">ß</span></div>
 
   <div class="cover-top">
@@ -57,6 +61,21 @@
         <p class="fact-v">Türkiye ve Almanya eğitim sistemleri</p>
       </li>
     </ul>
+
+    <div class="probe">
+      <p class="probe-top">Okunabilirlik ölçer</p>
+      <label>
+        <span class="sr-only">Almanca bir cümle yazın</span>
+        <input id="probe-in" type="text" lang="de" autocomplete="off" spellcheck="false"
+               placeholder="Almanca bir cümle yazın: Der Unterricht beginnt um acht Uhr.">
+      </label>
+      <div class="probe-out">
+        <span class="probe-band" id="probe-band">—</span>
+        <span class="meter"><i id="probe-fill"></i></span>
+        <span id="probe-lix">LIX —</span>
+      </div>
+      <p class="probe-note">Amstad ve LIX ile kaba kestirim, CEFR kararı değildir</p>
+    </div>
   </div>
 
   <div class="cover-foot">
@@ -122,7 +141,8 @@
   </ul>
 </div>
 
-<section id="calismalar" class="pin" aria-label="Çalışmalar">
+<div id="calismalar" aria-hidden="true"></div>
+<section class="pin" id="pin" aria-label="Çalışmalar">
   <div class="pin-stage">
     <div class="pin-head">
       <p class="eyebrow reveal"><span class="no">03</span> Çalışmalar</p>
