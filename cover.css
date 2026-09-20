@@ -24,9 +24,7 @@ html:not(.js) .curtain{display:none}
 .curtain.bitti{animation:perdeKalk .9s var(--ease) forwards}
 @keyframes perdeKalk{to{opacity:0;transform:scale(1.08);visibility:hidden}}
 
-/* ===== KATLANAN KAPAK =====
-   JavaScript varsa ve hareket kısıtlı değilse kapak sayfanın üzerinde
-   sabit durur; açıldığında sol kenarından menteşe gibi dönerek açılır. */
+/* ===== KATLANAN KAPAK ===== */
 html.katlanir body.kapali{overflow:hidden}
 
 html.katlanir .cover{
@@ -44,7 +42,6 @@ html.katlanir .cover.acildi{
 }
 html.katlanir .cover.gizli{display:none}
 
-/* alçak ekranlarda kapak içeriğini hafiflet */
 @media (max-height:700px){
   html.katlanir .facts{display:none}
 }
@@ -61,6 +58,53 @@ html.katlanir .cover.gizli{display:none}
   color:var(--accent);flex:none;
 }
 .guncel-me{font-size:14.5px;color:var(--ink)}
+
+/* ===== YÖNTEM SEKMELERİ ===== */
+.sekmeler{margin-top:34px;position:relative}
+.sekmeler > input{position:absolute;opacity:0;width:1px;height:1px;pointer-events:none}
+.sk-liste{
+  display:flex;gap:4px;flex-wrap:wrap;
+  border-bottom:1px solid var(--line);
+  margin-bottom:26px;
+}
+.sk-liste label{
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--muted);
+  padding:11px 14px;
+  cursor:pointer;
+  border-bottom:2px solid transparent;
+  margin-bottom:-1px;
+  transition:color .25s, border-color .25s;
+  white-space:nowrap;
+}
+.sk-liste label:hover{color:var(--ink)}
+.sk-panel{display:none}
+.sk-panel ul{list-style:none;margin:0;padding:0;display:grid;gap:14px;max-width:70ch}
+.sk-panel li{
+  display:grid;gap:4px;
+  border-top:1px solid var(--line);
+  padding-top:13px;
+}
+.sk-t{font-size:16px;font-weight:600}
+.sk-d{font-size:14.5px;color:var(--muted)}
+.sk-kod{font-family:var(--mono);font-size:13.5px;color:var(--accent)}
+
+#sk1:checked ~ .sk-liste label[for="sk1"],
+#sk2:checked ~ .sk-liste label[for="sk2"],
+#sk3:checked ~ .sk-liste label[for="sk3"],
+#sk4:checked ~ .sk-liste label[for="sk4"]{
+  color:var(--accent);border-bottom-color:var(--accent);
+}
+#sk1:checked ~ .sk-panel[data-p="1"],
+#sk2:checked ~ .sk-panel[data-p="2"],
+#sk3:checked ~ .sk-panel[data-p="3"],
+#sk4:checked ~ .sk-panel[data-p="4"]{display:block}
+
+.sekmeler > input:focus-visible ~ .sk-liste label[for]{outline:none}
+#sk1:focus-visible ~ .sk-liste label[for="sk1"],
+#sk2:focus-visible ~ .sk-liste label[for="sk2"],
+#sk3:focus-visible ~ .sk-liste label[for="sk3"],
+#sk4:focus-visible ~ .sk-liste label[for="sk4"]{outline:2px solid var(--accent);outline-offset:2px}
 
 /* ===== okunabilirlik ölçer ===== */
 .probe{
