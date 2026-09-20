@@ -18,6 +18,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,400;6..96,700;6..96,900&family=IBM+Plex+Mono:wght@400;500&family=Source+Sans+3:wght@400;600;700&display=swap">
 <link rel="stylesheet" href="/styles.css">
 <link rel="stylesheet" href="/cover.css">
+<link rel="stylesheet" href="/sekme.css">
 </head>
 <body>
 
@@ -92,6 +93,7 @@
     <a href="#hakkinda">Hakkımda</a>
     <a href="#arastirma">Araştırma</a>
     <a href="#calismalar">Çalışmalar</a>
+    <a href="#yontem">Yöntem</a>
     <a href="#yayinlar">Yayınlar</a>
     <a href="#iletisim">İletişim</a>
   </div>
@@ -204,9 +206,114 @@
   </div>
 </section>
 
+<section id="yontem" class="ruled">
+  <div class="wrap">
+    <p class="eyebrow reveal"><span class="no">04</span> Yöntem</p>
+    <h2 class="mask">Başvurduğum araçlar ve ölçütler</h2>
+
+    <div class="sekmeler reveal" style="--i:1">
+      <input type="radio" name="sekme" id="sk1" checked>
+      <input type="radio" name="sekme" id="sk2">
+      <input type="radio" name="sekme" id="sk3">
+      <input type="radio" name="sekme" id="sk4">
+
+      <div class="sk-liste">
+        <label for="sk1">Model ve çıkarım</label>
+        <label for="sk2">Ölçme ve güvenirlik</label>
+        <label for="sk3">Derlem işleme</label>
+        <label for="sk4">Okunabilirlik</label>
+      </div>
+
+      <div class="sk-panel" data-p="1">
+        <ul>
+          <li>
+            <span class="sk-t">Yerel çıkarım</span>
+            <span class="sk-d">4 bit ve 8 bit <span class="sk-kod">niceleme</span> ile bellek ve doğruluk arasındaki ödünleşmenin izlenmesi.</span>
+          </li>
+          <li>
+            <span class="sk-t">Uyarlama</span>
+            <span class="sk-d">Düşük kerteli uyarlama (<span class="sk-kod">LoRA</span>) ile parametre verimli ince ayar; tam ince ayarla karşılaştırma.</span>
+          </li>
+          <li>
+            <span class="sk-t">İstem tasarımı</span>
+            <span class="sk-d">Sıfır ve az örnekli kurulumlar, sıcaklık ve örnekleme ayarlarının çıktı kararlılığına etkisi.</span>
+          </li>
+          <li>
+            <span class="sk-t">Model karşılaştırması</span>
+            <span class="sk-d"><span class="sk-kod">Şaşkınlık</span> (perplexity), bağlam penceresi sınırları, belirteç maliyeti ve yanıt tutarlılığı.</span>
+          </li>
+        </ul>
+      </div>
+
+      <div class="sk-panel" data-p="2">
+        <ul>
+          <li>
+            <span class="sk-t">Puanlayıcılar arası uyum</span>
+            <span class="sk-d"><span class="sk-kod">Krippendorff alfa</span>, sınıf içi korelasyon ve uyum sınırlarının kestirimi.</span>
+          </li>
+          <li>
+            <span class="sk-t">İnsan ve model uyumu</span>
+            <span class="sk-d">Ağırlıklı kappa, ortalama mutlak hata ve puan dağılımlarının karşılaştırılması.</span>
+          </li>
+          <li>
+            <span class="sk-t">Geçerlik</span>
+            <span class="sk-d">Ölçüt geçerliği, ölçme değişmezliği ve puanlayıcı yanlılığının sınanması.</span>
+          </li>
+          <li>
+            <span class="sk-t">Puanlama tasarımı</span>
+            <span class="sk-d">Dereceli puanlama anahtarları, çapa metinler ve puanlayıcı eğitimi düzenekleri.</span>
+          </li>
+        </ul>
+      </div>
+
+      <div class="sk-panel" data-p="3">
+        <ul>
+          <li>
+            <span class="sk-t">Ön işleme</span>
+            <span class="sk-d">Belirteçleme, köke indirgeme (<span class="sk-kod">lemmatizasyon</span>) ve sözcük türü etiketleme.</span>
+          </li>
+          <li>
+            <span class="sk-t">Söz varlığı ölçütleri</span>
+            <span class="sk-d">Sıklık listeleri, tür–belirteç oranı, kapsam hesapları ve düzey bantlarına dağılım.</span>
+          </li>
+          <li>
+            <span class="sk-t">Hata etiketleme</span>
+            <span class="sk-d">Biçimbirim duyarlı etiketleme şemaları, çok katmanlı açıklama ve etiketleyici uyumu.</span>
+          </li>
+          <li>
+            <span class="sk-t">Derlem kurgusu</span>
+            <span class="sk-d">Örnekleme çerçevesi, dengeleme ölçütleri ve üst veri şeması.</span>
+          </li>
+        </ul>
+      </div>
+
+      <div class="sk-panel" data-p="4">
+        <ul>
+          <li>
+            <span class="sk-t">Formüller</span>
+            <span class="sk-d"><span class="sk-kod">Amstad</span> (Almanca Flesch), <span class="sk-kod">LIX</span> ve Wiener Sachtextformel değerlerinin birlikte okunması.</span>
+          </li>
+          <li>
+            <span class="sk-t">Değişkenler</span>
+            <span class="sk-d">Cümle uzunluğu, sözcük uzunluğu, hece kestirimi ve bileşik sözcük çözümlemesi.</span>
+          </li>
+          <li>
+            <span class="sk-t">Düzey kestirimi</span>
+            <span class="sk-d">Geleneksel ölçütlerle model temelli kestirimlerin aynı metinler üzerinde karşılaştırılması.</span>
+          </li>
+          <li>
+            <span class="sk-t">Sınırlar</span>
+            <span class="sk-d">Formüllerin dil bağımlılığı, kısa metinlerde kararlılık sorunu ve CEFR eşleştirmesinin sınırları.</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
 <section id="yayinlar" class="ruled">
   <div class="wrap">
-    <p class="eyebrow reveal"><span class="no">04</span> Yayınlar</p>
+    <p class="eyebrow reveal"><span class="no">05</span> Yayınlar</p>
     <h2 class="mask">Makaleler ve kitap bölümleri</h2>
 
 <!-- YAYINLAR:BASLA -->
@@ -383,7 +490,7 @@
 
 <section id="iletisim" class="ruled">
   <div class="wrap">
-    <p class="eyebrow reveal"><span class="no">05</span> İletişim</p>
+    <p class="eyebrow reveal"><span class="no">06</span> İletişim</p>
     <h2 class="mask">Mesaj gönderin</h2>
     <p class="lede muted reveal" style="--i:1">Formu doldurduğunuzda mesajınız bana iletilir. E-posta adresinizi yalnızca yanıt verebilmek için kullanırım.</p>
 
