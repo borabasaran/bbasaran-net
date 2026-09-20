@@ -1,12 +1,12 @@
 // bbasaran.net icerik guncelleyici
 // Ayda bir GitHub Actions tarafindan calistirilir.
-// 1) OpenAlex'ten ORCID ile yeni yayinlari ceker, data/yayinlar.json icine EKLER (asla silmez)
-// 2) kitap.bbasaran.net sayfasindan guncel kitap basligini ceker
-// 3) index.html icindeki isaretli bloklari yeniden yazar
 //
-// Mukerrer kontrolu iki asamalidir: once normalize edilmis baslik,
-// sonra yil + dergi adi. Ikincisi, ayni calismanin ceviri baslikla
-// ikinci kez eklenmesini onler.
+// Ilke: yayin listesine OTOMATIK EKLEME YAPILMAZ.
+// OpenAlex'te bulunup listede gorunmeyen kayitlar data/aday.json icine yazilir,
+// siteye yansimaz. Insan gozden gecirip dogru kunyesiyle yayinlar.json'a tasir.
+// Boylece ceviri baslikli mukerrer kayitlar siteye hic girmez.
+//
+// Tam otomatik olan tek sey guncel kitap basligidir.
 
 import { readFile, writeFile } from 'node:fs/promises';
 
@@ -28,10 +28,6 @@ const sadelestir = (s) => String(s)
   .replace(/[^\p{L}\p{N}]+/gu, '')
   .slice(0, 90);
 
-// dergi adlarini kabaca esler: "Diyalog. Interkulturelle Zeitschrift fur Germanistik"
-// ile "Diyalog Interkulturelle Zeitschrift Fur Germanistik" ayni sayilir
-const dergiAnahtari = (k) => k.yil + '|' + sadelestir(k.kaynak).slice(0, 40);
-
 async function getir(url, tip = 'json') {
   const y = await fetch(url, {
     headers: { 'user-agent': 'bbasaran.net-guncelleyici' },
@@ -41,7 +37,7 @@ async function getir(url, tip = 'json') {
   return tip === 'json' ? y.json() : y.text();
 }
 
-/* ---------- 1. OpenAlex ---------- */
+/* ---------- OpenAlex ---------- */
 async function openAlex() {
   const url = 'https://api.openalex.org/works'
     + '?filter=author.orcid:' + ORCID
@@ -50,17 +46,12 @@ async function openAlex() {
   return (veri.results || []).map((w) => ({
     yil: w.publication_year || 0,
     baslik: (w.display_name || '').trim(),
-    yazarlar: '',
     kaynak: w.primary_location?.source?.display_name || '',
-    ayrinti: [
-      w.biblio?.volume || '',
-      w.biblio?.issue ? '(' + w.biblio.issue + ')' : ''
-    ].join('') || '',
-    dizin: ''
+    doi: w.doi || ''
   })).filter((k) => k.baslik && k.yil);
 }
 
-/* ---------- 2. guncel kitap ---------- */
+/* ---------- guncel kitap ---------- */
 function etiketsiz(s) {
   return s.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
 }
@@ -75,7 +66,7 @@ async function guncelKitap() {
   return aday[0] || '';
 }
 
-/* ---------- 3. HTML uretimi ---------- */
+/* ---------- HTML uretimi ---------- */
 function satir(k) {
   const yazar = k.yazarlar ? k.yazarlar + ' · ' : '';
   const kaynak = k.kaynak ? '<em>' + kacis(k.kaynak) + '</em>' : '';
@@ -117,34 +108,23 @@ function blokDegistir(html, ad, icerik) {
 /* ---------- ana akis ---------- */
 const yayinlar = JSON.parse(await oku('data/yayinlar.json'));
 const guncel = JSON.parse(await oku('data/guncel.json'));
+const adayDosya = JSON.parse(await oku('data/aday.json'));
 
-let eklenen = 0;
-let atlanan = 0;
+// 1) aday listesi (siteye yansimaz)
 try {
   const bulunan = await openAlex();
-  const tumu = [...yayinlar.makaleler, ...yayinlar.bolumler];
-  const basliklar = new Set(tumu.map((k) => sadelestir(k.baslik)));
-  const dergiler = new Set(tumu.filter((k) => k.kaynak).map(dergiAnahtari));
-
-  for (const k of bulunan) {
-    const anahtar = sadelestir(k.baslik);
-    if (!anahtar) continue;
-    if (basliklar.has(anahtar)) { atlanan++; continue; }
-    if (k.kaynak && dergiler.has(dergiAnahtari(k))) {
-      console.log('mukerrer sayildi (ayni yil + dergi): ' + k.baslik);
-      atlanan++;
-      continue;
-    }
-    yayinlar.makaleler.push(k);
-    basliklar.add(anahtar);
-    if (k.kaynak) dergiler.add(dergiAnahtari(k));
-    eklenen++;
-    console.log('YENI YAYIN: ' + k.yil + ' - ' + k.baslik);
-  }
+  const basliklar = new Set(
+    [...yayinlar.makaleler, ...yayinlar.bolumler].map((k) => sadelestir(k.baslik))
+  );
+  const adaylar = bulunan.filter((k) => !basliklar.has(sadelestir(k.baslik)));
+  adayDosya.adaylar = adaylar;
+  console.log('aday sayisi: ' + adaylar.length);
+  adaylar.forEach((k) => console.log('  aday: ' + k.yil + ' - ' + k.baslik));
 } catch (e) {
   console.warn('OpenAlex atlandi: ' + e.message);
 }
 
+// 2) guncel kitap (tam otomatik)
 try {
   const kitap = await guncelKitap();
   if (kitap) guncel.kitap = kitap;
@@ -153,12 +133,13 @@ try {
 }
 
 const bugun = new Date().toISOString().slice(0, 10);
-yayinlar.guncellendi = bugun;
 guncel.guncellendi = bugun;
+adayDosya.guncellendi = bugun;
 
-await yaz('data/yayinlar.json', JSON.stringify(yayinlar, null, 2) + '\n');
 await yaz('data/guncel.json', JSON.stringify(guncel, null, 2) + '\n');
+await yaz('data/aday.json', JSON.stringify(adayDosya, null, 2) + '\n');
 
+// 3) sayfayi kuratorlu listeden uret
 let html = await oku('index.html');
 
 html = blokDegistir(html, 'YAYINLAR',
@@ -174,4 +155,4 @@ html = blokDegistir(html, 'GUNCEL', guncelHtml);
 
 await yaz('index.html', html);
 
-console.log('bitti - yeni: ' + eklenen + ' - atlanan: ' + atlanan + ' - kitap: ' + (guncel.kitap || '-'));
+console.log('bitti - kitap: ' + (guncel.kitap || '-') + ' - aday: ' + (adayDosya.adaylar || []).length);
