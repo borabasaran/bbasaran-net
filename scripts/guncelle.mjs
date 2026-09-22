@@ -6,20 +6,17 @@
 // siteye yansimaz. Insan gozden gecirip dogru kunyesiyle yayinlar.json'a tasir.
 //
 // Tam otomatik olan tek sey guncel kitap cagrisi bandidir.
+// Sayfa, lib/sayfa.js ile data/ klasorundeki verilerden yeniden uretilir.
 
 import { readFile, writeFile } from 'node:fs/promises';
+import sayfa from '../lib/sayfa.js';
 
 const ORCID = '0000-0003-0251-5895';
-const KITAP_URL = 'https://kitap.bbasaran.net';
+const KITAP_URL = sayfa.KITAP_URL;
 const KOK = new URL('..', import.meta.url).pathname;
 
 const oku = (p) => readFile(KOK + p, 'utf8');
 const yaz = (p, s) => writeFile(KOK + p, s, 'utf8');
-
-const kacis = (s) => String(s)
-  .replace(/&(?![a-zA-Z#0-9]+;)/g, '&amp;')
-  .replace(/</g, '&lt;')
-  .replace(/>/g, '&gt;');
 
 const sadelestir = (s) => String(s)
   .toLocaleLowerCase('tr')
@@ -65,60 +62,8 @@ async function guncelKitap() {
   return aday[0] || '';
 }
 
-/* ---------- HTML uretimi ---------- */
-function satir(k) {
-  const yazar = k.yazarlar ? k.yazarlar + ' · ' : '';
-  const kaynak = k.kaynak ? '<em>' + kacis(k.kaynak) + '</em>' : '';
-  const ayrinti = k.ayrinti ? ', ' + kacis(k.ayrinti) : '';
-  const dizin = k.dizin
-    ? '<span class="idx' + (k.dizin === 'SSCI' ? ' ssci' : '') + '">' + kacis(k.dizin) + '</span>'
-    : '';
-  return '        <li class="reveal">\n'
-    + '          <span class="yr">' + k.yil + '</span>\n'
-    + '          <div>\n'
-    + '            <p class="pub-t">' + kacis(k.baslik) + '</p>\n'
-    + '            <p class="pub-m">' + yazar + kaynak + ayrinti + dizin + '</p>\n'
-    + '          </div>\n'
-    + '        </li>';
-}
-
-function grup(baslik, liste) {
-  const sirali = [...liste].sort((a, b) => b.yil - a.yil);
-  return '    <div class="pubgroup">\n'
-    + '      <h3>' + baslik + ' <span class="count">' + sirali.length + '</span></h3>\n'
-    + '      <ol class="pubs">\n'
-    + sirali.map(satir).join('\n') + '\n'
-    + '      </ol>\n'
-    + '    </div>';
-}
-
-function bantHtml(kitap) {
-  if (!kitap) return '';
-  const ad = kacis(kitap);
-  const metin = '<b>' + ad + '</b> · Kitap bölümü çağrısı · '
-    + 'Ayrıntılar ve başvuru için tıklayın <span class="ok">→</span> &nbsp;&nbsp;·&nbsp;&nbsp; ';
-  return '  <a class="bant" href="' + KITAP_URL + '">\n'
-    + '    <span class="bant-et">Güncel çağrı</span>\n'
-    + '    <span class="bant-akis">\n'
-    + '      <span>' + metin + '</span>\n'
-    + '      <span aria-hidden="true">' + metin + '</span>\n'
-    + '    </span>\n'
-    + '  </a>';
-}
-
-function blokDegistir(html, ad, icerik) {
-  const bas = '<!-- ' + ad + ':BASLA -->';
-  const son = '<!-- ' + ad + ':BITTI -->';
-  const i = html.indexOf(bas);
-  const j = html.indexOf(son);
-  if (i < 0 || j < 0) {
-    console.warn('isaret bulunamadi: ' + ad);
-    return html;
-  }
-  return html.slice(0, i + bas.length) + '\n' + icerik + '\n' + html.slice(j);
-}
-
 /* ---------- ana akis ---------- */
+const site = JSON.parse(await oku('data/site.json'));
 const yayinlar = JSON.parse(await oku('data/yayinlar.json'));
 const guncel = JSON.parse(await oku('data/guncel.json'));
 const adayDosya = JSON.parse(await oku('data/aday.json'));
@@ -128,7 +73,8 @@ try {
   const basliklar = new Set(
     [...yayinlar.makaleler, ...yayinlar.bolumler].map((k) => sadelestir(k.baslik))
   );
-  const adaylar = bulunan.filter((k) => !basliklar.has(sadelestir(k.baslik)));
+  const yoksayilan = new Set((adayDosya.yoksayilanlar || []).map(sadelestir));
+  const adaylar = bulunan.filter((k) => !basliklar.has(sadelestir(k.baslik)) && !yoksayilan.has(sadelestir(k.baslik)));
   adayDosya.adaylar = adaylar;
   console.log('aday sayisi: ' + adaylar.length);
   adaylar.forEach((k) => console.log('  aday: ' + k.yil + ' - ' + k.baslik));
@@ -150,13 +96,7 @@ adayDosya.guncellendi = bugun;
 await yaz('data/guncel.json', JSON.stringify(guncel, null, 2) + '\n');
 await yaz('data/aday.json', JSON.stringify(adayDosya, null, 2) + '\n');
 
-let html = await oku('index.html');
-
-html = blokDegistir(html, 'YAYINLAR',
-  grup('Makaleler', yayinlar.makaleler) + '\n\n' + grup('Kitap bölümleri', yayinlar.bolumler));
-
-html = blokDegistir(html, 'GUNCEL', bantHtml(guncel.kitap));
-
+const html = sayfa.sayfayiUret(await oku('index.html'), { site, yayinlar, guncel });
 await yaz('index.html', html);
 
 console.log('bitti - kitap: ' + (guncel.kitap || '-') + ' - aday: ' + (adayDosya.adaylar || []).length);
