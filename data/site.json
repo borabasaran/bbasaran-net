@@ -96,9 +96,9 @@
         "baslik": "DaF Konuşma Asistanı",
         "metin": "B2 düzeyinde Almanca konuşma pratiği için büyük dil modeli destekli asistan. Yerel modellerle çalışan konuşma ortamı.",
         "etiket": "Geliştirme",
-        "renk": "sari",
-        "baglanti": "",
-        "baglantiMetni": ""
+        "renk": "yesil",
+        "baglanti": "https://daf-asistan.bbasaran.net",
+        "baglantiMetni": "Asistanı aç"
       },
       {
         "baslik": "Okunabilirlik Derlemi",
