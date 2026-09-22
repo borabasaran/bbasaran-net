@@ -177,15 +177,15 @@ main{max-width:980px;margin:0 auto;padding:22px 20px 80px}
     k.className = 'mesaj ' + (tur || '');
     k.appendChild(document.createTextNode(m));
     if (eylem) k.appendChild(el('button', { class: 'btn kucuk', type: 'button', text: eylem[0], onclick: eylem[1] }));
-    if (tur === 'iyi') setTimeout(function () { if (k.textContent.indexOf(m) === 0) mesaj(''); }, 6000);
   }
 
+  var sonKayit = '';
   function kirliMi() { return veri && JSON.stringify(veri) !== temel; }
   function degisti() {
     var kirli = kirliMi();
     $('kaydetBtn').disabled = !kirli;
     var d = $('durum');
-    d.textContent = kirli ? 'Kaydedilmemiş değişiklik var' : 'Güncel';
+    d.textContent = kirli ? 'Kaydedilmemiş değişiklik var' : (sonKayit ? 'Kaydedildi · ' + sonKayit : 'Güncel');
     d.className = 'durum' + (kirli ? ' kirli' : '');
   }
 
@@ -443,6 +443,7 @@ main{max-width:980px;margin:0 auto;padding:22px 20px 80px}
 
   /* ---------- yükleme, kaydetme, önizleme ---------- */
   function yukle() {
+    sonKayit = '';
     mesaj('Yükleniyor…');
     return post({ eylem: 'oku' }).then(function (d) {
       veri = coz(d.veri);
@@ -466,8 +467,9 @@ main{max-width:980px;margin:0 auto;padding:22px 20px 80px}
     post({ eylem: 'kaydet', surum: surum, veri: temizVeri() }).then(function (d) {
       surum = d.surum;
       temel = gonderilen;
+      if (d.degisiklik) sonKayit = new Date().toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
       degisti();
-      mesaj(d.degisiklik ? 'Kaydedildi. Site yaklaşık bir dakika içinde güncellenir.' : 'Değişiklik yoktu, bir şey yazılmadı.', 'iyi');
+      mesaj(d.degisiklik ? 'Kaydedildi. Site yaklaşık bir dakika içinde güncellenir; sonra sayfayı yenileyerek görebilirsiniz.' : 'Değişiklik yoktu, bir şey yazılmadı.', 'iyi');
     }).catch(function (e) {
       if (e.status === 401) return cikis('Oturum geçersiz, yeniden giriş yapın.');
       if (e.status === 409) return mesaj(e.message, 'kotu', ['Yeniden yükle', function () { if (!kirliMi() || confirm('Kaydedilmemiş değişiklikleriniz kaybolacak. Yeniden yüklensin mi?')) yukle(); }]);
