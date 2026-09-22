@@ -265,7 +265,7 @@ main{max-width:980px;margin:0 auto;padding:22px 20px 80px}
         yeni: function () { return { baslik: '', satirlar: [''] }; },
         ciz: function (b, ic, ad) {
           ic.appendChild(alan('Başlık', b, 'baslik', { degisince: ad }));
-          ic.appendChild(satirAlani('Satırlar', b, 'satirlar', 'Her satır ayrı bir ifade. İlk satır önce görünür, diğerleri kapakta sırayla döner.'));
+          ic.appendChild(satirAlani('Satırlar', b, 'satirlar', 'Her satır ayrı bir ifade. İlk satır önce görünür, diğerleri kapakta sırayla döner. Bağlantı için: [Görünecek yazı](https://adres)'));
         }
       })], 'Kapaktaki dört küçük bilgi kutusu.'));
     },
@@ -413,7 +413,7 @@ main{max-width:980px;margin:0 auto;padding:22px 20px 80px}
         ad: function (b) { return b.baslik || 'Başlıksız'; }, ekle: 'Bilgi ekle',
         yeni: function () { return { baslik: '', deger: '' }; },
         ciz: function (b, ic, ad) {
-          ic.appendChild(el('div', { class: 'iki' }, [alan('Başlık', b, 'baslik', { degisince: ad }), alan('Değer', b, 'deger')]));
+          ic.appendChild(el('div', { class: 'iki' }, [alan('Başlık', b, 'baslik', { degisince: ad }), alan('Değer', b, 'deger', { ipucu: 'Bağlantı için: [Görünecek yazı](https://adres)' })]));
         }
       })]));
     }
