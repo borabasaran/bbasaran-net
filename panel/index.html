@@ -264,10 +264,13 @@ main{max-width:980px;margin:0 auto;padding:22px 20px 80px}
         ad: function (b) { return b.baslik || 'Başlıksız'; }, ekle: 'Bilgi ekle', en: 6,
         yeni: function () { return { baslik: '', satirlar: [''] }; },
         ciz: function (b, ic, ad) {
-          ic.appendChild(alan('Başlık', b, 'baslik', { degisince: ad }));
-          ic.appendChild(satirAlani('Satırlar', b, 'satirlar', 'Her satır ayrı bir ifade. İlk satır önce görünür, diğerleri kapakta sırayla döner. Bağlantı için: [Görünecek yazı](https://adres)'));
+          ic.appendChild(el('div', { class: 'iki' }, [
+            alan('Başlık', b, 'baslik', { degisince: ad }),
+            alan('Görünüm', b, 'gorunum', { secenekler: [['', 'Sırayla dönsün'], ['liste', 'Alt alta listelensin']] })
+          ]));
+          ic.appendChild(satirAlani('Satırlar', b, 'satirlar', 'Her satır ayrı bir ifade. Sırayla dönen kutuda ilk satır önce görünür, diğerleri sırayla gelir; listelenen kutuda hepsi alt alta görünür. Bağlantı için: [Görünecek yazı](https://adres)'));
         }
-      })], 'Kapaktaki dört küçük bilgi kutusu.'));
+      })], 'Kapaktaki küçük bilgi kutuları (en fazla 6).'));
     },
     hakkinda: function (k) {
       var s = veri.site.hakkinda;
