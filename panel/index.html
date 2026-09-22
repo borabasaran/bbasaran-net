@@ -260,6 +260,20 @@ main{max-width:980px;margin:0 auto;padding:22px 20px 80px}
         alan('Unvan', s, 'unvan', { ipucu: 'Kalın yazılan ilk satır.' }),
         alan('Tanıtım', s, 'tanitim', { cok: true, satir: 4 })
       ]));
+      k.appendChild(kart('Kapaktaki araçlar', [listeDuzenle(s.araclar, {
+        ad: function (x) { return x.etiket || 'Adsız araç'; }, ekle: 'Araç ekle', en: 3,
+        yeni: function () { return { etiket: '', baslik: '', baglanti: '', dugme: '' }; },
+        ciz: function (x, ic, ad) {
+          ic.appendChild(el('div', { class: 'iki' }, [
+            alan('Üst etiket', x, 'etiket', { degisince: ad, yer: 'Örn. ArSi: Araştırma Sihirbazı' }),
+            alan('Başlık', x, 'baslik', { yer: 'Örn. Araştırma konusu geliştirme · 11 aşama' })
+          ]));
+          ic.appendChild(el('div', { class: 'iki' }, [
+            alan('Bağlantı', x, 'baglanti', { yer: 'https://...' }),
+            alan('Düğme yazısı', x, 'dugme', { yer: 'Örn. Sihirbazı aç' })
+          ]));
+        }
+      })], 'Kapağın altındaki bağlantı kutuları (en fazla 3). Okunabilirlik ölçer sabittir, listede görünmez. Bağlantısı boş bırakılan kutu kapakta gösterilmez.'));
       k.appendChild(kart('Bilgi satırları', [listeDuzenle(s.bilgiler, {
         ad: function (b) { return b.baslik || 'Başlıksız'; }, ekle: 'Bilgi ekle', en: 6,
         yeni: function () { return { baslik: '', satirlar: [''] }; },
