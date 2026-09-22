@@ -21,7 +21,7 @@ test('index.html verilerle birebir uyumlu (yeniden üretim hiçbir şeyi değiş
 
 test('tüm içerik blok işaretleri sayfada var', () => {
   const html = oku('index.html');
-  for (const ad of ['KAPAK', 'HAKKINDA', 'ARASTIRMA', 'CALISMALAR', 'YONTEM', 'YAYINLAR', 'YAYINNOTU', 'GUNCEL', 'ILETISIM', 'KONULAR', 'BILGILER']) {
+  for (const ad of ['KAPAK', 'ARACLAR', 'HAKKINDA', 'ARASTIRMA', 'CALISMALAR', 'YONTEM', 'YAYINLAR', 'YAYINNOTU', 'GUNCEL', 'ILETISIM', 'KONULAR', 'BILGILER']) {
     assert.ok(html.includes('<!-- ' + ad + ':BASLA -->') && html.includes('<!-- ' + ad + ':BITTI -->'), ad);
   }
 });
@@ -34,7 +34,7 @@ test('metinlerdeki HTML kaçırılır, var olan varlıklar korunur', () => {
   assert.doesNotMatch(html, /<script>alert/);
 });
 
-test('kart eklenince numara ve sayaç güncellenir, bağlantı ve etiket rengi işlenir', () => {
+test('kart eklenince numara ve sayac ügüncellenir, bağlantı ve etiket rengi işlenir', () => {
   const v = veri();
   v.site.calismalar.kartlar.push({ baslik: 'Yeni', metin: 'Deneme', etiket: 'Kullanımda', renk: 'yesil', baglanti: 'https://daf-asistan.bbasaran.net', baglantiMetni: 'Asistanı aç' });
   const html = sayfa.sayfayiUret(oku('index.html'), v);
@@ -81,4 +81,16 @@ test('görünümü liste olan kutuda bütün satırlar alt alta görünür ve d�
 
 test('eksik işaret açık bir hata verir', () => {
   assert.throws(() => sayfa.sayfayiUret('<html></html>', veri()), /İşaret bulunamadı/);
+});
+
+test('kapak araçları verilerden üretilir; bağlantısı olmayan kutu çıkmaz', () => {
+  const v = veri();
+  v.site.kapak.araclar = [
+    { etiket: 'ArSi', baslik: '11 aşama', baglanti: 'https://arsi.bbasaran.net', dugme: 'Sihirbazı aç' },
+    { etiket: 'Taslak', baslik: 'Henüz yok', baglanti: '', dugme: '' }
+  ];
+  const html = sayfa.sayfayiUret(oku('index.html'), v);
+  assert.match(html, /<a class="probe arac-link" href="https:\/\/arsi\.bbasaran\.net">\n        <p class="probe-top">ArSi<\/p>/);
+  assert.match(html, /<span class="arac-git">Sihirbazı aç <span class="ok" aria-hidden="true">→<\/span><\/span>/);
+  assert.doesNotMatch(html, /Henüz yok/);
 });
