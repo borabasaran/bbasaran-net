@@ -77,6 +77,25 @@ main{max-width:980px;margin:0 auto;padding:22px 20px 80px}
 .ekle{width:100%;border:1px dashed var(--line);background:none;padding:9px;border-radius:5px;cursor:pointer;color:var(--muted);font-weight:600}
 .ekle:hover{border-color:var(--accent);color:var(--accent)}
 
+/* istatistik */
+.sayilar{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;margin-bottom:18px}
+.sayi{border:1px solid var(--line);border-radius:5px;padding:11px 13px;background:#FCFBF9}
+.sayi b{display:block;font-family:var(--serif);font-size:25px;line-height:1.1}
+.sayi span{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.cubuklar{display:flex;align-items:flex-end;gap:2px;height:140px;border-bottom:1px solid var(--line);padding-top:6px}
+.cubuk{flex:1;min-width:2px;background:color-mix(in srgb,var(--accent) 65%,#fff);border-radius:2px 2px 0 0}
+.cubuk:hover{background:var(--accent)}
+.cubuk.bos{background:var(--line)}
+.eksen{display:flex;justify-content:space-between;font-family:var(--mono);font-size:10px;color:var(--muted);margin-top:6px}
+.siralama{display:grid;gap:6px;margin-top:4px}
+.satir{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;font-size:14px;border-bottom:1px solid var(--line);padding-bottom:5px}
+.satir span:last-child{font-family:var(--mono);color:var(--muted)}
+.satir .ad{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bos-veri{color:var(--muted);font-size:14px}
+.sure{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.sure button{border:1px solid var(--line);background:var(--surface);border-radius:4px;padding:5px 11px;cursor:pointer;font-size:13.5px}
+.sure button.aktif{border-color:var(--accent);color:var(--accent);font-weight:600}
+
 /* adaylar */
 .aday{border:1px solid color-mix(in srgb,var(--ochre) 45%,transparent);background:color-mix(in srgb,var(--ochre) 7%,#fff);border-radius:5px;padding:11px 13px;margin-bottom:9px}
 .aday p{margin:0 0 8px}
@@ -127,7 +146,8 @@ main{max-width:980px;margin:0 auto;padding:22px 20px 80px}
 
   var SEKMELER = [
     ['kapak', 'Kapak'], ['hakkinda', 'Hakkımda'], ['arastirma', 'Araştırma'], ['calismalar', 'Çalışmalar'],
-    ['yontem', 'Yöntem'], ['yayinlar', 'Yayınlar'], ['guncel', 'Güncel çağrı'], ['iletisim', 'İletişim']
+    ['yontem', 'Yöntem'], ['yayinlar', 'Yayınlar'], ['guncel', 'Güncel çağrı'], ['iletisim', 'İletişim'],
+    ['istatistik', 'İstatistik']
   ];
   var DIZINLER = ['', 'SSCI', 'SCI-E', 'ESCI', 'AHCI', 'Scopus', 'TR Dizin'];
 
@@ -433,8 +453,86 @@ main{max-width:980px;margin:0 auto;padding:22px 20px 80px}
           ic.appendChild(el('div', { class: 'iki' }, [alan('Başlık', b, 'baslik', { degisince: ad }), alan('Değer', b, 'deger', { ipucu: 'Bağlantı için: [Görünecek yazı](https://adres)' })]));
         }
       })]));
+    },
+    istatistik: function (k) {
+      istCiz(k);
+      if (!istOzet && !istYukleniyor) istYukle();
     }
   };
+
+  /* ---------- istatistik ---------- */
+  var istGun = 30, istOzet = null, istYukleniyor = false;
+  var BOLUM_ADI = { hakkinda: 'Hakkımda', arastirma: 'Araştırma', calismalar: 'Çalışmalar', yontem: 'Yöntem', yayinlar: 'Yayınlar', iletisim: 'İletişim' };
+
+  function istListe(baslik, kayitlar, adCevir) {
+    var liste = (kayitlar || []).map(function (x) {
+      return el('div', { class: 'satir' }, [
+        el('span', { class: 'ad', text: adCevir ? adCevir(x.ad) : x.ad }),
+        el('span', { text: String(x.n) })
+      ]);
+    });
+    return kart(baslik, [liste.length ? el('div', { class: 'siralama' }, liste) : el('p', { class: 'bos-veri', text: 'Henüz kayıt yok.' })]);
+  }
+
+  function istCiz(k) {
+    var sure = el('div', { class: 'sure' }, [7, 30, 90, 365].map(function (g) {
+      var b = el('button', { type: 'button', text: g === 365 ? 'Son 1 yıl' : ('Son ' + g + ' gün'), onclick: function () { istGun = g; istOzet = null; sekmeCiz(); istYukle(); } });
+      if (g === istGun) b.className = 'aktif';
+      return b;
+    }));
+    k.appendChild(sure);
+
+    if (!istOzet) {
+      k.appendChild(kart('İstatistik', [el('p', { class: 'bos-veri', text: istYukleniyor ? 'Yükleniyor…' : 'Veri bekleniyor.' })]));
+      return;
+    }
+
+    var t = istOzet.toplam || {}, tz = istOzet.tum_zaman || {};
+    var sayilar = [
+      ['Ziyaret', t.ziyaret], ['Oturum', t.oturum], ['Bölüm açılışı', t.bolum],
+      ['Tıklama', t.tiklama], ['Ölçer kullanımı', t.olcer], ['Toplam ziyaret', tz.ziyaret]
+    ].map(function (x) {
+      return el('div', { class: 'sayi' }, [el('b', { text: String(x[1] == null ? 0 : x[1]) }), el('span', { text: x[0] })]);
+    });
+
+    var gunluk = istOzet.gunluk || [];
+    var enYuksek = gunluk.reduce(function (m, g) { return Math.max(m, g.ziyaret); }, 0) || 1;
+    var cubuklar = el('div', { class: 'cubuklar' }, gunluk.map(function (g) {
+      var y = Math.round((g.ziyaret / enYuksek) * 100);
+      var c = el('div', { class: 'cubuk' + (g.ziyaret ? '' : ' bos'), title: g.gun + ': ' + g.ziyaret + ' ziyaret, ' + g.oturum + ' oturum' });
+      c.style.height = Math.max(y, 2) + '%';
+      return c;
+    }));
+    var eksen = el('div', { class: 'eksen' }, [
+      el('span', { text: gunluk.length ? gunluk[0].gun : '' }),
+      el('span', { text: gunluk.length ? gunluk[gunluk.length - 1].gun : '' })
+    ]);
+
+    k.appendChild(kart('Özet', [el('div', { class: 'sayilar' }, sayilar), cubuklar, eksen],
+      'Ziyaret: sayfanın her açılışı. Oturum: aynı sekmede yapılan gezinmelerin tamamı tek sayılır. Sütunların üzerine gelince günün sayısı görünür.'));
+
+    k.appendChild(istListe('Açılan bölümler', istOzet.bolumler, function (ad) { return BOLUM_ADI[ad] || ad; }));
+    k.appendChild(istListe('Tıklamalar', istOzet.tiklamalar));
+    k.appendChild(istListe('Nereden gelindi', istOzet.kaynaklar));
+    k.appendChild(istListe('Ülkeler', istOzet.ulkeler));
+    k.appendChild(istListe('Cihazlar', istOzet.cihazlar, function (ad) {
+      return { masaustu: 'Masaüstü', telefon: 'Telefon', tablet: 'Tablet' }[ad] || ad;
+    }));
+    k.appendChild(kart('Gizlilik', [el('p', { class: 'aciklama', text: 'Çerez, IP adresi ve kalıcı ziyaretçi kimliği tutulmaz. Oturum numarası sekme kapanınca silinir. Tarayıcısında izlenmeme tercihi açık olan ziyaretçiler hiç sayılmaz.' })]));
+  }
+
+  function istYukle() {
+    istYukleniyor = true;
+    post({ eylem: 'istatistik', gun: istGun }).then(function (d) {
+      istYukleniyor = false;
+      istOzet = d.ozet;
+      if (etkin === 'istatistik') sekmeCiz();
+    }).catch(function (e) {
+      istYukleniyor = false;
+      if (e.status === 401) return cikis('Oturum geçersiz, yeniden giriş yapın.');
+      mesaj('İstatistik okunamadı: ' + e.message, 'kotu', ['Yeniden dene', istYukle]);
+    });
+  }
 
   function sekmeRozeti() {
     var n = veri && veri.aday && veri.aday.adaylar ? veri.aday.adaylar.length : 0;
@@ -519,6 +617,7 @@ main{max-width:980px;margin:0 auto;padding:22px 20px 80px}
 
   function cikis(neden) {
     sifre = ''; veri = null; temel = ''; surum = '';
+    istOzet = null; istYukleniyor = false;
     $('uygulama').classList.add('gizli');
     $('giris').classList.remove('gizli');
     $('sifre').value = '';
