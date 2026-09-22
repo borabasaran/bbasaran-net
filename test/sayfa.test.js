@@ -51,6 +51,23 @@ test('yöntemde [[terim]] vurgulanır, kapakta tek satırlık bilgi dönmez', ()
   assert.equal((html.match(/data-akis=/g) || []).length, 3);
 });
 
+test('[yazı](adres) biçimi kapakta ve iletişim bilgilerinde bağlantı olur, güvensiz adres bağlantı olmaz', () => {
+  const v = veri();
+  const bag = '[Almanca Öğretmenliği Programı](https://abp.anadolu.edu.tr/tr/program/dersler/163/13)';
+  v.site.kapak.bilgiler[0].satirlar = [bag, 'İkinci & satır'];
+  v.site.iletisim.bilgiler[0].deger = 'Bkz. ' + bag;
+  const html = sayfa.sayfayiUret(oku('index.html'), v);
+  const a = '<a href="https://abp.anadolu.edu.tr/tr/program/dersler/163/13" target="_blank" rel="noopener">Almanca Öğretmenliği Programı</a>';
+  assert.ok(html.includes('<p class="fact-v" data-akis="'), 'dönen satır korunur');
+  assert.ok(html.includes('">' + a + '</p>'), 'ilk satır bağlantı');
+  assert.ok(html.includes('<dd>Bkz. ' + a + '</dd>'), 'iletişim bilgisi bağlantı');
+  const akis = JSON.parse(html.match(/data-akis="([^"]*)"/)[1].replace(/&quot;/g, '"').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&'));
+  assert.deepEqual(akis, [a, 'İkinci &amp; satır'], 'dönen satırlar hazır HTML olarak saklanır');
+  assert.equal(sayfa.baglantili('[x](javascript:alert(1))'), '[x](javascript:alert(1))');
+  assert.equal(sayfa.baglantili('[x](https://a.b/"onmouseover=1)'), '[x](https://a.b/"onmouseover=1)');
+  assert.equal(sayfa.baglantili('<b>[x](https://a.b/?a=1&b=2)</b>'), '&lt;b&gt;<a href="https://a.b/?a=1&amp;b=2" target="_blank" rel="noopener">x</a>&lt;/b&gt;');
+});
+
 test('eksik işaret açık bir hata verir', () => {
   assert.throws(() => sayfa.sayfayiUret('<html></html>', veri()), /İşaret bulunamadı/);
 });

@@ -137,7 +137,7 @@ function dogrula(v) {
         nesne(b, 'Kapak bilgisi');
         return {
           baslik: metin(b.baslik, 'Kapak bilgisi ' + (n + 1) + ' başlığı', 80),
-          satirlar: liste(b.satirlar, 'Kapak bilgisi satırları', 10).map(function (x) { return metin(x, 'Kapak satırı', 200); })
+          satirlar: liste(b.satirlar, 'Kapak bilgisi satırları', 10).map(function (x) { return metin(x, 'Kapak satırı', 400); })
         };
       })
     },
