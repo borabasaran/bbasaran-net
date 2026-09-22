@@ -7,7 +7,7 @@ Doç. Dr. Bora Başaran'ın kişisel akademik sitesi.
 Statik site, derleme adımı yok:
 
 - `index.html` — sayfanın tamamı; içerik blokları `<!-- AD:BASLA -->` ile `<!-- AD:BITTI -->` işaretleri arasındadır
-- `data/site.json` — kapak, hakkımda, araştırma, çalışmalar, yöntem, iletişim metinleri
+- `data/site.json` — kapak, kapaktaki araç kutuları, hakkımda, araştırma, çalışmalar, yöntem, iletişim metinleri
 - `data/yayinlar.json` — makaleler ve kitap bölümleri
 - `data/guncel.json` — güncel kitap çağrısı bandı
 - `data/aday.json` — OpenAlex'te bulunan, henüz listede olmayan yayın adayları (siteye yansımaz)
@@ -25,6 +25,8 @@ Metinler `data/` altındaki JSON dosyalarındadır. İşaretli blokların içini
 node scripts/uret.mjs   # index.html'i verilerden yeniden üretir
 npm test                # index.html ile verilerin uyumunu denetler
 ```
+
+Kapaktaki araç kutuları (`kapak.araclar`) en fazla üçtür; her kutunun üst etiketi, başlığı, bağlantısı ve düğme yazısı vardır. Bağlantısı boş olan kutu sayfaya yazılmaz. Okunabilirlik ölçer sayfada sabittir, veriden gelmez.
 
 Yöntem maddelerinde `[[terim]]` yazımı vurgulu terim olarak gösterilir. Kapaktaki bilgi satırlarında birden fazla satır varsa kapakta sırayla döner. Çalışma kartına `baglanti` eklenirse kartta bir bağlantı görünür; `renk` alanı `yesil` ya da `sari` olabilir.
 

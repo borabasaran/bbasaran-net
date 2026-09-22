@@ -133,6 +133,17 @@ function dogrula(v) {
     kapak: {
       unvan: metin(k.unvan, 'Unvan', 200),
       tanitim: metin(k.tanitim, 'Tanıtım', 1200),
+      araclar: liste(k.araclar || [], 'Kapak araçları', 4).map(function (x, n) {
+        nesne(x, 'Kapak aracı');
+        var bag = metin(x.baglanti, 'Araç bağlantısı', 500).trim();
+        if (!baglantiUygun(bag)) throw new Error('Araç ' + (n + 1) + ': bağlantı https:// ile başlamalı.');
+        return {
+          etiket: metin(x.etiket, 'Araç etiketi', 60),
+          baslik: metin(x.baslik, 'Araç başlığı', 120),
+          baglanti: bag,
+          dugme: metin(x.dugme, 'Araç düğmesi', 40)
+        };
+      }),
       bilgiler: liste(k.bilgiler, 'Kapak bilgileri', 8).map(function (b, n) {
         nesne(b, 'Kapak bilgisi');
         var bilgi = {
