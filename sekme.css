@@ -21,5 +21,6 @@
 /* Bilgi satırlarında [yazı](adres) ile verilen bağlantılar */
 .fact-v a{color:inherit;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px;text-decoration-color:rgba(231,240,236,.45)}
 .fact-v a:hover{color:var(--ochre);text-decoration-color:currentColor}
+.fact-liste{line-height:1.75}
 .contact dd a{color:inherit;text-decoration:underline;text-underline-offset:3px}
 .contact dd a:hover{color:var(--accent)}
