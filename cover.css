@@ -200,3 +200,32 @@ html.katlanir .cover.gizli{display:none}
 @media (prefers-reduced-motion:reduce){
   .curtain{display:none}
 }
+
+/* ===== KAPAKTAKİ ARAÇLAR ===== */
+.araclar{display:grid;gap:14px;max-width:1000px}
+@media (min-width:820px){.araclar{grid-template-columns:minmax(0,1.2fr) minmax(0,1fr)}}
+.araclar .probe{max-width:none}
+.arac-link{
+  text-decoration:none;color:inherit;align-content:start;
+  transition:border-color .3s, background .3s, transform .45s var(--ease);
+}
+.arac-link:hover{border-color:rgba(214,164,74,.65);background:rgba(6,32,34,.5);transform:translateY(-2px)}
+.arac-link:focus-visible{outline:2px solid var(--ochre);outline-offset:3px}
+.arac-baslik{
+  font-size:16px;color:var(--cover-ink);
+  padding:7px 0;border-bottom:1px solid rgba(232,240,237,.28);
+}
+.arac-metin{font-size:13.5px;line-height:1.5;color:#DCE9E4}
+.arac-git{
+  display:inline-flex;align-items:center;gap:8px;
+  font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#fff;
+}
+.arac-git .ok{color:var(--ochre);transition:transform .35s var(--ease)}
+.arac-link:hover .arac-git .ok{transform:translateX(4px)}
+
+/* ===== ANASAYFA BAĞLANTISI VE KAPAĞA DÖNÜŞ ===== */
+nav.bar a.ana{color:var(--ink)}
+nav.bar a.ana::before{content:"\2190";margin-right:7px;color:var(--accent)}
+html.katlanir .cover.donus{
+  transition:transform 1s cubic-bezier(.5,0,.2,1), opacity .35s ease;
+}

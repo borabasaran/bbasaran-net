@@ -12,7 +12,7 @@
   var cover = document.getElementById('cover');
 
   var sayfalar = Array.prototype.slice.call(document.querySelectorAll('.sayfa'));
-  var baglar = Array.prototype.slice.call(document.querySelectorAll('nav.bar a'));
+  var baglar = Array.prototype.slice.call(document.querySelectorAll('nav.bar a:not(.ana)'));
   var kitapModu = sayfalar.length > 1 && !azHareket;
   var etkinSayfa = 0;
   var gecisKilidi = false;
@@ -58,6 +58,8 @@
   /* ==================== KATLANAN KAPAK ==================== */
   var katlanir = !!cover && !azHareket;
   var acik = false;
+  var gizleSaati = null;
+  var kapakDonusleri = [];
 
   if(katlanir){
     kok.classList.add('katlanir');
@@ -73,11 +75,37 @@
     kontroluGuncelle();
     gecisKilidi = true;
     setTimeout(function(){ gecisKilidi = false; }, 900);
-    setTimeout(function(){ cover.classList.add('gizli'); }, 1250);
+    gizleSaati = setTimeout(function(){ if(acik) cover.classList.add('gizli'); }, 1250);
   }
 
   var cue = document.getElementById('cue');
   if(cue) cue.addEventListener('click', kapagiAc);
+
+  /* Anasayfa: kapağı geri kapatır, kapak yeniden açılabilir */
+  function kapagiKapat(){
+    if(!katlanir || !acik) return;
+    acik = false;
+    clearTimeout(gizleSaati);
+    cover.classList.add('donus');
+    cover.classList.remove('gizli');
+    void cover.offsetWidth;
+    cover.classList.remove('acildi');
+    document.body.classList.add('kapali');
+    if(kontrol) kontrol.hidden = true;
+    try { history.replaceState(null, '', location.pathname + location.search); } catch(e){}
+    kapakDonusleri.forEach(function(f){ f(); });
+    gecisKilidi = true;
+    setTimeout(function(){ gecisKilidi = false; cover.classList.remove('donus'); }, 1100);
+  }
+
+  var anaBag = document.querySelector('nav.bar a.ana');
+  if(anaBag){
+    anaBag.addEventListener('click', function(e){
+      if(!katlanir) return;
+      e.preventDefault();
+      kapagiKapat();
+    });
+  }
 
   /* ==================== KAPAKTA AKAN BILGI SATIRLARI ==================== */
   if(cover && !azHareket){
@@ -254,6 +282,7 @@
       if(et && /^(INPUT|TEXTAREA|SELECT)$/.test(et.tagName)) return;
 
       if(!acik && katlanir){
+        if(et && /^(A|BUTTON)$/.test(et.tagName) && (e.key === 'Enter' || e.key === ' ')) return;
         if(['ArrowDown','ArrowRight','PageDown',' ','Enter'].indexOf(e.key) >= 0) kapagiAc();
         return;
       }
@@ -327,7 +356,7 @@
     }
 
     function ciz(){
-      if(acik){ return; }
+      if(acik){ cizimSuruyor = false; return; }
       ctx.clearRect(0, 0, G, Y);
       for(var i = 0; i < zerreler.length; i++){
         var z = zerreler[i];
@@ -357,8 +386,15 @@
       requestAnimationFrame(ciz);
     }
 
+    var cizimSuruyor = true;
     kur();
     requestAnimationFrame(ciz);
+    kapakDonusleri.push(function(){
+      if(cizimSuruyor) return;
+      cizimSuruyor = true;
+      kur();
+      requestAnimationFrame(ciz);
+    });
 
     window.addEventListener('resize', function(){ if(!acik) kur(); }, {passive:true});
     window.addEventListener('pointermove', function(e){
