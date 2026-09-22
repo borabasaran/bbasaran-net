@@ -38,6 +38,7 @@ header{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--paper
 .btn.ana{background:var(--accent);border-color:var(--accent);color:#fff}
 .btn.ana:hover:not(:disabled){opacity:.9;color:#fff}
 .btn:disabled{opacity:.45;cursor:default}
+.btn.ana:disabled{opacity:1;background:var(--surface);color:var(--muted);border-color:var(--line)}
 .btn.kucuk{padding:4px 9px;font-size:12.5px;font-weight:600}
 .btn.sil{color:var(--red)}
 .btn.sil:hover:not(:disabled){border-color:var(--red);color:var(--red)}
@@ -183,7 +184,9 @@ main{max-width:980px;margin:0 auto;padding:22px 20px 80px}
   function kirliMi() { return veri && JSON.stringify(veri) !== temel; }
   function degisti() {
     var kirli = kirliMi();
-    $('kaydetBtn').disabled = !kirli;
+    var btn = $('kaydetBtn');
+    btn.disabled = !kirli;
+    btn.textContent = kirli ? 'Kaydet & Yayınla' : (sonKayit ? 'Kaydedildi ✓' : 'Değişiklik yok');
     var d = $('durum');
     d.textContent = kirli ? 'Kaydedilmemiş değişiklik var' : (sonKayit ? 'Kaydedildi · ' + sonKayit : 'Güncel');
     d.className = 'durum' + (kirli ? ' kirli' : '');
@@ -462,6 +465,7 @@ main{max-width:980px;margin:0 auto;padding:22px 20px 80px}
   function kaydet() {
     var btn = $('kaydetBtn');
     btn.disabled = true;
+    btn.textContent = 'Kaydediliyor…';
     mesaj('Kaydediliyor…');
     var gonderilen = JSON.stringify(veri);
     post({ eylem: 'kaydet', surum: surum, veri: temizVeri() }).then(function (d) {
