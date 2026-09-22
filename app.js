@@ -109,31 +109,12 @@
 
   /* ==================== KAPAKTA AKAN BILGI SATIRLARI ==================== */
   if(cover && !azHareket){
-    var akislar = [
-      [
-        'Almancanın yabancı dil olarak öğretimi',
-        'Öğretmen eğitimi ve kapsayıcı sınıflar',
-        'Ders kitabı çözümlemesi ve materyal tasarımı'
-      ],
-      [
-        'Sözcük sıklığı, derlem, ders materyali tasarımı',
-        'Okunabilirlik ve dil düzeyine uygunluk',
-        'Söz varlığı listeleri ve kapsam hesapları'
-      ],
-      [
-        'Dil eğitiminde teknoloji ve büyük dil modelleri',
-        'Yazılı anlatımın otomatik puanlanması',
-        'Ölçme geçerliği ve puanlayıcı tutarlılığı'
-      ],
-      [
-        'Türkiye ve Almanya eğitim sistemleri',
-        'Eğitim politikaları ve öğretmen yetiştirme',
-        'İki ülkede ders kitabı gelenekleri'
-      ]
-    ];
-
-    var satirlar = Array.prototype.slice.call(cover.querySelectorAll('.fact-v'));
-    if(satirlar.length === akislar.length){
+    /* Dönen satırlar sayfadaki data-akis niteliğinden okunur (data/site.json) */
+    var satirlar = Array.prototype.slice.call(cover.querySelectorAll('.fact-v[data-akis]'));
+    var akislar = satirlar.map(function(el){
+      try { return JSON.parse(el.getAttribute('data-akis')) || []; } catch(e){ return []; }
+    });
+    if(satirlar.length){
       var sira = 0;
       var adimlar = satirlar.map(function(){ return 0; });
 

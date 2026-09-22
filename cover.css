@@ -229,3 +229,13 @@ nav.bar a.ana::before{content:"\2190";margin-right:7px;color:var(--accent)}
 html.katlanir .cover.donus{
   transition:transform 1s cubic-bezier(.5,0,.2,1), opacity .35s ease;
 }
+
+/* ===== ÇALIŞMA KARTI BAĞLANTISI ===== */
+.card-git{
+  align-self:flex-start;
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--accent);text-decoration:none;
+  display:inline-flex;gap:6px;align-items:center;
+}
+.card-git span{transition:transform .35s var(--ease)}
+.card-git:hover span{transform:translateX(4px)}
