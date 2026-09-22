@@ -199,6 +199,11 @@
   function ileri(){ sayfaGoster(etkinSayfa + 1, 'ileri'); }
   function geri(){ sayfaGoster(etkinSayfa - 1, 'geri'); }
 
+  function kapakKayabilir(){
+    var g = cover && cover.querySelector('.cover-body');
+    return !!g && g.scrollTop + g.clientHeight < g.scrollHeight - 3;
+  }
+
   function kenardaMi(){
     var s = sayfalar[etkinSayfa];
     return {
@@ -223,7 +228,8 @@
       if(gecisKilidi) return;
 
       if(!acik && katlanir){
-        if(e.deltaY > 6) kapagiAc();
+        /* kapak içeriği taşıyorsa önce içerik kayar, sonunda kapak açılır */
+        if(e.deltaY > 6 && !kapakKayabilir()) kapagiAc();
         return;
       }
       if(!acik) return;
@@ -235,6 +241,10 @@
       } else if(e.deltaY < 0 && k.ust && etkinSayfa > 0){
         e.preventDefault();
         geri();
+      } else if(e.deltaY < -6 && k.ust && etkinSayfa === 0 && katlanir){
+        /* ilk sayfanın tepesinde yukarı kaydırınca kapak geri kapanır */
+        e.preventDefault();
+        kapagiKapat();
       }
     }, {passive:false});
 
@@ -245,7 +255,7 @@
 
     window.addEventListener('touchmove', function(e){
       if(acik || baslangicY === null) return;
-      if(baslangicY - e.touches[0].clientY > 28) kapagiAc();
+      if(baslangicY - e.touches[0].clientY > 28 && !kapakKayabilir()) kapagiAc();
     }, {passive:true});
 
     window.addEventListener('touchend', function(e){
@@ -256,7 +266,8 @@
       if(Math.abs(fark) < 60) return;
       var k = kenardaMi();
       if(fark > 0 && k.alt) ileri();
-      else if(fark < 0 && k.ust) geri();
+      else if(fark < 0 && k.ust && etkinSayfa > 0) geri();
+      else if(fark < 0 && k.ust && etkinSayfa === 0 && katlanir) kapagiKapat();
     }, {passive:true});
 
     window.addEventListener('keydown', function(e){
@@ -269,7 +280,10 @@
         return;
       }
       if(e.key === 'ArrowRight' || e.key === 'PageDown'){ e.preventDefault(); ileri(); }
-      else if(e.key === 'ArrowLeft' || e.key === 'PageUp'){ e.preventDefault(); geri(); }
+      else if(e.key === 'ArrowLeft' || e.key === 'PageUp'){
+        e.preventDefault();
+        if(etkinSayfa === 0 && katlanir && kenardaMi().ust) kapagiKapat(); else geri();
+      }
     });
 
     var baslangic = 0;
