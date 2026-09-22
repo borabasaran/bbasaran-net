@@ -234,6 +234,28 @@ function dogrula(v) {
 
 function jsonMetni(x) { return JSON.stringify(x, null, 2) + '\n'; }
 
+/* ---------- istatistik ---------- */
+// Supabase'deki bb_ozet fonksiyonunu çağırır; panele yalnızca toplamlar gider.
+async function istatistik(res, b) {
+  var url = process.env.SUPABASE_URL || '';
+  var anahtar = process.env.SUPABASE_ANAHTAR || '';
+  if (!url || !anahtar) return hata(res, 500, 'Sunucuda SUPABASE_URL ve SUPABASE_ANAHTAR tanımlı değil.');
+  var gun = Math.min(Math.max(parseInt(b.gun, 10) || 30, 1), 365);
+  var r = await fetch(url.replace(/\/+$/, '') + '/rest/v1/rpc/bb_ozet', {
+    method: 'POST',
+    headers: {
+      'apikey': anahtar,
+      'Authorization': 'Bearer ' + anahtar,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ p_gun: gun }),
+    signal: AbortSignal.timeout(12000)
+  });
+  var veri = await r.json().catch(function () { return null; });
+  if (!r.ok) return hata(res, 502, 'İstatistik okunamadı: ' + ((veri && veri.message) || ('HTTP ' + r.status)));
+  return yanit(res, 200, { ok: true, ozet: veri });
+}
+
 /* ---------- işlemler ---------- */
 async function oku(res, ayar) {
   var uc = await dalUcu(ayar);
@@ -288,6 +310,7 @@ module.exports = async function handler(req, res) {
   var ayar = ayarlar();
   try {
     if (b.eylem === 'giris') return yanit(res, 200, { ok: true });
+    if (b.eylem === 'istatistik') return await istatistik(res, b);
     if (!ayar.token) return hata(res, 500, 'Sunucuda GITHUB_TOKEN tanımlı değil.');
     if (b.eylem === 'oku') return await oku(res, ayar);
     if (b.eylem === 'kaydet') return await kaydet(res, ayar, b);
