@@ -2,6 +2,20 @@
   "kapak": {
     "unvan": "Doç. Dr. · Alman Dili Eğitimi",
     "tanitim": "Almanca öğretimini sözcük sıklığı, materyal tasarımı; teknoloji ve büyük dil modelleri ekseninde ele alıyor; Türkiye ve Almanya'nın eğitim sistemlerini karşılaştırmalı bir bakışla inceliyorum.",
+    "araclar": [
+      {
+        "etiket": "DaF Konuşma Asistanı",
+        "baslik": "Almanca konuşma pratiği · B2",
+        "baglanti": "https://daf-asistan.bbasaran.net",
+        "dugme": "Asistanı aç"
+      },
+      {
+        "etiket": "ArSi: Araştırma Sihirbazı",
+        "baslik": "Araştırma konusu geliştirme · 11 aşama",
+        "baglanti": "https://arsi.bbasaran.net",
+        "dugme": "Sihirbazı aç"
+      }
+    ],
     "bilgiler": [
       {
         "baslik": "Alan",
