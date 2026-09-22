@@ -34,7 +34,7 @@ test('metinlerdeki HTML kaçırılır, var olan varlıklar korunur', () => {
   assert.doesNotMatch(html, /<script>alert/);
 });
 
-test('kart eklenince numara ve sayac ügüncellenir, bağlantı ve etiket rengi işlenir', () => {
+test('kart eklenince numara ve sayaç güncellenir, bağlantı ve etiket rengi işlenir', () => {
   const v = veri();
   v.site.calismalar.kartlar.push({ baslik: 'Yeni', metin: 'Deneme', etiket: 'Kullanımda', renk: 'yesil', baglanti: 'https://daf-asistan.bbasaran.net', baglantiMetni: 'Asistanı aç' });
   const html = sayfa.sayfayiUret(oku('index.html'), v);
