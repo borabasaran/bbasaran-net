@@ -17,3 +17,9 @@
   #sk3:checked ~ .sk-panel[data-p="3"],
   #sk4:checked ~ .sk-panel[data-p="4"]{animation:none}
 }
+
+/* Bilgi satırlarında [yazı](adres) ile verilen bağlantılar */
+.fact-v a{color:inherit;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px;text-decoration-color:rgba(231,240,236,.45)}
+.fact-v a:hover{color:var(--ochre);text-decoration-color:currentColor}
+.contact dd a{color:inherit;text-decoration:underline;text-underline-offset:3px}
+.contact dd a:hover{color:var(--accent)}
