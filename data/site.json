@@ -1,0 +1,238 @@
+{
+  "kapak": {
+    "unvan": "Doç. Dr. · Alman Dili Eğitimi",
+    "tanitim": "Almanca öğretimini sözcük sıklığı, materyal tasarımı; teknoloji ve büyük dil modelleri ekseninde ele alıyor; Türkiye ve Almanya'nın eğitim sistemlerini karşılaştırmalı bir bakışla inceliyorum.",
+    "bilgiler": [
+      {
+        "baslik": "Alan",
+        "satirlar": [
+          "Almancanın yabancı dil olarak öğretimi",
+          "Öğretmen eğitimi ve kapsayıcı sınıflar",
+          "Ders kitabı çözümlemesi ve materyal tasarımı"
+        ]
+      },
+      {
+        "baslik": "Çalışıyorum",
+        "satirlar": [
+          "Sözcük sıklığı, derlem, ders materyali tasarımı",
+          "Okunabilirlik ve dil düzeyine uygunluk",
+          "Söz varlığı listeleri ve kapsam hesapları"
+        ]
+      },
+      {
+        "baslik": "Araştırıyorum",
+        "satirlar": [
+          "Dil eğitiminde teknoloji ve büyük dil modelleri",
+          "Yazılı anlatımın otomatik puanlanması",
+          "Ölçme geçerliği ve puanlayıcı tutarlılığı"
+        ]
+      },
+      {
+        "baslik": "Karşılaştırıyorum",
+        "satirlar": [
+          "Türkiye ve Almanya eğitim sistemleri",
+          "Eğitim politikaları ve öğretmen yetiştirme",
+          "İki ülkede ders kitabı gelenekleri"
+        ]
+      }
+    ]
+  },
+  "hakkinda": {
+    "baslik": "Bir dilin nasıl öğretildiğini ölçülebilir hale getirmek",
+    "paragraflar": [
+      "Anadolu Üniversitesi Eğitim Fakültesi Alman Dili Eğitimi Bölümünde öğretim üyesiyim. Akademik çalışmalarım; Almancanın yabancı dil olarak öğretimi, sözcük sıklığı, ders materyali tasarımı, dil eğitiminde teknoloji ve büyük dil modeli uygulamaları ile Türkiye–Almanya ekseninde karşılaştırmalı eğitim araştırmalarına odaklanıyor.",
+      "Almanya'da üstlendiğim eğitim ataşeliği görevi, iki ülkenin eğitim sistemlerini akademik ve uygulamalı boyutlarıyla ele alan araştırmalarıma yön veriyor. Doktora tezlerine danışmanlık yapıyor, TÜBİTAK ve BAP destekli projelerde yürütücü ve araştırmacı olarak yer alıyorum."
+    ]
+  },
+  "arastirma": {
+    "baslik": "Dört bağlantılı hat",
+    "alanlar": [
+      {
+        "baslik": "Yabancı dil olarak Almanca öğretimi",
+        "metin": "Ders materyali tasarımı, ders kitabı analizleri, okunabilirlik ve dil düzeyine uygunluk."
+      },
+      {
+        "baslik": "Sözcük sıklığı ve derlem temelli araştırmalar",
+        "metin": "Sözcük sıklığı, söz varlığı gelişimi ve derlem verilerinin dil öğretimine ve materyal tasarımına yansımaları."
+      },
+      {
+        "baslik": "Dil eğitiminde teknoloji ve büyük dil modelleri",
+        "metin": "Teknoloji destekli dil öğretimi, büyük dil modelleriyle materyal geliştirme, yazılı ve sözlü anlatımın değerlendirilmesi ve ölçme geçerliği."
+      },
+      {
+        "baslik": "Türkiye–Almanya karşılaştırmalı eğitim araştırmaları",
+        "metin": "Eğitim politikaları, öğretmen yetiştirme, kapsayıcılık ve eğitim sistemlerinin karşılaştırmalı incelenmesi."
+      }
+    ]
+  },
+  "calismalar": {
+    "baslik": "Yürüttüğüm projeler ve geliştirdiğim sistemler",
+    "kartlar": [
+      {
+        "baslik": "Almanca Öğretiminde Kapsayıcı Sınıflar",
+        "metin": "Kapsayıcı Almanca öğretimi üzerine öğretmen eğitimi projesi. Farklı öğrenme ihtiyaçları olan sınıflarda uygulanabilir öğretim tasarımları.",
+        "etiket": "TÜBİTAK 4008",
+        "renk": "yesil",
+        "baglanti": "",
+        "baglantiMetni": ""
+      },
+      {
+        "baslik": "Almanca Yazma Puanlama Platformu",
+        "metin": "Yazılı anlatım performanslarının çevrim içi puanlanması için geliştirilen değerlendirme ortamı. Puanlayıcılar arası tutarlılığın ölçülmesi.",
+        "etiket": "TÜBİTAK 3005-B",
+        "renk": "yesil",
+        "baglanti": "",
+        "baglantiMetni": ""
+      },
+      {
+        "baslik": "Yabancı Dil Eğitiminde Yapay Zekâ",
+        "metin": "Ulusal yapay zekâ strateji belgelerinin dil eğitimi açısından taranması ve karşılaştırmalı çözümlenmesi.",
+        "etiket": "BAP",
+        "renk": "yesil",
+        "baglanti": "",
+        "baglantiMetni": ""
+      },
+      {
+        "baslik": "DaF Konuşma Asistanı",
+        "metin": "B2 düzeyinde Almanca konuşma pratiği için büyük dil modeli destekli asistan. Yerel modellerle çalışan konuşma ortamı.",
+        "etiket": "Geliştirme",
+        "renk": "sari",
+        "baglanti": "",
+        "baglantiMetni": ""
+      },
+      {
+        "baslik": "Okunabilirlik Derlemi",
+        "metin": "Almanca ders kitaplarından oluşturulan geniş ölçekli derlem ve kodlama hattı. Metin düzeyi kestiriminin ölçülmesi.",
+        "etiket": "Geliştirme",
+        "renk": "sari",
+        "baglanti": "",
+        "baglantiMetni": ""
+      },
+      {
+        "baslik": "Editörlü Kitap Sistemi",
+        "metin": "Akademik editörlü kitap bölümü başvurularının alındığı, hakem sürecinin ve yazışmaların yönetildiği platform.",
+        "etiket": "Geliştirme",
+        "renk": "sari",
+        "baglanti": "",
+        "baglantiMetni": ""
+      }
+    ]
+  },
+  "yontem": {
+    "baslik": "Başvurduğum araçlar ve ölçütler",
+    "sekmeler": [
+      {
+        "ad": "Model ve çıkarım",
+        "maddeler": [
+          {
+            "baslik": "Yerel çıkarım",
+            "metin": "4 bit ve 8 bit [[niceleme]] ile bellek ve doğruluk arasındaki ödünleşmenin izlenmesi."
+          },
+          {
+            "baslik": "Uyarlama",
+            "metin": "Düşük kerteli uyarlama ([[LoRA]]) ile parametre verimli ince ayar; tam ince ayarla karşılaştırma."
+          },
+          {
+            "baslik": "İstem tasarımı",
+            "metin": "Sıfır ve az örnekli kurulumlar, sıcaklık ve örnekleme ayarlarının çıktı kararlılığına etkisi."
+          },
+          {
+            "baslik": "Model karşılaştırması",
+            "metin": "[[Şaşkınlık]] (perplexity), bağlam penceresi sınırları, belirteç maliyeti ve yanıt tutarlılığı."
+          }
+        ]
+      },
+      {
+        "ad": "Ölçme ve güvenirlik",
+        "maddeler": [
+          {
+            "baslik": "Puanlayıcılar arası uyum",
+            "metin": "[[Krippendorff alfa]], sınıf içi korelasyon ve uyum sınırlarının kestirimi."
+          },
+          {
+            "baslik": "İnsan ve model uyumu",
+            "metin": "Ağırlıklı kappa, ortalama mutlak hata ve puan dağılımlarının karşılaştırılması."
+          },
+          {
+            "baslik": "Geçerlik",
+            "metin": "Ölçüt geçerliği, ölçme değişmezliği ve puanlayıcı yanlılığının sınanması."
+          },
+          {
+            "baslik": "Puanlama tasarımı",
+            "metin": "Dereceli puanlama anahtarları, çapa metinler ve puanlayıcı eğitimi düzenekleri."
+          }
+        ]
+      },
+      {
+        "ad": "Derlem işleme",
+        "maddeler": [
+          {
+            "baslik": "Ön işleme",
+            "metin": "Belirteçleme, köke indirgeme ([[lemmatizasyon]]) ve sözcük türü etiketleme."
+          },
+          {
+            "baslik": "Söz varlığı ölçütleri",
+            "metin": "Sıklık listeleri, tür–belirteç oranı, kapsam hesapları ve düzey bantlarına dağılım."
+          },
+          {
+            "baslik": "Hata etiketleme",
+            "metin": "Biçimbirim duyarlı etiketleme şemaları, çok katmanlı açıklama ve etiketleyici uyumu."
+          },
+          {
+            "baslik": "Derlem kurgusu",
+            "metin": "Örnekleme çerçevesi, dengeleme ölçütleri ve üst veri şeması."
+          }
+        ]
+      },
+      {
+        "ad": "Okunabilirlik",
+        "maddeler": [
+          {
+            "baslik": "Formüller",
+            "metin": "[[Amstad]] (Almanca Flesch), [[LIX]] ve Wiener Sachtextformel değerlerinin birlikte okunması."
+          },
+          {
+            "baslik": "Değişkenler",
+            "metin": "Cümle uzunluğu, sözcük uzunluğu, hece kestirimi ve bileşik sözcük çözümlemesi."
+          },
+          {
+            "baslik": "Düzey kestirimi",
+            "metin": "Geleneksel ölçütlerle model temelli kestirimlerin aynı metinler üzerinde karşılaştırılması."
+          },
+          {
+            "baslik": "Sınırlar",
+            "metin": "Formüllerin dil bağımlılığı, kısa metinlerde kararlılık sorunu ve CEFR eşleştirmesinin sınırları."
+          }
+        ]
+      }
+    ]
+  },
+  "yayinlar": {
+    "not": "Bu listeye ek olarak, 2003'ten bu yana ulusal ve uluslararası hakemli bilimsel toplantılarda 24 bildiri sundum."
+  },
+  "iletisim": {
+    "baslik": "Mesaj gönderin",
+    "aciklama": "Formu doldurduğunuzda mesajınız bana iletilir. E-posta adresinizi yalnızca yanıt verebilmek için kullanırım.",
+    "konular": [
+      "Genel soru",
+      "Lisansüstü danışmanlık",
+      "Proje ve iş birliği",
+      "Davet ve konuşma",
+      "Basın"
+    ],
+    "bilgiler": [
+      {
+        "baslik": "Kurum",
+        "deger": "Anadolu Üniversitesi, Eğitim Fakültesi, Alman Dili Eğitimi"
+      },
+      {
+        "baslik": "Şehir",
+        "deger": "Eskişehir, Türkiye"
+      },
+      {
+        "baslik": "Yanıt süresi",
+        "deger": "Genellikle birkaç iş günü içinde"
+      }
+    ]
+  }
+}
