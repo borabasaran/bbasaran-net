@@ -135,10 +135,12 @@ function dogrula(v) {
       tanitim: metin(k.tanitim, 'Tanıtım', 1200),
       bilgiler: liste(k.bilgiler, 'Kapak bilgileri', 8).map(function (b, n) {
         nesne(b, 'Kapak bilgisi');
-        return {
+        var bilgi = {
           baslik: metin(b.baslik, 'Kapak bilgisi ' + (n + 1) + ' başlığı', 80),
           satirlar: liste(b.satirlar, 'Kapak bilgisi satırları', 10).map(function (x) { return metin(x, 'Kapak satırı', 400); })
         };
+        if (b.gorunum === 'liste') bilgi.gorunum = 'liste';
+        return bilgi;
       })
     },
     hakkinda: {

@@ -6,6 +6,8 @@ const sayfa = require('../lib/sayfa.js');
 
 const kok = path.join(__dirname, '..');
 const oku = (p) => fs.readFileSync(path.join(kok, p), 'utf8');
+// Kapakta dönen (birden çok satırlı, liste olmayan) kutu sayısı
+const donenSayisi = (bilgiler) => bilgiler.filter((b) => b.gorunum !== 'liste' && b.satirlar.filter((x) => x.trim()).length > 1).length;
 const veri = () => ({
   site: JSON.parse(oku('data/site.json')),
   yayinlar: JSON.parse(oku('data/yayinlar.json')),
@@ -48,7 +50,7 @@ test('yöntemde [[terim]] vurgulanır, kapakta tek satırlık bilgi dönmez', ()
   const html = sayfa.sayfayiUret(oku('index.html'), v);
   assert.match(html, /Bir <span class="sk-kod">terim<\/span> örneği/);
   assert.match(html, /<p class="fact-v">Tek satır<\/p>/);
-  assert.equal((html.match(/data-akis=/g) || []).length, 3);
+  assert.equal((html.match(/data-akis=/g) || []).length, donenSayisi(v.site.kapak.bilgiler));
 });
 
 test('[yazı](adres) biçimi kapakta ve iletişim bilgilerinde bağlantı olur, güvensiz adres bağlantı olmaz', () => {
@@ -66,6 +68,15 @@ test('[yazı](adres) biçimi kapakta ve iletişim bilgilerinde bağlantı olur, 
   assert.equal(sayfa.baglantili('[x](javascript:alert(1))'), '[x](javascript:alert(1))');
   assert.equal(sayfa.baglantili('[x](https://a.b/"onmouseover=1)'), '[x](https://a.b/"onmouseover=1)');
   assert.equal(sayfa.baglantili('<b>[x](https://a.b/?a=1&b=2)</b>'), '&lt;b&gt;<a href="https://a.b/?a=1&amp;b=2" target="_blank" rel="noopener">x</a>&lt;/b&gt;');
+});
+
+test('görünümü liste olan kutuda bütün satırlar alt alta görünür ve dönmez', () => {
+  const v = veri();
+  v.site.kapak.bilgiler.push({ baslik: 'Linkler', gorunum: 'liste', satirlar: ['[A](https://a.example)', '[B](https://b.example)'] });
+  const html = sayfa.sayfayiUret(oku('index.html'), v);
+  assert.ok(html.includes('<p class="fact-v fact-liste"><a href="https://a.example" target="_blank" rel="noopener">A</a><br><a href="https://b.example" target="_blank" rel="noopener">B</a></p>'));
+  assert.equal((html.match(/data-akis=/g) || []).length, donenSayisi(v.site.kapak.bilgiler), 'liste kutusu dönmez');
+  assert.equal(donenSayisi(v.site.kapak.bilgiler), donenSayisi(veri().site.kapak.bilgiler));
 });
 
 test('eksik işaret açık bir hata verir', () => {
