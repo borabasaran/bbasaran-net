@@ -24,6 +24,88 @@
   var progress = document.getElementById('progress');
   var sahne = null;
 
+  /* ==================== ISTATISTIK ====================
+     Sunucudaki /api/olay adresine küçük olaylar gönderir. Çerez yok,
+     kalıcı kimlik yok; oturum numarası sekme kapanınca silinir.
+     Tarayıcıda "izlenmek istemiyorum" (Do Not Track) açıksa hiçbir şey gönderilmez. */
+  var olcumKapali = navigator.doNotTrack === '1' || window.doNotTrack === '1';
+  var oturumNo = '';
+  var gonderilen = {};
+
+  function oturum() {
+    if (oturumNo) return oturumNo;
+    try {
+      oturumNo = sessionStorage.getItem('bb_oturum') || '';
+      if (!oturumNo) {
+        oturumNo = Math.random().toString(36).slice(2, 12);
+        sessionStorage.setItem('bb_oturum', oturumNo);
+      }
+    } catch (e) { oturumNo = Math.random().toString(36).slice(2, 12); }
+    return oturumNo;
+  }
+
+  function cihazTuru() {
+    var g = window.innerWidth || 0;
+    if (g < 700) return 'telefon';
+    if (g < 1050) return 'tablet';
+    return 'masaustu';
+  }
+
+  /* Kendi sitemizden gelen gezinme kaynak sayılmaz */
+  function disKaynak() {
+    var r = document.referrer || '';
+    if (!r) return '';
+    try { return new URL(r).host === location.host ? '' : r; } catch (e) { return ''; }
+  }
+
+  function olay(tur, deger, birKez) {
+    if (olcumKapali) return;
+    var imza = tur + ':' + (deger || '');
+    if (birKez) {
+      if (gonderilen[imza]) return;
+      gonderilen[imza] = true;
+    }
+    var govde = JSON.stringify({
+      tur: tur,
+      deger: deger || null,
+      kaynak: tur === 'ziyaret' ? disKaynak() : '',
+      cihaz: cihazTuru(),
+      oturum: oturum()
+    });
+    try {
+      if (navigator.sendBeacon) {
+        navigator.sendBeacon('/api/olay', new Blob([govde], { type: 'application/json' }));
+        return;
+      }
+    } catch (e) {}
+    try { fetch('/api/olay', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: govde, keepalive: true }); } catch (e) {}
+  }
+
+  /* Ziyaret: oturumda bir kez */
+  olay('ziyaret', null, true);
+
+  /* Araç ve bağlantı tıklamaları */
+  document.addEventListener('click', function (e) {
+    var a = e.target && e.target.closest ? e.target.closest('a') : null;
+    if (!a) return;
+    var ad = '';
+    if (a.classList.contains('arac-link')) {
+      var ust = a.querySelector('.probe-top');
+      ad = ust ? ust.textContent.trim() : 'Kapak aracı';
+    } else if (a.classList.contains('bant')) {
+      ad = 'Kitap çağrısı';
+    } else if (a.classList.contains('card-git')) {
+      var k = a.closest('.card');
+      var b = k ? k.querySelector('h3') : null;
+      ad = 'Çalışma: ' + (b ? b.textContent.trim() : '');
+    } else if (a.href && a.host && a.host !== location.host) {
+      ad = 'Dış bağlantı: ' + a.host.replace(/^www\./, '');
+    } else {
+      return;
+    }
+    olay('tiklama', ad.slice(0, 60));
+  }, true);
+
   /* ==================== KITAP KURULUMU ==================== */
   if(kitapModu){
     kok.classList.add('kitap');
@@ -76,6 +158,8 @@
     gecisKilidi = true;
     setTimeout(function(){ gecisKilidi = false; }, 900);
     gizleSaati = setTimeout(function(){ if(acik) cover.classList.add('gizli'); }, 1250);
+    var g = sayfalar[etkinSayfa];
+    if (g) olay('bolum', g.id || ('sayfa-' + (etkinSayfa + 1)), true);
   }
 
   var cue = document.getElementById('cue');
@@ -186,6 +270,8 @@
     s.classList.add('aktif');
     s.scrollTop = yon === 'geri' ? s.scrollHeight : 0;
     etkinSayfa = i;
+    /* Kapak kapalıyken sayfa henüz görünmüyor; açılınca sayılır. */
+    if (acik || !katlanir) olay('bolum', s.id || ('sayfa-' + (i + 1)), true);
     acilmalariTetikle(s);
     kontroluGuncelle();
     if(s.id){
@@ -482,6 +568,7 @@
 
       cikti.textContent = band;
       lixEl.textContent = 'LIX ' + lix.toFixed(0);
+      olay('olcer', null, true);
       dolgu.style.transform = 'scaleX(' + (fre / 100).toFixed(3) + ')';
     }
 
