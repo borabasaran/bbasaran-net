@@ -109,7 +109,8 @@
 
   /* ==================== KAPAKTA AKAN BILGI SATIRLARI ==================== */
   if(cover && !azHareket){
-    /* Dönen satırlar sayfadaki data-akis niteliğinden okunur (data/site.json) */
+    /* Dönen satırlar sayfadaki data-akis niteliğinden okunur (data/site.json).
+       Satırlar sayfa üreticisinde kaçırılmış HTML'dir; [yazı](adres) bağlantıları içerebilir. */
     var satirlar = Array.prototype.slice.call(cover.querySelectorAll('.fact-v[data-akis]'));
     var akislar = satirlar.map(function(el){
       try { return JSON.parse(el.getAttribute('data-akis')) || []; } catch(e){ return []; }
@@ -119,14 +120,14 @@
       var adimlar = satirlar.map(function(){ return 0; });
 
       var degistir = function(el, metin){
-        if(!el.animate){ el.textContent = metin; return; }
+        if(!el.animate){ el.innerHTML = metin; return; }
         var cik = el.animate(
           [{opacity:1, transform:'translateY(0)'},
            {opacity:0, transform:'translateY(-7px)'}],
           {duration:300, easing:'cubic-bezier(.5,0,.2,1)', fill:'forwards'}
         );
         cik.onfinish = function(){
-          el.textContent = metin;
+          el.innerHTML = metin;
           el.animate(
             [{opacity:0, transform:'translateY(9px)'},
              {opacity:1, transform:'translateY(0)'}],
