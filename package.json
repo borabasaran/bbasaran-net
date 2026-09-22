@@ -1,0 +1,8 @@
+{
+  "name": "bbasaran-net",
+  "private": true,
+  "scripts": {
+    "test": "node --test",
+    "uret": "node scripts/uret.mjs"
+  }
+}
