@@ -192,16 +192,98 @@
   }
 
   /* ==================== KAPAKTA AKAN BILGI SATIRLARI ==================== */
-  if(cover && !azHareket){
+  if(cover){
     /* Dönen satırlar sayfadaki data-akis niteliğinden okunur (data/site.json).
-       Satırlar sayfa üreticisinde kaçırılmış HTML'dir; [yazı](adres) bağlantıları içerebilir. */
+       Satırlar sayfa üreticisinde kaçırılmış HTML'dir; [yazı](adres) bağlantıları içerebilir.
+       İmleç bir bilgi kutusunun üzerine gelince (dokunmatikte kutuya dokununca)
+       o kutunun bütün satırları bir katmanda açılır ve o kutunun dönmesi durur;
+       böylece sıradaki satırlar ve içlerindeki bağlantılar beklemeden görülebilir. */
     var satirlar = Array.prototype.slice.call(cover.querySelectorAll('.fact-v[data-akis]'));
     var akislar = satirlar.map(function(el){
       try { return JSON.parse(el.getAttribute('data-akis')) || []; } catch(e){ return []; }
     });
-    if(satirlar.length){
+    var adimlar = satirlar.map(function(){ return 0; });
+    var acikNo = -1;
+
+    function kutu(i){
+      var el = satirlar[i];
+      return (el.closest ? el.closest('li') : null) || el.parentNode;
+    }
+
+    function katmanKur(i){
+      var li = kutu(i);
+      var k = li.querySelector('.fact-tum');
+      if(k) return k;
+      k = document.createElement('div');
+      k.className = 'fact-tum';
+      akislar[i].forEach(function(m){
+        var s = document.createElement('span');
+        s.className = 'fact-satir';
+        s.innerHTML = m;
+        k.appendChild(s);
+      });
+      li.appendChild(k);
+      return k;
+    }
+
+    function katmaniKapat(){
+      if(acikNo < 0) return;
+      kutu(acikNo).classList.remove('acik');
+      acikNo = -1;
+    }
+
+    function katmaniAc(i){
+      if(acikNo === i || akislar[i].length < 2) return;
+      katmaniKapat();
+      var li = kutu(i);
+      var el = satirlar[i];
+      var k = katmanKur(i);
+      /* katman, o anki satırın tam üstüne oturur; taşarsa yukarı doğru açılır */
+      k.style.top = (el.offsetTop - 11) + 'px';
+      k.style.bottom = 'auto';
+      k.style.left = '-12px';
+      li.classList.add('acik');
+      acikNo = i;
+
+      var alt = cover.getBoundingClientRect().bottom - 8;
+      if(k.getBoundingClientRect().bottom > alt){
+        k.style.top = 'auto';
+        k.style.bottom = (li.clientHeight - el.offsetTop - el.offsetHeight - 11) + 'px';
+      }
+      var r = k.getBoundingClientRect();
+      if(r.right > window.innerWidth - 10){
+        k.style.left = (-12 - (r.right - (window.innerWidth - 10))) + 'px';
+      } else if(r.left < 10){
+        k.style.left = (-12 + (10 - r.left)) + 'px';
+      }
+    }
+
+    satirlar.forEach(function(el, i){
+      if(akislar[i].length < 2) return;
+      var li = kutu(i);
+      li.classList.add('fact-acilir');
+      li.tabIndex = 0;
+      li.addEventListener('pointerenter', function(e){ if(e.pointerType !== 'touch') katmaniAc(i); });
+      li.addEventListener('pointerleave', function(e){ if(e.pointerType !== 'touch') katmaniKapat(); });
+      li.addEventListener('focusin', function(){ katmaniAc(i); });
+      li.addEventListener('focusout', function(e){ if(!li.contains(e.relatedTarget)) katmaniKapat(); });
+      li.addEventListener('click', function(e){
+        if(inceImlec) return;                                   /* fare varsa hover yeter */
+        if(e.target && e.target.closest && e.target.closest('a')) return;
+        if(acikNo === i) katmaniKapat(); else katmaniAc(i);
+      });
+      li.addEventListener('keydown', function(e){
+        if(e.key === 'Escape') katmaniKapat();
+      });
+    });
+
+    /* dokunmatikte dışarı dokununca kapanır */
+    document.addEventListener('pointerdown', function(e){
+      if(acikNo >= 0 && !kutu(acikNo).contains(e.target)) katmaniKapat();
+    }, true);
+
+    if(satirlar.length && !azHareket){
       var sira = 0;
-      var adimlar = satirlar.map(function(){ return 0; });
 
       var degistir = function(el, metin){
         if(!el.animate){ el.innerHTML = metin; return; }
@@ -223,13 +305,15 @@
       var akisSaati = setInterval(function(){
         if(acik || document.hidden) return;
         var i = sira % satirlar.length;
+        sira++;
+        /* açık kutu yerinde durur */
+        if(i === acikNo || akislar[i].length < 2) return;
         adimlar[i] = (adimlar[i] + 1) % akislar[i].length;
         degistir(satirlar[i], akislar[i][adimlar[i]]);
-        sira++;
       }, 2600);
 
       var akisDurdur = setInterval(function(){
-        if(acik){ clearInterval(akisSaati); clearInterval(akisDurdur); }
+        if(acik){ clearInterval(akisSaati); clearInterval(akisDurdur); katmaniKapat(); }
       }, 1000);
     }
   }
