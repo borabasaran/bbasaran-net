@@ -29,22 +29,38 @@ html.kitap .sayfa{
   padding-block:clamp(26px,5vh,54px);
   border-top:0;
 }
+/* Sayfa çevirme kapakla aynı yönde çalışır: ileri giderken o anki sayfa
+   sol menteşeden sola doğru çevrilip gider, yeni sayfa altında düz durur.
+   Geri dönerken çevrilen sayfa aynı yoldan geri kapanır, eski sayfa altta
+   bekler. Yani hareket eden her zaman "çevrilen yaprak"tır. */
 html.kitap .sayfa.aktif{
   display:block;
+  z-index:2;
+}
+html.kitap .sayfa.altta{
+  display:block;
+  z-index:1;
+}
+html.kitap .sayfa.cevrilen{
+  display:block;
+  z-index:3;
   transform-origin:left center;
-  animation:sayfaIleri .6s cubic-bezier(.5,0,.2,1) both;
+  backface-visibility:hidden;
+  overflow:hidden;
+  pointer-events:none;
+  box-shadow:18px 0 44px -22px rgba(0,0,0,.65);
+  animation:sayfaCevir .62s cubic-bezier(.5,0,.2,1) both;
 }
-html.kitap .sayfa.aktif.geri{
-  transform-origin:right center;
-  animation-name:sayfaGeri;
+html.kitap .sayfa.cevrilen.geri{
+  animation-name:sayfaCevirGeri;
 }
-@keyframes sayfaIleri{
-  from{opacity:0;transform:rotateY(-36deg)}
-  to{opacity:1;transform:none}
+@keyframes sayfaCevir{
+  from{opacity:1;transform:rotateY(0)}
+  to{opacity:0;transform:rotateY(-105deg)}
 }
-@keyframes sayfaGeri{
-  from{opacity:0;transform:rotateY(36deg)}
-  to{opacity:1;transform:none}
+@keyframes sayfaCevirGeri{
+  from{opacity:0;transform:rotateY(-105deg)}
+  to{opacity:1;transform:rotateY(0)}
 }
 
 /* kitap kurgusunda gereksiz öğeler */
@@ -103,5 +119,6 @@ html.kitap .kitap-kontrol{
 html:not(.kitap) .sayfa-son{display:none}
 
 @media (prefers-reduced-motion:reduce){
-  html.kitap .sayfa.aktif{animation:none}
+  html.kitap .sayfa.aktif,
+  html.kitap .sayfa.cevrilen{animation:none}
 }
