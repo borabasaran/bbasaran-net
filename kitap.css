@@ -48,6 +48,8 @@ html.kitap .sayfa.cevrilen{
   backface-visibility:hidden;
   overflow:hidden;
   pointer-events:none;
+  /* gerçek bir yaprak gibi donuk olsun, altındaki sayfa içinden görünmesin */
+  background:var(--paper);
   box-shadow:18px 0 44px -22px rgba(0,0,0,.65);
   animation:sayfaCevir .62s cubic-bezier(.5,0,.2,1) both;
 }
@@ -55,12 +57,14 @@ html.kitap .sayfa.cevrilen.geri{
   animation-name:sayfaCevirGeri;
 }
 @keyframes sayfaCevir{
-  from{opacity:1;transform:rotateY(0)}
-  to{opacity:0;transform:rotateY(-105deg)}
+  0%{opacity:1;transform:rotateY(0)}
+  62%{opacity:1}
+  100%{opacity:0;transform:rotateY(-105deg)}
 }
 @keyframes sayfaCevirGeri{
-  from{opacity:0;transform:rotateY(-105deg)}
-  to{opacity:1;transform:rotateY(0)}
+  0%{opacity:0;transform:rotateY(-105deg)}
+  38%{opacity:1}
+  100%{opacity:1;transform:rotateY(0)}
 }
 
 /* kitap kurgusunda gereksiz öğeler */
