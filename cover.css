@@ -309,6 +309,7 @@ html.katlanir .cover-body{gap:clamp(14px,2.6vh,32px);padding-block:clamp(10px,2.
    İmleç kutunun üzerine gelince (dokunmatikte dokununca) o kutunun bütün
    satırları bir katmanda açılır; sayfa düzeni kaymasın diye katman üstte durur. */
 .facts li.fact-acilir{position:relative;cursor:pointer}
+.facts li.acik{z-index:40}
 .facts li.fact-acilir:focus-visible{outline:2px solid var(--ochre);outline-offset:4px}
 .facts li.fact-acilir .fact-v{transition:opacity .2s ease}
 .facts li.acik .fact-v{opacity:0;visibility:hidden}
