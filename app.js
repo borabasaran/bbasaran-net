@@ -343,16 +343,37 @@
     baglar.forEach(function(a, i){ a.classList.toggle('aktif', i === etkinSayfa); });
   }
 
+  var cevirmeSaati = null;
+
   function sayfaGoster(i, yon){
     if(!kitapModu) return;
     i = Math.min(Math.max(i, 0), sayfalar.length - 1);
     if(i === etkinSayfa && sayfalar[i].classList.contains('aktif')) return;
 
-    sayfalar.forEach(function(s){ s.classList.remove('aktif', 'geri'); });
+    var eski = sayfalar[etkinSayfa];
     var s = sayfalar[i];
-    if(yon === 'geri') s.classList.add('geri');
+    /* ilk açılışta çevrilecek bir yaprak yok */
+    var cevrilebilir = !!eski && eski !== s && eski.classList.contains('aktif');
+
+    clearTimeout(cevirmeSaati);
+    sayfalar.forEach(function(x){ x.classList.remove('aktif', 'geri', 'cevrilen', 'altta'); });
     s.classList.add('aktif');
     s.scrollTop = yon === 'geri' ? s.scrollHeight : 0;
+
+    if(cevrilebilir){
+      if(yon === 'geri'){
+        /* geri: gelen sayfa aynı yoldan geri kapanır, eski sayfa altında bekler */
+        s.classList.add('cevrilen', 'geri');
+        eski.classList.add('altta');
+      } else {
+        /* ileri: o anki sayfa kapak gibi sol menteşeden çevrilip gider */
+        eski.classList.add('cevrilen');
+      }
+      cevirmeSaati = setTimeout(function(){
+        s.classList.remove('cevrilen', 'geri');
+        eski.classList.remove('cevrilen', 'altta');
+      }, 700);
+    }
     etkinSayfa = i;
     /* Kapak kapalıyken sayfa henüz görünmüyor; açılınca sayılır. */
     if (acik || !katlanir) olay('bolum', s.id || ('sayfa-' + (i + 1)), true);
