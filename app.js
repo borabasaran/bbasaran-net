@@ -711,9 +711,9 @@
 
   /* ==================== YONTEM SEKMELERI ====================
      Sekmeler HTML'de gizli radyo düğmeleriyle çalışır; JavaScript kapalıyken de
-     açılsınlar diye böyle kuruldu. Ancak bazı mobil tarayıcılar ":checked ~"
-     kuralıyla açılan paneli yeniden boyamıyor, panel boş görünüyordu.
-     JavaScript varsa açık paneli ve etkin etiketi doğrudan sınıfla sürüyoruz. */
+     açılsınlar diye böyle kuruldu. Ancak bazı tarayıcılar ":checked ~" kuralıyla
+     açılan paneli yeniden boyamıyor, panel boş görünüyordu. JavaScript varsa
+     açık paneli hem sınıfla hem satır içi stille doğrudan sürüyoruz. */
   Array.prototype.forEach.call(document.querySelectorAll('.sekmeler'), function(sek){
     var girdiler = Array.prototype.slice.call(sek.querySelectorAll('input[type="radio"]'));
     var paneller = Array.prototype.slice.call(sek.querySelectorAll('.sk-panel'));
@@ -735,7 +735,13 @@
       girdiler.forEach(function(g){ if(g.checked && !secili) secili = g; });
       if(!secili){ secili = girdiler[0]; secili.checked = true; }
       var no = String(secili.id).replace(/\D/g, '');
-      paneller.forEach(function(p){ p.classList.toggle('acik', p.getAttribute('data-p') === no); });
+      /* Sınıfın yanında satır içi stil de veriyoruz: satır içi stil bütün CSS
+         kurallarını geçer ve her tarayıcıda yeniden boyanmayı garantiler. */
+      paneller.forEach(function(p){
+        var acilsin = p.getAttribute('data-p') === no;
+        p.classList.toggle('acik', acilsin);
+        p.style.display = acilsin ? 'block' : 'none';
+      });
       etiketler.forEach(function(l){ l.classList.toggle('etkin', l.getAttribute('for') === secili.id); });
       if(fareyleSecildi){
         fareyleSecildi = false;
