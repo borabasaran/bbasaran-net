@@ -721,6 +721,15 @@
     var etiketler = Array.prototype.slice.call(sek.querySelectorAll('.sk-liste label'));
     sek.classList.add('sk-js');
 
+    /* Fareyle mi seçildi? Öyleyse gizli radyo düğmesinde odak bırakmıyoruz:
+       odaklı bir radyo grubunun üzerinde tekerlek çevrilince tarayıcı seçimi
+       bir sonrakine kaydırıyor ve sekme kendiliğinden değişiyor. Klavyeyle
+       gelindiğinde odak korunur, ok tuşlarıyla gezinme bozulmasın. */
+    var fareyleSecildi = false;
+    sek.addEventListener('pointerdown', function(e){
+      if(e.target && e.target.closest && e.target.closest('.sk-liste label')) fareyleSecildi = true;
+    }, true);
+
     function sekmeUygula(){
       var secili = null;
       girdiler.forEach(function(g){ if(g.checked && !secili) secili = g; });
@@ -728,6 +737,14 @@
       var no = String(secili.id).replace(/\D/g, '');
       paneller.forEach(function(p){ p.classList.toggle('acik', p.getAttribute('data-p') === no); });
       etiketler.forEach(function(l){ l.classList.toggle('etkin', l.getAttribute('for') === secili.id); });
+      if(fareyleSecildi){
+        fareyleSecildi = false;
+        var odagiBirak = function(){
+          if(secili === document.activeElement && secili.blur) secili.blur();
+        };
+        odagiBirak();                /* odak tıklama sırasında geçtiyse */
+        setTimeout(odagiBirak, 0);   /* sonra geçiyorsa */
+      }
     }
 
     girdiler.forEach(function(g){ g.addEventListener('change', sekmeUygula); });
