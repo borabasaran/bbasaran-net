@@ -416,14 +416,20 @@
     if(oncekiDug) oncekiDug.addEventListener('click', geri);
     if(sonrakiDug) sonrakiDug.addEventListener('click', ileri);
 
-    /* Tekerlek/dokunmatik yüzey ataleti tek bir kaydırmayla hem sayfayı sonuna
-       götürüp hem de sayfayı çevirmesin: çevirme yalnızca yeni bir kaydırma
-       hareketinde olur (önceki tekerlek olayından en az 150 ms sonra). */
+    /* Sayfa çevirme iki koşula bağlı, böylece içerik okunmadan akıp gitmiyor:
+       1) Kaydırma hareketi zaten sayfa kenarındayken başlamış olmalı. Sayfayı
+          sonuna götüren hareket, ataletiyle sayfayı da çeviremez.
+       2) Kenarda en az CEVIRME_ESIGI kadar kaydırma birikmeli. Ekrana tam
+          sığan kısa sayfalarda tek bir tekerlek tıkırtısı sayfayı çevirmez. */
+    var CEVIRME_ESIGI = 180;
     var sonTeker = 0;
+    var sonYon = null;
+    var jestKenarda = false;
+    var birikim = 0;
 
     window.addEventListener('wheel', function(e){
       var simdi = Date.now();
-      var yeniHareket = simdi - sonTeker > 150;
+      var yeniJest = simdi - sonTeker > 150;
       sonTeker = simdi;
       if(gecisKilidi) return;
 
@@ -434,18 +440,24 @@
       }
       if(!acik) return;
 
+      var asagi = e.deltaY > 0;
       var k = kenardaMi();
-      if(e.deltaY > 0 && k.alt && etkinSayfa < sayfalar.length - 1){
-        e.preventDefault();
-        if(yeniHareket) ileri();
-      } else if(e.deltaY < 0 && k.ust && etkinSayfa > 0){
-        e.preventDefault();
-        if(yeniHareket) geri();
-      } else if(e.deltaY < -6 && k.ust && etkinSayfa === 0 && katlanir){
-        /* ilk sayfanın tepesinde yukarı kaydırınca kapak geri kapanır */
-        e.preventDefault();
-        if(yeniHareket) kapagiKapat();
-      }
+      var kenarda = asagi ? k.alt : k.ust;
+
+      if(yeniJest || asagi !== sonYon){ jestKenarda = kenarda; birikim = 0; }
+      sonYon = asagi;
+
+      if(!kenarda){ birikim = 0; return; }   /* sayfa kendi içinde kayıyor */
+
+      e.preventDefault();
+      if(!jestKenarda) return;               /* bu hareket kaydırmak içindi */
+      birikim += Math.abs(e.deltaY);
+      if(birikim < CEVIRME_ESIGI) return;
+      birikim = 0;
+
+      if(asagi && etkinSayfa < sayfalar.length - 1) ileri();
+      else if(!asagi && etkinSayfa > 0) geri();
+      else if(!asagi && etkinSayfa === 0 && katlanir) kapagiKapat();
     }, {passive:false});
 
     var baslangicY = null;
@@ -469,7 +481,7 @@
       var bas = baslangicKenar || {alt:false, ust:false};
       baslangicY = null;
       baslangicKenar = null;
-      if(Math.abs(fark) < 60) return;
+      if(Math.abs(fark) < 100) return;
       var k = kenardaMi();
       /* çevirme yalnızca dokunuş zaten kenarda başladıysa olur */
       if(fark > 0 && k.alt && bas.alt) ileri();
