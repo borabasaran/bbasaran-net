@@ -440,8 +440,12 @@
     }, {passive:false});
 
     var baslangicY = null;
+    var baslangicKenar = null;
     window.addEventListener('touchstart', function(e){
       baslangicY = e.touches[0].clientY;
+      /* dokunuş başlarken sayfa kenarda mıydı? tek bir kaydırma hem
+         sayfayı sonuna götürüp hem de sayfayı çevirmesin */
+      baslangicKenar = acik ? kenardaMi() : null;
     }, {passive:true});
 
     window.addEventListener('touchmove', function(e){
@@ -453,12 +457,15 @@
       if(!acik || gecisKilidi || baslangicY === null) return;
       var son = e.changedTouches[0] ? e.changedTouches[0].clientY : baslangicY;
       var fark = baslangicY - son;
+      var bas = baslangicKenar || {alt:false, ust:false};
       baslangicY = null;
+      baslangicKenar = null;
       if(Math.abs(fark) < 60) return;
       var k = kenardaMi();
-      if(fark > 0 && k.alt) ileri();
-      else if(fark < 0 && k.ust && etkinSayfa > 0) geri();
-      else if(fark < 0 && k.ust && etkinSayfa === 0 && katlanir) kapagiKapat();
+      /* çevirme yalnızca dokunuş zaten kenarda başladıysa olur */
+      if(fark > 0 && k.alt && bas.alt) ileri();
+      else if(fark < 0 && k.ust && bas.ust && etkinSayfa > 0) geri();
+      else if(fark < 0 && k.ust && bas.ust && etkinSayfa === 0 && katlanir) kapagiKapat();
     }, {passive:true});
 
     window.addEventListener('keydown', function(e){
