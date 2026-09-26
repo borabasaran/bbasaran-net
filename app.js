@@ -321,12 +321,13 @@
   /* ==================== SAYFA GECISI ==================== */
   function acilmalariTetikle(kap){
     var ogeler = kap.querySelectorAll('.reveal, .mask');
+    function ac(){ Array.prototype.forEach.call(ogeler, function(el){ el.classList.add('in'); }); }
     Array.prototype.forEach.call(ogeler, function(el){ el.classList.remove('in'); });
-    requestAnimationFrame(function(){
-      requestAnimationFrame(function(){
-        Array.prototype.forEach.call(ogeler, function(el){ el.classList.add('in'); });
-      });
-    });
+    requestAnimationFrame(function(){ requestAnimationFrame(ac); });
+    /* Güvenlik ağı: sekme arka planda ya da tarayıcı çizimi askıdaysa
+       requestAnimationFrame çalışmayabiliyor; o durumda içerik hep saydam
+       kalıyordu. Zamanlayıcı her hâlükârda açıyor. */
+    setTimeout(ac, 220);
   }
 
   function kontroluGuncelle(){
