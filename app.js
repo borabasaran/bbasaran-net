@@ -688,6 +688,31 @@
     olc();
   }
 
+  /* ==================== YONTEM SEKMELERI ====================
+     Sekmeler HTML'de gizli radyo düğmeleriyle çalışır; JavaScript kapalıyken de
+     açılsınlar diye böyle kuruldu. Ancak bazı mobil tarayıcılar ":checked ~"
+     kuralıyla açılan paneli yeniden boyamıyor, panel boş görünüyordu.
+     JavaScript varsa açık paneli ve etkin etiketi doğrudan sınıfla sürüyoruz. */
+  Array.prototype.forEach.call(document.querySelectorAll('.sekmeler'), function(sek){
+    var girdiler = Array.prototype.slice.call(sek.querySelectorAll('input[type="radio"]'));
+    var paneller = Array.prototype.slice.call(sek.querySelectorAll('.sk-panel'));
+    if(!girdiler.length || !paneller.length) return;
+    var etiketler = Array.prototype.slice.call(sek.querySelectorAll('.sk-liste label'));
+    sek.classList.add('sk-js');
+
+    function sekmeUygula(){
+      var secili = null;
+      girdiler.forEach(function(g){ if(g.checked && !secili) secili = g; });
+      if(!secili){ secili = girdiler[0]; secili.checked = true; }
+      var no = String(secili.id).replace(/\D/g, '');
+      paneller.forEach(function(p){ p.classList.toggle('acik', p.getAttribute('data-p') === no); });
+      etiketler.forEach(function(l){ l.classList.toggle('etkin', l.getAttribute('for') === secili.id); });
+    }
+
+    girdiler.forEach(function(g){ g.addEventListener('change', sekmeUygula); });
+    sekmeUygula();
+  });
+
   /* ==================== KAYDIRMALI KURGU (kitap disi) ==================== */
   if(!kitapModu){
     var acilacak = document.querySelectorAll('.reveal, .mask');
