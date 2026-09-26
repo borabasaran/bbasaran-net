@@ -153,6 +153,11 @@ html.katlanir .cover.gizli{display:none}
 #sk3:checked ~ .sk-panel[data-p="3"],
 #sk4:checked ~ .sk-panel[data-p="4"]{display:block}
 
+/* JavaScript varsa açık panel ve etkin etiket doğrudan sınıfla sürülür:
+   bazı mobil tarayıcılar ":checked ~" ile açılan paneli yeniden boyamıyor. */
+.sekmeler.sk-js .sk-panel.acik{display:block}
+.sekmeler.sk-js .sk-liste label.etkin{color:var(--accent);border-bottom-color:var(--accent)}
+
 #sk1:focus-visible ~ .sk-liste label[for="sk1"],
 #sk2:focus-visible ~ .sk-liste label[for="sk2"],
 #sk3:focus-visible ~ .sk-liste label[for="sk3"],
