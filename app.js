@@ -729,6 +729,14 @@
     sek.addEventListener('pointerdown', function(e){
       if(e.target && e.target.closest && e.target.closest('.sk-liste label')) fareyleSecildi = true;
     }, true);
+    /* Zaten seçili sekmeye tıklanırsa "change" olmaz, odak yine de bırakılmalı */
+    sek.addEventListener('click', function(e){
+      if(!(e.target && e.target.closest && e.target.closest('.sk-liste label'))) return;
+      setTimeout(function(){
+        var o = document.activeElement;
+        if(girdiler.indexOf(o) >= 0 && o.blur) o.blur();
+      }, 0);
+    }, true);
 
     function sekmeUygula(){
       var secili = null;
