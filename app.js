@@ -416,7 +416,15 @@
     if(oncekiDug) oncekiDug.addEventListener('click', geri);
     if(sonrakiDug) sonrakiDug.addEventListener('click', ileri);
 
+    /* Tekerlek/dokunmatik yüzey ataleti tek bir kaydırmayla hem sayfayı sonuna
+       götürüp hem de sayfayı çevirmesin: çevirme yalnızca yeni bir kaydırma
+       hareketinde olur (önceki tekerlek olayından en az 150 ms sonra). */
+    var sonTeker = 0;
+
     window.addEventListener('wheel', function(e){
+      var simdi = Date.now();
+      var yeniHareket = simdi - sonTeker > 150;
+      sonTeker = simdi;
       if(gecisKilidi) return;
 
       if(!acik && katlanir){
@@ -429,14 +437,14 @@
       var k = kenardaMi();
       if(e.deltaY > 0 && k.alt && etkinSayfa < sayfalar.length - 1){
         e.preventDefault();
-        ileri();
+        if(yeniHareket) ileri();
       } else if(e.deltaY < 0 && k.ust && etkinSayfa > 0){
         e.preventDefault();
-        geri();
+        if(yeniHareket) geri();
       } else if(e.deltaY < -6 && k.ust && etkinSayfa === 0 && katlanir){
         /* ilk sayfanın tepesinde yukarı kaydırınca kapak geri kapanır */
         e.preventDefault();
-        kapagiKapat();
+        if(yeniHareket) kapagiKapat();
       }
     }, {passive:false});
 
