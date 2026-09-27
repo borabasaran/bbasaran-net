@@ -710,59 +710,60 @@
   }
 
   /* ==================== YONTEM SEKMELERI ====================
-     Sekmeler HTML'de gizli radyo düğmeleriyle çalışır; JavaScript kapalıyken de
-     açılsınlar diye böyle kuruldu. Ancak bazı tarayıcılar ":checked ~" kuralıyla
-     açılan paneli yeniden boyamıyor, panel boş görünüyordu. JavaScript varsa
-     açık paneli hem sınıfla hem satır içi stille doğrudan sürüyoruz. */
+     Sekmeler HTML'de gizli radyo düğmeleriyle kurgulanmıştı; JavaScript
+     kapalıyken de açılsınlar diye. Ancak gizli radyo düğmeleri tarayıcıdan
+     tarayıcıya sorun çıkardı: panel yeniden boyanmıyor, odaklı radyo grubunun
+     üzerinde tekerlek çevrilince seçim kayıyordu. JavaScript varsa artık
+     radyo düğmelerini tamamen devre dışı bırakıp sekmeleri doğrudan
+     sürüyoruz: başlığa tıklandığında ilgili panel görünür, o kadar.
+     JavaScript kapalıysa radyolar olduğu gibi kalır, eski CSS kurgusu çalışır. */
   Array.prototype.forEach.call(document.querySelectorAll('.sekmeler'), function(sek){
     var girdiler = Array.prototype.slice.call(sek.querySelectorAll('input[type="radio"]'));
     var paneller = Array.prototype.slice.call(sek.querySelectorAll('.sk-panel'));
-    if(!girdiler.length || !paneller.length) return;
     var etiketler = Array.prototype.slice.call(sek.querySelectorAll('.sk-liste label'));
+    if(!paneller.length || !etiketler.length) return;
     sek.classList.add('sk-js');
 
-    /* Fareyle mi seçildi? Öyleyse gizli radyo düğmesinde odak bırakmıyoruz:
-       odaklı bir radyo grubunun üzerinde tekerlek çevrilince tarayıcı seçimi
-       bir sonrakine kaydırıyor ve sekme kendiliğinden değişiyor. Klavyeyle
-       gelindiğinde odak korunur, ok tuşlarıyla gezinme bozulmasın. */
-    var fareyleSecildi = false;
-    sek.addEventListener('pointerdown', function(e){
-      if(e.target && e.target.closest && e.target.closest('.sk-liste label')) fareyleSecildi = true;
-    }, true);
-    /* Zaten seçili sekmeye tıklanırsa "change" olmaz, odak yine de bırakılmalı */
-    sek.addEventListener('click', function(e){
-      if(!(e.target && e.target.closest && e.target.closest('.sk-liste label'))) return;
-      setTimeout(function(){
-        var o = document.activeElement;
-        if(girdiler.indexOf(o) >= 0 && o.blur) o.blur();
-      }, 0);
-    }, true);
+    var secilen = 0;
+    girdiler.forEach(function(g, i){ if(g.checked) secilen = i; });
+    /* radyo düğmeleri devre dışı: ne odak alırlar ne de tekerlekle değişirler */
+    girdiler.forEach(function(g){ g.checked = false; g.disabled = true; g.tabIndex = -1; });
 
-    function sekmeUygula(){
-      var secili = null;
-      girdiler.forEach(function(g){ if(g.checked && !secili) secili = g; });
-      if(!secili){ secili = girdiler[0]; secili.checked = true; }
-      var no = String(secili.id).replace(/\D/g, '');
-      /* Sınıfın yanında satır içi stil de veriyoruz: satır içi stil bütün CSS
-         kurallarını geçer ve her tarayıcıda yeniden boyanmayı garantiler. */
-      paneller.forEach(function(p){
-        var acilsin = p.getAttribute('data-p') === no;
+    var liste = sek.querySelector('.sk-liste');
+    if(liste) liste.setAttribute('role', 'tablist');
+
+    function sec(i){
+      secilen = Math.min(Math.max(i, 0), etiketler.length - 1);
+      paneller.forEach(function(p, n){
+        var acilsin = n === secilen;
         p.classList.toggle('acik', acilsin);
-        p.style.display = acilsin ? 'block' : 'none';
+        p.style.display = acilsin ? 'block' : 'none';   /* satır içi stil her kuralı geçer */
       });
-      etiketler.forEach(function(l){ l.classList.toggle('etkin', l.getAttribute('for') === secili.id); });
-      if(fareyleSecildi){
-        fareyleSecildi = false;
-        var odagiBirak = function(){
-          if(secili === document.activeElement && secili.blur) secili.blur();
-        };
-        odagiBirak();                /* odak tıklama sırasında geçtiyse */
-        setTimeout(odagiBirak, 0);   /* sonra geçiyorsa */
-      }
+      etiketler.forEach(function(l, n){
+        var etkin = n === secilen;
+        l.classList.toggle('etkin', etkin);
+        l.setAttribute('aria-selected', etkin ? 'true' : 'false');
+        l.tabIndex = etkin ? 0 : -1;
+      });
     }
 
-    girdiler.forEach(function(g){ g.addEventListener('change', sekmeUygula); });
-    sekmeUygula();
+    etiketler.forEach(function(l, i){
+      l.setAttribute('role', 'tab');
+      l.addEventListener('click', function(e){ e.preventDefault(); sec(i); });
+      l.addEventListener('keydown', function(e){
+        var son = etiketler.length - 1;
+        if(e.key === 'Enter' || e.key === ' '){
+          e.preventDefault(); e.stopPropagation(); sec(i);
+        } else if(e.key === 'ArrowRight' || e.key === 'ArrowDown'){
+          e.preventDefault(); e.stopPropagation(); sec(i === son ? 0 : i + 1); etiketler[secilen].focus();
+        } else if(e.key === 'ArrowLeft' || e.key === 'ArrowUp'){
+          e.preventDefault(); e.stopPropagation(); sec(i === 0 ? son : i - 1); etiketler[secilen].focus();
+        }
+      });
+    });
+
+    paneller.forEach(function(p){ p.setAttribute('role', 'tabpanel'); });
+    sec(secilen);
   });
 
   /* ==================== KAYDIRMALI KURGU (kitap disi) ==================== */
