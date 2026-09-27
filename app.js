@@ -178,6 +178,20 @@
     if(kontrol) kontrol.hidden = true;
     try { history.replaceState(null, '', location.pathname + location.search); } catch(e){}
     kapakDonusleri.forEach(function(f){ f(); });
+
+    /* Kitap başa sarılır: kapak yeniden açıldığında ilk bölümden başlanır,
+       en son bakılan bölüm karşıya çıkmaz. */
+    if(kitapModu){
+      clearTimeout(cevirmeSaati);
+      sayfalar.forEach(function(x){ x.classList.remove('aktif', 'geri', 'cevrilen', 'altta'); });
+      etkinSayfa = 0;
+      if(sayfalar[0]){
+        sayfalar[0].classList.add('aktif');
+        sayfalar[0].scrollTop = 0;
+      }
+      kontroluGuncelle();
+    }
+
     gecisKilidi = true;
     setTimeout(function(){ gecisKilidi = false; cover.classList.remove('donus'); }, 1100);
   }
