@@ -1,6 +1,6 @@
 {
   "aciklama": "OpenAlex'te bulunan ama yayinlar.json icinde gorunmeyen kayitlar. Siteye YANSIMAZ. Gozden gecirip gercekten yeni olanlari dogru kunyesiyle yayinlar.json icine tasiyin.",
-  "guncellendi": "2026-09-20",
+  "guncellendi": "2026-10-01",
   "adaylar": [
     {
       "yil": 2026,
@@ -13,6 +13,12 @@
       "baslik": "Social cognitive agency in AI adoption: critical thinking as the cognitive amplifier for self-regulation in building AI self-efficacy",
       "kaynak": "Interactive Learning Environments",
       "doi": "https://doi.org/10.1080/10494820.2026.2651861"
+    },
+    {
+      "yil": 2026,
+      "baslik": "ACADEMIC REPRESENTATIONS OF THE FAMILY IN DOCTORAL RESEARCH: A COMPARATIVE STUDY OF TURKEY AND GERMANY (2019–2024)",
+      "kaynak": "PUPIL International Journal of Teaching Education and Learning",
+      "doi": "https://doi.org/10.20319/ictel.2026.0405"
     },
     {
       "yil": 2025,
