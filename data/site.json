@@ -14,12 +14,6 @@
         "baslik": "Araştırma konusu geliştirme aracı",
         "baglanti": "https://arsi.bbasaran.net",
         "dugme": "Sihirbazı aç"
-      },
-      {
-        "etiket": "Almanca Öğretmenliği Programı Tübitak 2209 Tanıtımı",
-        "baslik": "Tübitak 2209 kısa tanıtımı",
-        "baglanti": "https://youtu.be/BEBIqDuBASo",
-        "dugme": "İzlemek için tıkla"
       }
     ],
     "bilgiler": [
@@ -60,7 +54,8 @@
         "satirlar": [
           "[Almanca Öğretmenliği Programı](https://abp.anadolu.edu.tr/tr/program/dersler/163/13)",
           "[Akademik Takvim](https://oidb.anadolu.edu.tr/akademik-takvim)",
-          "[XVIII. Türkischer Internationaler Germanistik Kongress](https://gerder.org.tr/index.php/main-kongreler?layout=edit&id=121)"
+          "[XVIII. Türkischer Internationaler Germanistik Kongress](https://gerder.org.tr/index.php/main-kongreler?layout=edit&id=121)",
+          "[Almanca Öğretmenliği Programı Tübitak 2209 Tanıtımı](https://youtu.be/BEBIqDuBASo)"
         ]
       }
     ]
