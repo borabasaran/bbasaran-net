@@ -1,6 +1,7 @@
-/* ===== ARTİKEL AVCISI =====
+/* ===== RETRO ARTİKEL AVCISI =====
    Kapaktaki oyun kutusu araç kutularıyla aynı çerçeveyi kullanır. Geniş
-   ekranda ikinci satırın sağdaki iki sütununa sabitlenir; araç kutusu
+   ekranda araç kutuları bilgi satırıyla aynı genişliğe yayılır ve oyun
+   ikinci satırın sağdaki iki sütununa sabitlenir; araç kutusu
    eklense de yerinden oynamaz, yeni kutular alttaki satırlara geçer. */
 .araclar{grid-auto-flow:row dense}
 .araclar .oyun{gap:8px;padding:10px 12px 11px;align-content:start}
@@ -20,6 +21,7 @@
 .oyun-ekran:focus-visible{outline:2px solid var(--ochre);outline-offset:3px}
 html:not(.js) .oyun{display:none}
 @media (min-width:1180px){
+  .araclar{max-width:none}
   .araclar .oyun{grid-column:2 / span 2;grid-row:2}
 }
 @media (max-width:699px){
