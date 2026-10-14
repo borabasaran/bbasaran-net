@@ -36,7 +36,7 @@
   var KALEM_RENK = {1:KREM, 2:SOLUK, 3:'#9fb8b4'};
 
   /* ---------- ölçüler ---------- */
-  var W = 640, H = 112, dar = false, Y0 = 26, PY = 88, BG = 64, XS = [150, 320, 490], OLCEK = 3;
+  var W = 640, H = 140, dar = false, Y0 = 26, PY = 88, BG = 64, XS = [150, 320, 490], OLCEK = 3;
   var G = {sev:1, dogru:0, puan:0, y:26, cols:null, sx:320, mermi:null, vurulan:-1, bekle:0, ad:null,
            not:null, sevYazi:0, sasir:false, sasti:false, sasHedef:null, hedef:null, atesle:false};
 
@@ -44,7 +44,7 @@
     var g = Math.round(ekran.clientWidth || ekran.parentNode.clientWidth || 640);
     W = Math.max(280, g);
     dar = W < 520;
-    H = dar ? 140 : 112;
+    H = 140;
     Y0 = dar ? 40 : 26;
     PY = H - 24;
     BG = Math.min(64, Math.round(W * 0.2));

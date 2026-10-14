@@ -1,7 +1,6 @@
 /* ===== RETRO ARTİKEL AVCISI =====
    Kapaktaki oyun kutusu araç kutularıyla aynı çerçeveyi kullanır. Geniş
-   ekranda araç kutuları bilgi satırıyla aynı genişliğe yayılır ve oyun
-   ikinci satırın sağdaki iki sütununa sabitlenir; araç kutusu
+   ekranda ikinci satırın sağdaki iki sütununa sabitlenir; araç kutusu
    eklense de yerinden oynamaz, yeni kutular alttaki satırlara geçer. */
 .araclar{grid-auto-flow:row dense}
 .araclar .oyun{gap:8px;padding:10px 12px 11px;align-content:start}
@@ -16,12 +15,11 @@
 }
 .oyun-ses:hover,.oyun-ses[aria-pressed="true"]{color:var(--cover-ink);border-color:rgba(214,164,74,.65)}
 .oyun-ses:focus-visible{outline:2px solid var(--ochre);outline-offset:2px}
-.oyun-ekran{display:block;width:100%;height:112px;border-radius:2px;cursor:crosshair;touch-action:manipulation;background:#07262A}
+.oyun-ekran{display:block;width:100%;height:140px;border-radius:2px;cursor:crosshair;touch-action:manipulation;background:#07262A}
 .oyun-ekran:focus{outline:none}
 .oyun-ekran:focus-visible{outline:2px solid var(--ochre);outline-offset:3px}
 html:not(.js) .oyun{display:none}
 @media (min-width:1180px){
-  .araclar{max-width:none}
   .araclar .oyun{grid-column:2 / span 2;grid-row:2}
 }
 @media (max-width:699px){
