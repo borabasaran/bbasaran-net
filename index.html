@@ -20,6 +20,7 @@
 <link rel="stylesheet" href="/cover.css">
 <link rel="stylesheet" href="/sekme.css">
 <link rel="stylesheet" href="/kitap.css">
+<link rel="stylesheet" href="/artikel.css">
 </head>
 <body>
 
@@ -102,6 +103,16 @@
         <span class="arac-git">Asistani Aç <span class="ok" aria-hidden="true">→</span></span>
       </a>
 <!-- ARACLAR:BITTI -->
+
+      <div class="probe oyun" id="oyun">
+        <div class="oyun-ust">
+          <p class="probe-top">Artikel avcısı</p>
+          <span class="oyun-not">der · die · das</span>
+          <span class="spacer"></span>
+          <button type="button" class="oyun-ses" id="oyun-ses" aria-pressed="false">Ses kapalı</button>
+        </div>
+        <canvas id="artikel" class="oyun-ekran" tabindex="0" role="img" aria-label="Artikel avcısı: Almanca bir adın doğru artikelini vuran küçük bir oyun. Bloğa dokunarak ya da sol, sağ ok ve boşluk tuşlarıyla oynanır."></canvas>
+      </div>
     </div>
   </div>
 
@@ -588,6 +599,7 @@
   <button type="button" id="onceki">← Önceki</button>
   <span class="kitap-no" id="sayfaNo">01 / 06</span>
   <button type="button" id="sonraki">Sonraki →</button>
+  <span class="kitap-alt kitap-surum">v1.1.0</span>
 </div>
 
 <div class="ticker" aria-hidden="true">
@@ -600,11 +612,12 @@
 </div>
 
 <footer class="wrap">
-  <span>© 2026 Bora Başaran</span>
+  <span>© 2026 Bora Başaran · v1.1.0</span>
   <span class="sep"></span>
   <button id="theme" style="font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;background:none;border:1px solid var(--line);color:var(--muted);padding:6px 12px;border-radius:2px;cursor:pointer">Tema</button>
 </footer>
 
 <script src="/app.js"></script>
+<script src="/artikel.js"></script>
 </body>
 </html>
