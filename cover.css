@@ -268,7 +268,7 @@ html.katlanir .cover-body{gap:clamp(14px,2.6vh,32px);padding-block:clamp(10px,2.
 
 /* araç kutuları: başlık, tek satır, ok */
 .araclar{gap:12px}
-/* ilk satırda ortalı oyun; ölçer ve bağlantılar altında geniş ekranda üçerli, ortada ikişerli */
+/* ilk satırda sola yaslı oyun; ölçer ve bağlantılar altında geniş ekranda üçerli, ortada ikişerli */
 @media (min-width:1180px){.araclar{grid-template-columns:minmax(0,1.25fr) minmax(0,1fr) minmax(0,1fr)}}
 @media (max-width:1179px){
   .araclar{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
