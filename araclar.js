@@ -1,73 +1,58 @@
-/* bbasaran.net: kapaktaki araç kutuları, sığmayanlar düğmeyle açılır. */
+/* bbasaran.net: kapaktaki araç şeridi. Bağlantı kutuları ölçerin yanındaki
+   tek bir şeritte yana kayar; sağ ve sol ok düğmeleri bir kutu kaydırır.
+   Kaç araç olursa olsun kapağın yüksekliği değişmez. */
 (function(){
-  var kok = document.documentElement;
-  /* ==================== KAPAKTAKİ ARAÇLAR: FAZLASI ====================
-     Bağlantı kutusu sayısı sınırsızdır. Kapak tek ekrana sığsın diye sığan
-     kadar tam satır gösterilir (en az bir satır); gizlenen kutular
-     "+N araç daha" düğmesiyle açılır. Açıkken kapağın ortası kendi içinde kayar.
-     Katlanan kapak yoksa (hareket azaltma açık) en fazla iki bağlantı satırı gösterilir. */
-  var aracKap = document.querySelector('.araclar');
-  var aracGovde = aracKap ? aracKap.closest('.cover-body') : null;
-  if(aracKap){
-    var aracLink = Array.prototype.slice.call(aracKap.querySelectorAll('.arac-link'));
-    aracLink.forEach(function(a){
-      var b = a.querySelector('.arac-baslik');
-      if(b && !a.title) a.title = b.textContent.trim();
-    });
-    var aracDaha = document.createElement('button');
-    aracDaha.type = 'button';
-    aracDaha.className = 'arac-daha';
-    aracDaha.hidden = true;
-    aracKap.appendChild(aracDaha);
+  var serit = document.getElementById('aracSerit');
+  if(!serit) return;
+  var kap = serit.parentNode;
+  var kutular = Array.prototype.slice.call(serit.querySelectorAll('.arac-link'));
+  if(!kutular.length){ kap.hidden = true; return; }
 
-    var aracGoster = function(n){
-      aracLink.forEach(function(a, i){ a.classList.toggle('arac-gizli', i >= n); });
-    };
-    var aracSigdir = function(){
-      var toplam = aracLink.length;
-      var acik = aracKap.classList.contains('acik');
-      var n = toplam;
-      aracGoster(toplam);
-      aracDaha.hidden = true;
-      if(!acik && toplam > 1){
-        /* ilk bağlantı satırı her zaman görünür; sonraki satırlar kapağa sığmazsa sondan gizlenir */
-        var ilkSatir = aracLink[0].offsetTop;
-        if(kok.classList.contains('katlanir') && aracGovde){
-          aracDaha.hidden = false;
-          aracDaha.textContent = '+0 araç daha';
-          while(n > 0 && aracLink[n - 1].offsetTop > ilkSatir && aracGovde.scrollHeight > aracGovde.clientHeight + 1){
-            var satir = aracLink[n - 1].offsetTop;
-            while(n > 0 && aracLink[n - 1].offsetTop === satir) n--;
-            aracGoster(n);
-            aracDaha.textContent = '+' + (toplam - n) + ' araç daha';
-          }
-        } else {
-          /* katlanan kapak yoksa en fazla iki bağlantı satırı */
-          var satirlar = [];
-          aracLink.forEach(function(a){ if(satirlar.indexOf(a.offsetTop) < 0) satirlar.push(a.offsetTop); });
-          if(satirlar.length > 2){
-            while(n > 0 && aracLink[n - 1].offsetTop > satirlar[1]) n--;
-            aracGoster(n);
-          }
-        }
-      }
-      var fazla = toplam - n;
-      aracDaha.hidden = acik ? false : fazla <= 0;
-      aracDaha.textContent = acik ? 'Daha az göster' : '+' + fazla + ' araç daha';
-      aracDaha.setAttribute('aria-expanded', acik ? 'true' : 'false');
-    };
-    aracDaha.addEventListener('click', function(){
-      var acilacak = !aracKap.classList.contains('acik');
-      aracKap.classList.toggle('acik', acilacak);
-      aracSigdir();
-      if(!acilacak && aracGovde) aracGovde.scrollTop = 0;
-    });
-    var aracZaman = null;
-    window.addEventListener('resize', function(){
-      clearTimeout(aracZaman);
-      aracZaman = setTimeout(aracSigdir, 150);
-    });
-    if(document.fonts && document.fonts.ready) document.fonts.ready.then(aracSigdir);
-    aracSigdir();
+  /* tek satıra sığmayan başlığın tamamı imleç üzerine gelince görünsün */
+  kutular.forEach(function(a){
+    var b = a.querySelector('.arac-baslik');
+    if(b && !a.title) a.title = b.textContent.trim();
+  });
+
+  function okYap(yon, yazi, etiket){
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'serit-ok ' + yon;
+    b.textContent = yazi;
+    b.setAttribute('aria-label', etiket);
+    b.hidden = true;
+    kap.appendChild(b);
+    return b;
   }
+  var sag = okYap('sag', '→', 'Sonraki araçlar');
+  var sol = okYap('sol', '←', 'Önceki araçlar');
+
+  function adim(){
+    var k = kutular[0].getBoundingClientRect().width;
+    var bosluk = parseFloat(getComputedStyle(serit).columnGap) || 12;
+    return k + bosluk;
+  }
+  function guncelle(){
+    var en = serit.scrollWidth - serit.clientWidth;
+    var x = serit.scrollLeft;
+    var sagVar = en > 6 && x < en - 6;
+    var solVar = en > 6 && x > 6;
+    sag.hidden = !sagVar;
+    sol.hidden = !solVar;
+    serit.classList.toggle('sag-var', sagVar);
+    serit.classList.toggle('sol-var', solVar);
+  }
+  sag.addEventListener('click', function(){ serit.scrollBy({ left: adim(), behavior: 'smooth' }); });
+  sol.addEventListener('click', function(){ serit.scrollBy({ left: -adim(), behavior: 'smooth' }); });
+
+  /* klavyeyle odaklanan kutu görünür alana kaysın */
+  serit.addEventListener('focusin', function(e){
+    if(e.target.scrollIntoView) e.target.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+  });
+
+  serit.addEventListener('scroll', guncelle, { passive: true });
+  var zaman = null;
+  window.addEventListener('resize', function(){ clearTimeout(zaman); zaman = setTimeout(guncelle, 120); });
+  if(document.fonts && document.fonts.ready) document.fonts.ready.then(guncelle);
+  guncelle();
 })();

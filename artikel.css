@@ -1,7 +1,7 @@
 /* ===== RETRO ARTİKEL AVCISI =====
    Kapaktaki oyun kutusu araç kutularıyla aynı çerçeveyi kullanır. En üst
    satırda tek başına, sola yaslı durur (geniş ekranda iki sütun genişliğinde,
-   dar ekranda tam satır); ölçer ve bağlantı kutuları altına üçerli akar. */
+   dar ekranda tam satır); altında ölçer ve araç şeridi durur. */
 .araclar .oyun{gap:8px;padding:10px 12px 11px;align-content:start}
 .oyun-ust{display:flex;align-items:center;gap:10px}
 .oyun-ust .spacer{flex:1}
