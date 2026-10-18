@@ -14,6 +14,7 @@ Statik site, derleme adımı yok:
 - `lib/sayfa.js` — işaretli blokları verilerden üreten ortak modül
 - `styles.css`, `cover.css`, `sekme.css`, `kitap.css` — biçim
 - `app.js` — kapak, kitap kurgusu, okunabilirlik ölçer, form, ziyaret sayacı
+- `araclar.js` — kapaktaki araç kutularından sığmayanları gizleyip "+N araç daha" düğmesiyle açar
 - `api/olay.js` — ziyaret istatistiklerini yazan sunucu işlevi
 - `scripts/guncelle.mjs` — aylık güncelleyici
 - `scripts/uret.mjs` — sayfayı verilerden elle yeniden üretir
@@ -27,7 +28,7 @@ node scripts/uret.mjs   # index.html'i verilerden yeniden üretir
 npm test                # index.html ile verilerin uyumunu denetler
 ```
 
-Kapaktaki araç kutuları (`kapak.araclar`) en fazla üçtür; her kutunun üst etiketi, başlığı, bağlantısı ve düğme yazısı vardır. Bağlantısı boş olan kutu sayfaya yazılmaz. Okunabilirlik ölçer sayfada sabittir, veriden gelmez.
+Kapaktaki araç kutularının (`kapak.araclar`) sayı sınırı yoktur; her kutunun üst etiketi, başlığı, bağlantısı ve düğme yazısı vardır. Bağlantısı boş olan kutu sayfaya yazılmaz. Kapağın en üst satırında Retro Artikel Avcısı ortalı durur; altında Okunabilirlik ölçer ve bağlantı kutuları geniş ekranda üçerli dizilir (ölçer ve oyun sabittir, veriden gelmez). Kapak tek ekrana sığsın diye sığan kadar satır görünür (ilk satır her zaman), fazlası "+N araç daha" düğmesiyle açılır. Kutu başlıkları kapakta tek satırdır.
 
 Yöntem maddelerinde `[[terim]]` yazımı vurgulu terim olarak gösterilir. Kapaktaki bilgi satırlarında birden fazla satır varsa kapakta sırayla döner. Çalışma kartına `baglanti` eklenirse kartta bir bağlantı görünür; `renk` alanı `yesil` ya da `sari` olabilir.
 
