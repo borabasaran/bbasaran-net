@@ -293,7 +293,7 @@ main{max-width:980px;margin:0 auto;padding:22px 20px 80px}
             alan('Düğme yazısı', x, 'dugme', { yer: 'Örn. Sihirbazı aç' })
           ]));
         }
-      })], 'Kapağın altındaki bağlantı kutuları; sayı sınırı yoktur. Kapakta ölçerin yanındaki yana kayan şeritte görünür; sıra buradaki sıradır. Okunabilirlik ölçer ve Retro Artikel Avcısı sabittir, listede görünmez. Bağlantısı boş bırakılan kutu kapakta gösterilmez.'));
+      })], 'Kapağın altındaki bağlantı kutuları; sayı sınırı yoktur. Kapakta ölçerin yanında ikişerli görünür, devamına büyük okla geçilir; sıra buradaki sıradır. Okunabilirlik ölçer ve Retro Artikel Avcısı sabittir, listede görünmez. Bağlantısı boş bırakılan kutu kapakta gösterilmez.'));
       k.appendChild(kart('Bilgi satırları', [listeDuzenle(s.bilgiler, {
         ad: function (b) { return b.baslik || 'Başlıksız'; }, ekle: 'Bilgi ekle', en: 6,
         yeni: function () { return { baslik: '', satirlar: [''] }; },
@@ -304,7 +304,7 @@ main{max-width:980px;margin:0 auto;padding:22px 20px 80px}
           ]));
           ic.appendChild(satirAlani('Satırlar', b, 'satirlar', 'Her satır ayrı bir ifade. Sırayla dönen kutuda ilk satır önce görünür, diğerleri sırayla gelir; listelenen kutuda hepsi alt alta görünür. Bağlantı için: [Görünecek yazı](https://adres)'));
         }
-      })], 'Kapaktaki küçük bilgi kutuları (en fazla 6).'));
+      })], 'Kapaktaki küçük bilgi kutuları (en fazla 6). Başlığı "Linkler" olan kutu solda sabit durur; diğerleri ikişerli görünür, devamına büyük okla geçilir.'));
     },
     hakkinda: function (k) {
       var s = veri.site.hakkinda;
