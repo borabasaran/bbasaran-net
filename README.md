@@ -18,6 +18,7 @@ Statik site, derleme adımı yok:
 - `api/olay.js` — ziyaret istatistiklerini yazan sunucu işlevi
 - `scripts/guncelle.mjs` — aylık güncelleyici
 - `scripts/uret.mjs` — sayfayı verilerden elle yeniden üretir
+- `robots.txt`, `sitemap.xml` — arama motorları için; panel ve API dizine alınmaz
 
 ## İçeriği değiştirmek
 
