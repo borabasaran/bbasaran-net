@@ -268,7 +268,7 @@ html.katlanir .cover-body{gap:clamp(14px,2.6vh,32px);padding-block:clamp(10px,2.
 
 /* araç kutuları: başlık, tek satır, ok */
 .araclar{gap:12px}
-/* ilk satırda sola yaslı oyun; ölçer ve bağlantılar altında geniş ekranda üçerli, ortada ikişerli */
+/* ilk satırda sola yaslı oyun; altında ölçer ve yanında araç şeridi (ortada şerit ölçerin altında) */
 @media (min-width:1180px){.araclar{grid-template-columns:minmax(0,1.25fr) minmax(0,1fr) minmax(0,1fr)}}
 @media (max-width:1179px){
   .araclar{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
@@ -352,19 +352,44 @@ html.katlanir .cover-body{gap:clamp(14px,2.6vh,32px);padding-block:clamp(10px,2.
   .facts li.fact-acilir .fact-v{transition:none}
 }
 
-/* ===== KAPAKTAKİ ARAÇLAR: FAZLASI DÜĞMEYLE AÇILIR =====
-   Bağlantı kutusu sayısı sınırsızdır. araclar.js kapağa sığan kadar tam satırı
-   gösterir (en az bir satır); kalanlar "+N araç daha" ile açılır. Kutu
-   başlıkları kapakta tek satırdır, tamamı imleç üzerine gelince görünür. */
-.araclar .arac-link.arac-gizli{display:none}
-.araclar .arac-baslik{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.arac-daha{
-  grid-column:1 / -1;justify-self:start;
-  font-family:var(--mono);font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;
-  color:var(--cover-dim);background:none;cursor:pointer;
-  border:1px solid rgba(232,240,237,.25);border-radius:2px;padding:5px 11px;
-  transition:color .25s,border-color .25s;
+/* ===== KAPAKTAKİ ARAÇLAR: YANA KAYAN ŞERİT =====
+   Bağlantı kutuları ölçerin yanındaki tek bir şeritte durur; sayı sınırı
+   yoktur ve kapağın yüksekliği değişmez. Geniş ekranda iki kutu ve bir
+   sonrakinin kenarı görünür; araclar.js sağ ve sol ok düğmelerini ekler.
+   Kutu başlıkları tek satırdır, tamamı imleç üzerine gelince görünür. */
+.arac-serit-kap{position:relative;min-width:0;display:grid}
+@media (min-width:1180px){.arac-serit-kap{grid-column:2 / span 2}}
+@media (max-width:1179px){.arac-serit-kap{grid-column:1 / -1}}
+.arac-serit{
+  display:grid;grid-auto-flow:column;
+  grid-auto-columns:minmax(calc((100% - 24px) / 2.2),1fr);
+  gap:12px;
+  overflow-x:auto;overflow-y:hidden;
+  scroll-snap-type:x mandatory;scroll-behavior:smooth;
+  scrollbar-width:none;
+  padding:4px;margin:-4px;scroll-padding-inline:4px;
 }
-.arac-daha:hover{color:var(--cover-ink);border-color:rgba(214,164,74,.65)}
-.arac-daha:focus-visible{outline:2px solid var(--ochre);outline-offset:2px}
-.arac-daha[hidden]{display:none}
+.arac-serit::-webkit-scrollbar{display:none}
+.arac-serit .arac-link{scroll-snap-align:start;min-width:0}
+.arac-serit.sag-var{-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 56px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 56px),transparent)}
+.arac-serit.sol-var{-webkit-mask-image:linear-gradient(90deg,transparent,#000 56px);mask-image:linear-gradient(90deg,transparent,#000 56px)}
+.arac-serit.sag-var.sol-var{-webkit-mask-image:linear-gradient(90deg,transparent,#000 56px,#000 calc(100% - 56px),transparent);mask-image:linear-gradient(90deg,transparent,#000 56px,#000 calc(100% - 56px),transparent)}
+.araclar .arac-baslik{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.serit-ok{
+  position:absolute;top:50%;z-index:2;transform:translateY(-50%);
+  width:34px;height:34px;border-radius:50%;
+  display:grid;place-items:center;
+  font-family:var(--mono);font-size:15px;line-height:1;color:var(--cover-ink);
+  background:rgba(6,32,34,.9);cursor:pointer;
+  border:1px solid rgba(214,164,74,.7);
+  box-shadow:0 6px 16px rgba(0,0,0,.35);
+  transition:background .25s,border-color .25s,opacity .25s;
+}
+.serit-ok:hover{background:rgba(214,164,74,.9);color:#07262A}
+.serit-ok:focus-visible{outline:2px solid var(--ochre);outline-offset:2px}
+.serit-ok[hidden]{display:none}
+.serit-ok.sag{right:-8px}
+.serit-ok.sol{left:-8px}
+@media (max-width:699px){
+  .arac-serit{grid-auto-columns:minmax(calc((100% - 12px) / 1.6),1fr);gap:10px}
+}
