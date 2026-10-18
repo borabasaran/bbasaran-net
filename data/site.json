@@ -20,6 +20,12 @@
         "baslik": "Almanca Öğretmenliği Programı Öğrencilerinin Tübitak 2209 Proje Fikri geliştirme ortamı",
         "baglanti": "https://arsi2209.bbasaran.net",
         "dugme": "Asistani Aç"
+      },
+      {
+        "etiket": "İlan Radarı",
+        "baslik": "Almanca akademik kadro ilanları",
+        "baglanti": "https://ilan.bbasaran.net/",
+        "dugme": "Buradan"
       }
     ],
     "bilgiler": [
