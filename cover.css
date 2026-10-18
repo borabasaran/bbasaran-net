@@ -268,7 +268,7 @@ html.katlanir .cover-body{gap:clamp(14px,2.6vh,32px);padding-block:clamp(10px,2.
 
 /* araç kutuları: başlık, tek satır, ok */
 .araclar{gap:12px}
-/* ilk satırda sola yaslı oyun; altında ölçer ve yanında araç şeridi (ortada şerit ölçerin altında) */
+/* ilk satırda sola yaslı oyun; altında ölçer ve yanında iki araç kutusu (ortada kutular ölçerin altında) */
 @media (min-width:1180px){.araclar{grid-template-columns:minmax(0,1.25fr) minmax(0,1fr) minmax(0,1fr)}}
 @media (max-width:1179px){
   .araclar{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
@@ -352,44 +352,59 @@ html.katlanir .cover-body{gap:clamp(14px,2.6vh,32px);padding-block:clamp(10px,2.
   .facts li.fact-acilir .fact-v{transition:none}
 }
 
-/* ===== KAPAKTAKİ ARAÇLAR: YANA KAYAN ŞERİT =====
-   Bağlantı kutuları ölçerin yanındaki tek bir şeritte durur; sayı sınırı
-   yoktur ve kapağın yüksekliği değişmez. Geniş ekranda iki kutu ve bir
-   sonrakinin kenarı görünür; araclar.js sağ ve sol ok düğmelerini ekler.
-   Kutu başlıkları tek satırdır, tamamı imleç üzerine gelince görünür. */
-.arac-serit-kap{position:relative;min-width:0;display:grid}
+/* ===== KAPAKTAKİ ŞERİTLER: İKİ KUTU VE OKLAR =====
+   Bilgi satırında "Linkler", araç satırında Okunabilirlik ölçer solda sabit
+   durur; yanlarındaki kutular ikişerli görünür ve büyük oklarla değişir
+   (araclar.js). Sütunlar iki satırda alt alta hizalıdır. Kutu sayısı ne
+   olursa olsun kapağın yüksekliği değişmez. */
+.serit-sayfali{position:relative}
+.serit-gizli{display:none !important}
+
+/* bilgi satırı */
+.facts-kap{position:relative;min-width:0}
+.facts.facts-serit{max-width:1000px;column-gap:12px}
+@media (min-width:1180px){
+  .facts.facts-serit{grid-template-columns:minmax(0,1.25fr) minmax(0,1fr) minmax(0,1fr)}
+}
+@media (max-width:1179px){
+  .facts.facts-serit{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+  .facts.facts-serit li.sabit{grid-column:1 / -1}
+}
+.facts.facts-serit .fact-v{max-width:none}
+@media (max-width:699px){
+  /* telefonda Linkler gizli kalır (önceki düzende de öyleydi); akan kutular ikişerli */
+  .facts.facts-serit li.sabit{display:none}
+  .facts.facts-serit li:nth-child(n+5){display:block}
+  .facts.facts-serit li:last-child:nth-child(odd){grid-column:auto}
+}
+.facts.facts-serit.hazir li{animation:none}
+
+/* araç satırı */
+.arac-serit-kap{min-width:0}
 @media (min-width:1180px){.arac-serit-kap{grid-column:2 / span 2}}
 @media (max-width:1179px){.arac-serit-kap{grid-column:1 / -1}}
-.arac-serit{
-  display:grid;grid-auto-flow:column;
-  grid-auto-columns:minmax(calc((100% - 24px) / 2.2),1fr);
-  gap:12px;
-  overflow-x:auto;overflow-y:hidden;
-  scroll-snap-type:x mandatory;scroll-behavior:smooth;
-  scrollbar-width:none;
-  padding:4px;margin:-4px;scroll-padding-inline:4px;
-}
-.arac-serit::-webkit-scrollbar{display:none}
-.arac-serit .arac-link{scroll-snap-align:start;min-width:0}
-.arac-serit.sag-var{-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 56px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 56px),transparent)}
-.arac-serit.sol-var{-webkit-mask-image:linear-gradient(90deg,transparent,#000 56px);mask-image:linear-gradient(90deg,transparent,#000 56px)}
-.arac-serit.sag-var.sol-var{-webkit-mask-image:linear-gradient(90deg,transparent,#000 56px,#000 calc(100% - 56px),transparent);mask-image:linear-gradient(90deg,transparent,#000 56px,#000 calc(100% - 56px),transparent)}
+.arac-serit{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px}
+@media (max-width:699px){.arac-serit{gap:10px}}
 .araclar .arac-baslik{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* geçiş */
+@keyframes seritSag{from{opacity:0;transform:translateX(22px)}to{opacity:1;transform:none}}
+@keyframes seritSol{from{opacity:0;transform:translateX(-22px)}to{opacity:1;transform:none}}
+.gecis-sag{animation:seritSag .35s var(--ease) both !important}
+.gecis-sol{animation:seritSol .35s var(--ease) both !important}
+
+/* büyük beyaz oklar */
 .serit-ok{
-  position:absolute;top:50%;z-index:2;transform:translateY(-50%);
-  width:34px;height:34px;border-radius:50%;
+  position:absolute;z-index:6;transform:translate(-50%,-50%);
+  width:46px;height:46px;border-radius:50%;
   display:grid;place-items:center;
-  font-family:var(--mono);font-size:15px;line-height:1;color:var(--cover-ink);
-  background:rgba(6,32,34,.9);cursor:pointer;
-  border:1px solid rgba(214,164,74,.7);
-  box-shadow:0 6px 16px rgba(0,0,0,.35);
-  transition:background .25s,border-color .25s,opacity .25s;
+  font-family:var(--sans);font-size:24px;font-weight:700;line-height:1;
+  color:#07262A;background:#F4F1EA;cursor:pointer;
+  border:0;
+  box-shadow:0 8px 22px rgba(0,0,0,.4),0 0 0 4px rgba(244,241,234,.18);
+  transition:transform .25s var(--ease),background .25s;
 }
-.serit-ok:hover{background:rgba(214,164,74,.9);color:#07262A}
-.serit-ok:focus-visible{outline:2px solid var(--ochre);outline-offset:2px}
+.serit-ok:hover{background:#fff;transform:translate(-50%,-50%) scale(1.08)}
+.serit-ok:focus-visible{outline:2px solid var(--ochre);outline-offset:3px}
 .serit-ok[hidden]{display:none}
-.serit-ok.sag{right:-8px}
-.serit-ok.sol{left:-8px}
-@media (max-width:699px){
-  .arac-serit{grid-auto-columns:minmax(calc((100% - 12px) / 1.6),1fr);gap:10px}
-}
+@media (max-width:699px){.serit-ok{width:38px;height:38px;font-size:20px}}
