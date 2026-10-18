@@ -133,7 +133,7 @@ function dogrula(v) {
     kapak: {
       unvan: metin(k.unvan, 'Unvan', 200),
       tanitim: metin(k.tanitim, 'Tanıtım', 1200),
-      araclar: liste(k.araclar || [], 'Kapak araçları', 4).map(function (x, n) {
+      araclar: liste(k.araclar || [], 'Kapak araçları', 60).map(function (x, n) {
         nesne(x, 'Kapak aracı');
         var bag = metin(x.baglanti, 'Araç bağlantısı', 500).trim();
         if (!baglantiUygun(bag)) throw new Error('Araç ' + (n + 1) + ': bağlantı https:// ile başlamalı.');
