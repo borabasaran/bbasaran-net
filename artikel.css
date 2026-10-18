@@ -1,6 +1,6 @@
 /* ===== RETRO ARTİKEL AVCISI =====
    Kapaktaki oyun kutusu araç kutularıyla aynı çerçeveyi kullanır. En üst
-   satırda tek başına, ortalı durur (geniş ekranda iki sütun genişliğinde,
+   satırda tek başına, sola yaslı durur (geniş ekranda iki sütun genişliğinde,
    dar ekranda tam satır); ölçer ve bağlantı kutuları altına üçerli akar. */
 .araclar .oyun{gap:8px;padding:10px 12px 11px;align-content:start}
 .oyun-ust{display:flex;align-items:center;gap:10px}
@@ -20,7 +20,7 @@
 html:not(.js) .oyun{display:none}
 .araclar .oyun{grid-column:1 / -1}
 @media (min-width:1180px){
-  .araclar .oyun{justify-self:center;width:calc((100% - 24px) * 2 / 3.25 + 12px)}
+  .araclar .oyun{justify-self:start;width:calc((100% - 24px) * 2 / 3.25 + 12px)}
 }
 
 /* sürüm etiketi: kitap kurgusunda alt çubukta, telif satırından sonra */
