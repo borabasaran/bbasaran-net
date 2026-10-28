@@ -490,7 +490,39 @@ main{max-width:980px;margin:0 auto;padding:22px 20px 80px}
   function kaynakAdi(k) {
     if (k === 'doğrudan') return 'Doğrudan giriş';
     if (k === 'bilinmiyor') return 'Giriş kaydı yok';
+    if (k && k.indexOf('etiket:') === 0) return 'Paylaşılan bağlantı: ' + k.slice(7);
     return k;
+  }
+
+  var HAZIR_ETIKETLER = ['whatsapp', 'eposta', 'linkedin', 'sunum', 'qr'];
+  var paylasimEtiketi = 'whatsapp';
+
+  function paylasimKarti() {
+    var cikti = el('input', { type: 'text', readonly: 'readonly' });
+    var kopyala = el('button', { class: 'btn kucuk', type: 'button', text: 'Kopyala' });
+    function bagla() {
+      var e = paylasimEtiketi.toLowerCase().replace(/[^a-z0-9-]/g, '').slice(0, 30);
+      cikti.value = e ? 'https://bbasaran.net/?k=' + e : 'https://bbasaran.net/';
+      kopyala.textContent = 'Kopyala';
+    }
+    var giris = el('input', { type: 'text', value: paylasimEtiketi, placeholder: 'örn. whatsapp', oninput: function () { paylasimEtiketi = this.value; bagla(); } });
+    var hazir = el('div', { class: 'hareket-ust' }, HAZIR_ETIKETLER.map(function (e) {
+      return el('button', { class: 'btn kucuk', type: 'button', text: e, onclick: function () { paylasimEtiketi = e; giris.value = e; bagla(); } });
+    }));
+    kopyala.addEventListener('click', function () {
+      cikti.select();
+      var bitti = function () { kopyala.textContent = 'Kopyalandı ✓'; };
+      try { navigator.clipboard.writeText(cikti.value).then(bitti, function () { document.execCommand('copy'); bitti(); }); }
+      catch (x) { try { document.execCommand('copy'); bitti(); } catch (y) {} }
+    });
+    bagla();
+    return kart('Paylaşım bağlantısı', [
+      hazir,
+      el('div', { class: 'iki' }, [
+        el('label', { class: 'alan' }, [el('span', { text: 'Etiket' }), giris, el('small', { text: 'Küçük harf, rakam ve tire.' })]),
+        el('label', { class: 'alan' }, [el('span', { text: 'Bağlantı' }), cikti, kopyala])
+      ])
+    ], 'Siteyi bir yerde paylaşırken bu bağlantıyı kullanın. O bağlantıyla gelenler "Nereden gelindi" ve "Son hareketler" bölümlerinde etiketiyle görünür (örneğin Paylaşılan bağlantı: whatsapp). Etiket, ziyaretçinin adres çubuğundan kendiliğinden kaldırılır.');
   }
 
   function hareketKarti() {
@@ -569,7 +601,8 @@ main{max-width:980px;margin:0 auto;padding:22px 20px 80px}
     k.appendChild(hareketKarti());
     k.appendChild(istListe('Açılan bölümler', istOzet.bolumler, function (ad) { return BOLUM_ADI[ad] || ad; }));
     k.appendChild(istListe('Tıklamalar', istOzet.tiklamalar));
-    k.appendChild(istListe('Nereden gelindi', istOzet.kaynaklar));
+    k.appendChild(istListe('Nereden gelindi', istOzet.kaynaklar, kaynakAdi));
+    k.appendChild(paylasimKarti());
     k.appendChild(istListe('Ülkeler', istOzet.ulkeler));
     k.appendChild(istListe('Cihazlar', istOzet.cihazlar, function (ad) { return CIHAZ_ADI[ad] || ad; }));
     k.appendChild(kart('Gizlilik', [el('p', { class: 'aciklama', text: 'Çerez, IP adresi ve kalıcı ziyaretçi kimliği tutulmaz. Oturum numarası sekme kapanınca silinir. Tarayıcısında izlenmeme tercihi açık olan ziyaretçiler hiç sayılmaz.' })]));
