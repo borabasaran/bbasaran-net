@@ -38,8 +38,9 @@ test('kart eklenince numara ve sayaç güncellenir, bağlantı ve etiket rengi i
   const v = veri();
   v.site.calismalar.kartlar.push({ baslik: 'Yeni', metin: 'Deneme', etiket: 'Kullanımda', renk: 'yesil', baglanti: 'https://daf-asistan.bbasaran.net', baglantiMetni: 'Asistanı aç' });
   const html = sayfa.sayfayiUret(oku('index.html'), v);
-  assert.match(html, /<p class="no">07<\/p>\n          <h3>Yeni<\/h3>/);
-  assert.match(html, /<span>07<\/span>\n    <\/div>/);
+  const no = String(v.site.calismalar.kartlar.length).padStart(2, '0');
+  assert.match(html, new RegExp('<p class="no">' + no + '</p>\\n          <h3>Yeni</h3>'));
+  assert.match(html, new RegExp('<span>' + no + '</span>\\n    </div>'));
   assert.match(html, /<a class="card-git" href="https:\/\/daf-asistan\.bbasaran\.net">Asistanı aç/);
 });
 
