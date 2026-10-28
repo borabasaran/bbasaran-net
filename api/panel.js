@@ -309,6 +309,128 @@ function hareketleriKur(tiklamalar, ziyaretler) {
   };
 }
 
+// Ziyaret kimliğine (oturum) göre olayları birleştirir: her ziyaretin giriş kaynağı,
+// cihazı, ülkesi, süresi ve sitede sırayla yaptıkları. Olaylar eskiden yeniye sıralı gelir.
+function oturumlariKur(olaylar) {
+  var harita = {};
+  var sira = [];
+  (olaylar || []).forEach(function (o, i) {
+    var k = o.oturum || ('_' + i);
+    var s = harita[k];
+    if (!s) {
+      s = harita[k] = { bas: o.olusturuldu, son: o.olusturuldu, kaynak: null, giris: false, cihaz: null, ulke: null, sayfa: 0, adimlar: [] };
+      sira.push(s);
+    }
+    s.son = o.olusturuldu;
+    if (!s.cihaz && o.cihaz) s.cihaz = o.cihaz;
+    if (!s.ulke && o.ulke) s.ulke = o.ulke;
+    if (o.tur === 'ziyaret') {
+      s.giris = true;
+      s.sayfa += 1;
+      if (!s.kaynak && o.kaynak) s.kaynak = o.kaynak;
+      return;
+    }
+    var onceki = s.adimlar[s.adimlar.length - 1];
+    if (onceki && onceki.tur === o.tur && onceki.ad === (o.deger || '') &&
+        (Date.parse(o.olusturuldu) - Date.parse(onceki.son)) / 1000 <= TEKRAR_SANIYE) {
+      onceki.adet += 1;
+      onceki.son = o.olusturuldu;
+      return;
+    }
+    s.adimlar.push({ zaman: o.olusturuldu, son: o.olusturuldu, tur: o.tur, ad: o.deger || '', adet: 1 });
+  });
+  return sira.map(function (s) {
+    return {
+      bas: s.bas,
+      sure: Math.max(0, Math.round((Date.parse(s.son) - Date.parse(s.bas)) / 1000)),
+      kaynak: s.giris ? (s.kaynak || 'doğrudan') : 'bilinmiyor',
+      cihaz: s.cihaz, ulke: s.ulke, sayfa: s.sayfa,
+      adimlar: s.adimlar.map(function (a) { return { zaman: a.zaman, tur: a.tur, ad: a.ad, adet: a.adet }; })
+    };
+  });
+}
+
+// Olaylardan sekmelerin ihtiyaç duyduğu özetleri çıkarır.
+function istatistikDerle(olaylar) {
+  olaylar = olaylar || [];
+  var ziyaretler = oturumlariKur(olaylar);
+
+  function ozetle(tur) {
+    var h = {};
+    olaylar.forEach(function (o) {
+      if (o.tur !== tur) return;
+      var ad = o.deger || 'Adsız';
+      var x = h[ad] = h[ad] || { ad: ad, n: 0, kisiler: {}, son: o.olusturuldu };
+      x.n += 1;
+      if (o.oturum) x.kisiler[o.oturum] = 1;
+      if (o.olusturuldu > x.son) x.son = o.olusturuldu;
+    });
+    return Object.keys(h).map(function (k) {
+      var x = h[k];
+      return { ad: x.ad, n: x.n, kisi: Object.keys(x.kisiler).length, son: x.son };
+    }).sort(function (a, b) { return b.kisi - a.kisi || b.n - a.n; });
+  }
+
+  var kaynakMap = {};
+  ziyaretler.forEach(function (z) {
+    if (z.kaynak === 'bilinmiyor') return;
+    var x = kaynakMap[z.kaynak] = kaynakMap[z.kaynak] || { ad: z.kaynak, ziyaret: 0, bolum: 0, tiklayan: 0, son: z.bas };
+    x.ziyaret += 1;
+    var bolumler = {};
+    z.adimlar.forEach(function (a) { if (a.tur === 'bolum') bolumler[a.ad] = 1; });
+    x.bolum += Object.keys(bolumler).length;
+    if (z.adimlar.some(function (a) { return a.tur === 'tiklama'; })) x.tiklayan += 1;
+    if (z.bas > x.son) x.son = z.bas;
+  });
+  var kaynaklar = Object.keys(kaynakMap).map(function (k) {
+    var x = kaynakMap[k];
+    return { ad: x.ad, ziyaret: x.ziyaret, ortBolum: Math.round((x.bolum / x.ziyaret) * 10) / 10, tiklayan: x.tiklayan, son: x.son };
+  }).sort(function (a, b) { return b.ziyaret - a.ziyaret; });
+
+  // Her bölüm açılışına, o kişinin siteye giriş kaynağı eklenir.
+  var giris = {};
+  olaylar.forEach(function (o) {
+    if (o.tur !== 'ziyaret' || !o.oturum) return;
+    if (!(o.oturum in giris)) giris[o.oturum] = null;
+    if (!giris[o.oturum] && o.kaynak) giris[o.oturum] = o.kaynak;
+  });
+  var bolumListesi = olaylar.filter(function (o) { return o.tur === 'bolum'; }).map(function (o) {
+    var kaynak = o.oturum && (o.oturum in giris) ? (giris[o.oturum] || 'doğrudan') : 'bilinmiyor';
+    return { zaman: o.olusturuldu, ad: o.deger || '', cihaz: o.cihaz || null, ulke: o.ulke || null, kaynak: kaynak };
+  });
+
+  var tiklamalar = olaylar.filter(function (o) { return o.tur === 'tiklama'; }).reverse();
+  var girisler = olaylar.filter(function (o) { return o.tur === 'ziyaret'; });
+
+  return {
+    ziyaretler: ziyaretler.reverse().slice(0, ZIYARET_SINIRI),
+    bolumOzeti: ozetle('bolum'),
+    bolumListesi: bolumListesi.reverse().slice(0, LISTE_SINIRI),
+    tiklamaOzeti: ozetle('tiklama'),
+    hareketler: hareketleriKur(tiklamalar, girisler).hareketler.slice(0, LISTE_SINIRI),
+    kaynakOzeti: kaynaklar
+  };
+}
+
+var OLAY_SINIRI = 20000;
+var ZIYARET_SINIRI = 1500;
+var LISTE_SINIRI = 1500;
+
+async function olaylariOku(url, anahtar, bas) {
+  var tum = [];
+  var parca = 1000;
+  for (var atla = 0; atla < OLAY_SINIRI; atla += parca) {
+    var r = await supabaseIstek(url, anahtar, '/rest/v1/bb_olaylar?select=olusturuldu,tur,deger,kaynak,cihaz,ulke,oturum' +
+      '&gun=gte.' + bas + '&order=olusturuldu.asc,id.asc&limit=' + parca + '&offset=' + atla);
+    if (!r.ok) throw new Error('Olaylar okunamadı (HTTP ' + r.status + ')');
+    var p = await r.json();
+    if (!Array.isArray(p)) break;
+    tum = tum.concat(p);
+    if (p.length < parca) return { olaylar: tum, kesik: false };
+  }
+  return { olaylar: tum, kesik: true };
+}
+
 async function istatistik(res, b) {
   var url = process.env.SUPABASE_URL || '';
   var anahtar = process.env.SUPABASE_ANAHTAR || '';
@@ -316,36 +438,20 @@ async function istatistik(res, b) {
   var gun = Math.min(Math.max(parseInt(b.gun, 10) || 30, 1), 365);
   var bas = baslangicGunu(gun);
 
-  var istekler = await Promise.all([
+  var sonuc = await Promise.all([
     supabaseIstek(url, anahtar, '/rest/v1/rpc/bb_ozet', { method: 'POST', body: { p_gun: gun } }),
-    supabaseIstek(url, anahtar, '/rest/v1/bb_olaylar?select=olusturuldu,deger,cihaz,ulke,oturum' +
-      '&tur=eq.tiklama&gun=gte.' + bas + '&order=olusturuldu.desc&limit=' + HAREKET_SINIRI)
+    olaylariOku(url, anahtar, bas).catch(function (e) { return { hata: e.message }; })
   ]);
-  var veri = await istekler[0].json().catch(function () { return null; });
-  if (!istekler[0].ok) return hata(res, 502, 'İstatistik okunamadı: ' + ((veri && veri.message) || ('HTTP ' + istekler[0].status)));
+  var veri = await sonuc[0].json().catch(function () { return null; });
+  if (!sonuc[0].ok || !veri) return hata(res, 502, 'İstatistik okunamadı: ' + ((veri && veri.message) || ('HTTP ' + sonuc[0].status)));
 
-  // Hareketler okunamazsa özet yine gösterilir.
-  var tiklamalar = istekler[1].ok ? await istekler[1].json().catch(function () { return []; }) : [];
-  if (!Array.isArray(tiklamalar)) tiklamalar = [];
-
-  var oturumlar = [];
-  tiklamalar.forEach(function (t) {
-    var o = String(t.oturum || '').replace(/[^a-z0-9]/gi, '');
-    if (o && oturumlar.indexOf(o) < 0) oturumlar.push(o);
-  });
-  var ziyaretler = [];
-  if (oturumlar.length) {
-    var zr = await supabaseIstek(url, anahtar, '/rest/v1/bb_olaylar?select=oturum,kaynak' +
-      '&tur=eq.ziyaret&oturum=in.(' + oturumlar.join(',') + ')&order=olusturuldu.asc').catch(function () { return null; });
-    if (zr && zr.ok) ziyaretler = await zr.json().catch(function () { return []; });
-    if (!Array.isArray(ziyaretler)) ziyaretler = [];
+  if (sonuc[1].hata) {
+    veri.ayrinti_hatasi = sonuc[1].hata;
+  } else {
+    var d = istatistikDerle(sonuc[1].olaylar);
+    Object.keys(d).forEach(function (k) { veri[k] = d[k]; });
+    veri.kesik = sonuc[1].kesik;
   }
-
-  var sonuc = hareketleriKur(tiklamalar, ziyaretler);
-  if (veri && Array.isArray(veri.tiklamalar)) {
-    veri.tiklamalar.forEach(function (x) { x.kisi = sonuc.kisiSayisi[x.ad] || 0; });
-  }
-  if (veri) veri.hareketler = sonuc.hareketler;
   return yanit(res, 200, { ok: true, ozet: veri });
 }
 
@@ -521,3 +627,4 @@ module.exports.hareketleriKur = hareketleriKur;
 module.exports.baslangicGunu = baslangicGunu;
 module.exports.arama = arama;
 module.exports._gscSifirla = function () { gscBelirteci = { deger: '', bitis: 0 }; };
+module.exports.istatistikDerle = istatistikDerle;
