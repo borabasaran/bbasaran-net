@@ -51,6 +51,23 @@
     return 'masaustu';
   }
 
+  /* Paylaşım etiketi: bbasaran.net/?k=whatsapp gibi bağlantılarla gelenler ayrı görünür.
+     Etiket oturum boyunca saklanır ve adres çubuğundan kaldırılır. */
+  var paylasimEtiketi = (function () {
+    var e = '';
+    try {
+      var u = new URL(location.href);
+      e = String(u.searchParams.get('k') || '').toLowerCase().replace(/[^a-z0-9-]/g, '').slice(0, 30);
+      if (u.searchParams.has('k')) {
+        u.searchParams.delete('k');
+        history.replaceState(history.state, '', u.pathname + (u.search || '') + u.hash);
+      }
+      if (e) sessionStorage.setItem('bb_etiket', e);
+      else e = sessionStorage.getItem('bb_etiket') || '';
+    } catch (x) {}
+    return e;
+  })();
+
   /* Kendi sitemizden gelen gezinme kaynak sayılmaz */
   function disKaynak() {
     var r = document.referrer || '';
@@ -69,6 +86,7 @@
       tur: tur,
       deger: deger || null,
       kaynak: tur === 'ziyaret' ? disKaynak() : '',
+      etiket: tur === 'ziyaret' ? paylasimEtiketi : '',
       cihaz: cihazTuru(),
       oturum: oturum()
     });
@@ -340,7 +358,7 @@
     requestAnimationFrame(function(){ requestAnimationFrame(ac); });
     /* Güvenlik ağı: sekme arka planda ya da tarayıcı çizimi askıdaysa
        requestAnimationFrame çalışmayabiliyor; o durumda içerik hep saydam
-       kalıyordu. Zamanlayıcı her hâlükârda açıyor. */
+       kalıyordu. Zamanlayıcı her hâlükarda açıyor. */
     setTimeout(ac, 220);
   }
 

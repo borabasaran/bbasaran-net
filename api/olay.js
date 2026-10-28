@@ -2,7 +2,8 @@
 // Tarayıcıdan gelen olayları Supabase'deki bb_olaylar tablosuna yazar.
 // Kişisel veri saklanmaz: IP, çerez, e-posta ya da kalıcı ziyaretçi kimliği yoktur.
 // 'oturum' sekme kapanınca silinen rastgele bir sayıdır; ülke bilgisi Vercel'in
-// istek başlığından gelir ve yalnızca iki harfli ülke kodudur.
+// istek başlığından gelir ve yalnızca iki harfli ülke kodudur. Paylaşım etiketiyle
+// gelen ziyaretlerde kaynak "etiket:whatsapp" biçiminde yazılır.
 
 var TURLER = ['ziyaret', 'bolum', 'tiklama', 'olcer'];
 var CIHAZLAR = ['masaustu', 'telefon', 'tablet'];
@@ -34,6 +35,12 @@ function alanAdi(v) {
   } catch (e) { return null; }
 }
 
+// Paylaşım etiketi (bbasaran.net/?k=whatsapp): yalnızca küçük harf, rakam ve tire.
+function etiket(v) {
+  var s = kisalt(v, 30);
+  return s && /^[a-z0-9-]+$/.test(s) ? s : null;
+}
+
 function bitir(res, kod) {
   res.statusCode = kod;
   res.setHeader('Cache-Control', 'no-store');
@@ -55,7 +62,7 @@ module.exports = async function handler(req, res) {
   var satir = {
     tur: b.tur,
     deger: kisalt(b.deger, 60),
-    kaynak: alanAdi(b.kaynak),
+    kaynak: etiket(b.etiket) ? 'etiket:' + etiket(b.etiket) : alanAdi(b.kaynak),
     cihaz: CIHAZLAR.indexOf(b.cihaz) >= 0 ? b.cihaz : null,
     ulke: kisalt(req.headers['x-vercel-ip-country'], 2),
     oturum: kisalt(String(b.oturum || '').replace(/[^a-z0-9]/gi, ''), 24)

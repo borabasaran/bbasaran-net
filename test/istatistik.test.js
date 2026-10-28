@@ -28,3 +28,24 @@ test('aralık başlangıcı Türkiye takvimine göre hesaplanır', () => {
   assert.strictEqual(baslangicGunu(1, new Date('2026-10-27T22:30:00Z')), '2026-10-28');
   assert.strictEqual(baslangicGunu(30, new Date('2026-10-28T09:00:00Z')), '2026-09-29');
 });
+
+test('paylaşım etiketi kaynak olarak yazılır, geçersiz etiket yok sayılır', async () => {
+  const olay = require('../api/olay.js');
+  const eski = { f: global.fetch, u: process.env.SUPABASE_URL, a: process.env.SUPABASE_ANAHTAR };
+  process.env.SUPABASE_URL = 'https://ornek.supabase.co';
+  process.env.SUPABASE_ANAHTAR = 'x';
+  const yazilan = [];
+  global.fetch = async (url, o) => { yazilan.push(JSON.parse(o.body)); return { ok: true }; };
+  const istek = (govde) => ({ method: 'POST', headers: { host: 'bbasaran.net' }, body: govde });
+  const yanit = () => ({ setHeader() {}, end() {} });
+  try {
+    await olay(istek({ tur: 'ziyaret', etiket: 'whatsapp', kaynak: 'https://google.com/' }), yanit());
+    await olay(istek({ tur: 'ziyaret', etiket: 'Kötü etiket!', kaynak: 'https://www.google.com/ara' }), yanit());
+    await olay(istek({ tur: 'ziyaret' }), yanit());
+  } finally {
+    global.fetch = eski.f; process.env.SUPABASE_URL = eski.u || ''; process.env.SUPABASE_ANAHTAR = eski.a || '';
+  }
+  assert.strictEqual(yazilan[0].kaynak, 'etiket:whatsapp');
+  assert.strictEqual(yazilan[1].kaynak, 'google.com');
+  assert.strictEqual(yazilan[2].kaynak, null);
+});
