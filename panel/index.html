@@ -102,6 +102,11 @@ main{max-width:980px;margin:0 auto;padding:22px 20px 80px}
 .hareket-ust{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:10px}
 .hareket-ust select{padding:6px 9px;border:1px solid var(--line);border-radius:4px;background:#fff;font-size:13.5px;max-width:100%}
 @media (max-width:560px){.hareket{grid-template-columns:1fr}.hareket .ayrinti{grid-column:1}}
+.gsc-satir{display:grid;grid-template-columns:1fr auto auto auto;gap:4px 14px;align-items:center;font-size:14px;border-bottom:1px solid var(--line);padding:5px 0}
+.gsc-satir.bas{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.gsc-satir .ad{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.gsc-satir .s{font-family:var(--mono);color:var(--muted);text-align:right;min-width:52px}
+@media (max-width:560px){.gsc-satir{grid-template-columns:1fr auto auto}.gsc-satir .sira-s{display:none}}
 .sure{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
 .sure button{border:1px solid var(--line);background:var(--surface);border-radius:4px;padding:5px 11px;cursor:pointer;font-size:13.5px}
 .sure button.aktif{border-color:var(--accent);color:var(--accent);font-weight:600}
@@ -467,11 +472,13 @@ main{max-width:980px;margin:0 auto;padding:22px 20px 80px}
     istatistik: function (k) {
       istCiz(k);
       if (!istOzet && !istYukleniyor) istYukle();
+      if (!gscVeri && !gscYukleniyor) gscYukle();
     }
   };
 
   /* ---------- istatistik ---------- */
   var istGun = 30, istOzet = null, istYukleniyor = false, istSecili = '', istGoster = 25;
+  var gscVeri = null, gscYukleniyor = false;
   var BOLUM_ADI = { hakkinda: 'Hakkımda', arastirma: 'Araştırma', calismalar: 'Çalışmalar', yontem: 'Yöntem', yayinlar: 'Yayınlar', iletisim: 'İletişim' };
 
   function istListe(baslik, kayitlar, adCevir) {
@@ -525,6 +532,65 @@ main{max-width:980px;margin:0 auto;padding:22px 20px 80px}
     ], 'Siteyi bir yerde paylaşırken bu bağlantıyı kullanın. O bağlantıyla gelenler "Nereden gelindi" ve "Son hareketler" bölümlerinde etiketiyle görünür (örneğin Paylaşılan bağlantı: whatsapp). Etiket, ziyaretçinin adres çubuğundan kendiliğinden kaldırılır.');
   }
 
+  function gscTablo(satirlar, baslik, adBicim) {
+    var bas = el('div', { class: 'gsc-satir bas' }, [
+      el('span', { text: baslik }), el('span', { class: 's', text: 'Tıklama' }),
+      el('span', { class: 's', text: 'Gösterim' }), el('span', { class: 's sira-s', text: 'Sıra' })
+    ]);
+    return el('div', {}, [bas].concat(satirlar.map(function (x) {
+      return el('div', { class: 'gsc-satir' }, [
+        el('span', { class: 'ad', text: adBicim ? adBicim(x.ad) : x.ad, title: x.ad }),
+        el('span', { class: 's', text: String(x.tiklama) }),
+        el('span', { class: 's', text: String(x.gosterim) }),
+        el('span', { class: 's sira-s', text: x.sira ? String(x.sira).replace('.', ',') : '–' })
+      ]);
+    })));
+  }
+
+  function gscKarti() {
+    var aciklama = 'Google\'da hangi aramalarla bulunduğunuz. Google bu verileri günlük toplamlar hâlinde ve 2-3 gün gecikmeyle verir; çok az aranan terimleri gizlilik gereği göstermez. Sıra: arama sonuçlarındaki ortalama konum (1 en üst).';
+    if (!gscVeri) {
+      return kart('Google aramaları', [el('p', { class: 'bos-veri', text: gscYukleniyor ? 'Yükleniyor…' : 'Veri bekleniyor.' })], aciklama);
+    }
+    var d = gscVeri;
+    if (d.durum === 'kurulmadi') {
+      return kart('Google aramaları', [el('p', { class: 'bos-veri', text: 'Bağlantı henüz kurulmadı: Vercel\'de GSC_ANAHTAR değişkeni tanımlı değil (ya da içeriği geçerli bir JSON anahtarı değil). Ekledikten sonra Vercel\'de projeyi yeniden yayımlayın.' })], aciklama);
+    }
+    if (d.durum === 'izin') {
+      return kart('Google aramaları', [el('p', { class: 'bos-veri', text: 'Google erişimi reddetti. Hizmet hesabının e-posta adresini Search Console\'da Ayarlar > Kullanıcılar ve izinler bölümüne eklediğinizden emin olun.' })], aciklama);
+    }
+    if (d.durum !== 'hazir') {
+      return kart('Google aramaları', [el('p', { class: 'bos-veri', text: 'Google verisi okunamadı: ' + (d.hata || 'bilinmeyen hata') })], aciklama);
+    }
+    var tarih = function (g) { var p = g.split('-'); return p[2] + '.' + p[1] + '.' + p[0]; };
+    var sayilar = el('div', { class: 'sayilar' }, [
+      ['Google\'dan tıklama', d.toplam.tiklama], ['Arama sonuçlarında görünme', d.toplam.gosterim]
+    ].map(function (x) { return el('div', { class: 'sayi' }, [el('b', { text: String(x[1]) }), el('span', { text: x[0] })]); }));
+    var cocuklar = [
+      el('p', { class: 'aciklama', text: tarih(d.bas) + ' ile ' + tarih(d.bit) + ' arası.' }),
+      sayilar,
+      el('h3', { class: 'ust-yazi', text: 'Aramalar' }),
+      d.aramalar.length ? gscTablo(d.aramalar, 'Arama') : el('p', { class: 'bos-veri', text: 'Bu aralıkta gösterilebilecek arama yok.' }),
+      el('h3', { class: 'ust-yazi', text: 'Google\'dan gelinen sayfalar', style: 'margin-top:18px' }),
+      d.sayfalar.length ? gscTablo(d.sayfalar, 'Sayfa', function (u) { return u.replace(/^https?:\/\//, '').replace(/\/$/, ''); }) : el('p', { class: 'bos-veri', text: 'Henüz kayıt yok.' })
+    ];
+    return kart('Google aramaları', cocuklar, aciklama);
+  }
+
+  function gscYukle() {
+    gscYukleniyor = true;
+    post({ eylem: 'arama', gun: istGun }).then(function (d) {
+      gscYukleniyor = false;
+      gscVeri = d;
+      if (etkin === 'istatistik') sekmeCiz();
+    }).catch(function (e) {
+      gscYukleniyor = false;
+      if (e.status === 401) return cikis('Oturum geçersiz, yeniden giriş yapın.');
+      gscVeri = { durum: 'sorgu', hata: e.message };
+      if (etkin === 'istatistik') sekmeCiz();
+    });
+  }
+
   function hareketKarti() {
     var tum = istOzet.hareketler || [];
     var adlar = [];
@@ -563,7 +629,7 @@ main{max-width:980px;margin:0 auto;padding:22px 20px 80px}
 
   function istCiz(k) {
     var sure = el('div', { class: 'sure' }, [7, 30, 90, 365].map(function (g) {
-      var b = el('button', { type: 'button', text: g === 365 ? 'Son 1 yıl' : ('Son ' + g + ' gün'), onclick: function () { istGun = g; istOzet = null; istGoster = 25; sekmeCiz(); istYukle(); } });
+      var b = el('button', { type: 'button', text: g === 365 ? 'Son 1 yıl' : ('Son ' + g + ' gün'), onclick: function () { istGun = g; istOzet = null; gscVeri = null; istGoster = 25; sekmeCiz(); istYukle(); gscYukle(); } });
       if (g === istGun) b.className = 'aktif';
       return b;
     }));
@@ -602,6 +668,7 @@ main{max-width:980px;margin:0 auto;padding:22px 20px 80px}
     k.appendChild(istListe('Açılan bölümler', istOzet.bolumler, function (ad) { return BOLUM_ADI[ad] || ad; }));
     k.appendChild(istListe('Tıklamalar', istOzet.tiklamalar));
     k.appendChild(istListe('Nereden gelindi', istOzet.kaynaklar, kaynakAdi));
+    k.appendChild(gscKarti());
     k.appendChild(paylasimKarti());
     k.appendChild(istListe('Ülkeler', istOzet.ulkeler));
     k.appendChild(istListe('Cihazlar', istOzet.cihazlar, function (ad) { return CIHAZ_ADI[ad] || ad; }));
@@ -704,7 +771,7 @@ main{max-width:980px;margin:0 auto;padding:22px 20px 80px}
 
   function cikis(neden) {
     sifre = ''; veri = null; temel = ''; surum = '';
-    istOzet = null; istYukleniyor = false;
+    istOzet = null; istYukleniyor = false; gscVeri = null; gscYukleniyor = false;
     $('uygulama').classList.add('gizli');
     $('giris').classList.remove('gizli');
     $('sifre').value = '';
