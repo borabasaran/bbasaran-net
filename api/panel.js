@@ -349,6 +349,105 @@ async function istatistik(res, b) {
   return yanit(res, 200, { ok: true, ozet: veri });
 }
 
+/* ---------- Google arama verileri (Search Console) ---------- */
+// GSC_ANAHTAR: Google Cloud hizmet hesabının JSON anahtarı (Vercel ortam değişkeni).
+// Hizmet hesabı Search Console'da bbasaran.net alan adı mülküne "Kısıtlanmış" kullanıcı
+// olarak eklenmiş olmalı. Yalnızca okuma izni istenir.
+var GSC_MULK = process.env.GSC_MULK || 'sc-domain:bbasaran.net';
+var GSC_KAPSAM = 'https://www.googleapis.com/auth/webmasters.readonly';
+var gscBelirteci = { deger: '', bitis: 0 };
+
+function b64url(x) {
+  return Buffer.from(x).toString('base64').replace(/=+$/, '').replace(/\+/g, '-').replace(/\//g, '_');
+}
+
+function gscAnahtari() {
+  var ham = process.env.GSC_ANAHTAR || '';
+  if (!ham) return null;
+  try {
+    var a = JSON.parse(ham);
+    if (!a.client_email || !a.private_key) return null;
+    return a;
+  } catch (e) { return null; }
+}
+
+async function gscErisim(anahtar, simdi) {
+  simdi = simdi || Date.now();
+  if (gscBelirteci.deger && gscBelirteci.bitis > simdi + 60000) return gscBelirteci.deger;
+  var iat = Math.floor(simdi / 1000);
+  var govdeMetni = b64url(JSON.stringify({ alg: 'RS256', typ: 'JWT' })) + '.' + b64url(JSON.stringify({
+    iss: anahtar.client_email, scope: GSC_KAPSAM,
+    aud: 'https://oauth2.googleapis.com/token', iat: iat, exp: iat + 3600
+  }));
+  var imza = crypto.createSign('RSA-SHA256').update(govdeMetni).sign(anahtar.private_key);
+  var jwt = govdeMetni + '.' + b64url(imza);
+  var r = await fetch('https://oauth2.googleapis.com/token', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: 'grant_type=' + encodeURIComponent('urn:ietf:params:oauth:grant-type:jwt-bearer') + '&assertion=' + jwt,
+    signal: AbortSignal.timeout(10000)
+  });
+  var d = await r.json().catch(function () { return {}; });
+  if (!r.ok || !d.access_token) {
+    var e = new Error('Google erişim anahtarı alınamadı: ' + (d.error_description || d.error || ('HTTP ' + r.status)));
+    e.gsc = 'anahtar';
+    throw e;
+  }
+  gscBelirteci = { deger: d.access_token, bitis: simdi + (Number(d.expires_in) || 3600) * 1000 };
+  return d.access_token;
+}
+
+async function gscSorgu(belirtec, govde) {
+  var r = await fetch('https://searchconsole.googleapis.com/webmasters/v3/sites/' + encodeURIComponent(GSC_MULK) + '/searchAnalytics/query', {
+    method: 'POST',
+    headers: { 'Authorization': 'Bearer ' + belirtec, 'Content-Type': 'application/json' },
+    body: JSON.stringify(govde),
+    signal: AbortSignal.timeout(12000)
+  });
+  var d = await r.json().catch(function () { return {}; });
+  if (!r.ok) {
+    var e = new Error((d.error && d.error.message) || ('HTTP ' + r.status));
+    e.gsc = r.status === 403 ? 'izin' : 'sorgu';
+    throw e;
+  }
+  return d.rows || [];
+}
+
+function gscSatir(x) {
+  return {
+    ad: (x.keys && x.keys[0]) || '',
+    tiklama: x.clicks || 0,
+    gosterim: x.impressions || 0,
+    sira: Math.round((x.position || 0) * 10) / 10
+  };
+}
+
+async function arama(res, b, simdi) {
+  var anahtar = gscAnahtari();
+  if (!anahtar) return yanit(res, 200, { ok: true, durum: 'kurulmadi' });
+  var gun = Math.min(Math.max(parseInt(b.gun, 10) || 30, 1), 365);
+  // Google verileri 2-3 gün gecikmeli gelir; aralık bu gecikmeyi de kapsasın diye en az 7 gün.
+  var bas = baslangicGunu(Math.max(gun, 7), simdi);
+  var bit = baslangicGunu(1, simdi);
+  try {
+    var belirtec = await gscErisim(anahtar, simdi && simdi.getTime());
+    var sonuc = await Promise.all([
+      gscSorgu(belirtec, { startDate: bas, endDate: bit, dimensions: ['query'], rowLimit: 50 }),
+      gscSorgu(belirtec, { startDate: bas, endDate: bit, dimensions: ['page'], rowLimit: 25 }),
+      gscSorgu(belirtec, { startDate: bas, endDate: bit })
+    ]);
+    var toplam = sonuc[2][0] || {};
+    return yanit(res, 200, {
+      ok: true, durum: 'hazir', bas: bas, bit: bit,
+      toplam: { tiklama: toplam.clicks || 0, gosterim: toplam.impressions || 0 },
+      aramalar: sonuc[0].map(gscSatir),
+      sayfalar: sonuc[1].map(gscSatir)
+    });
+  } catch (e) {
+    return yanit(res, 200, { ok: true, durum: e.gsc || 'sorgu', hata: e.message });
+  }
+}
+
 /* ---------- işlemler ---------- */
 async function oku(res, ayar) {
   var uc = await dalUcu(ayar);
@@ -404,6 +503,7 @@ module.exports = async function handler(req, res) {
   try {
     if (b.eylem === 'giris') return yanit(res, 200, { ok: true });
     if (b.eylem === 'istatistik') return await istatistik(res, b);
+    if (b.eylem === 'arama') return await arama(res, b);
     if (!ayar.token) return hata(res, 500, 'Sunucuda GITHUB_TOKEN tanımlı değil.');
     if (b.eylem === 'oku') return await oku(res, ayar);
     if (b.eylem === 'kaydet') return await kaydet(res, ayar, b);
@@ -419,3 +519,5 @@ module.exports = async function handler(req, res) {
 module.exports.dogrula = dogrula;
 module.exports.hareketleriKur = hareketleriKur;
 module.exports.baslangicGunu = baslangicGunu;
+module.exports.arama = arama;
+module.exports._gscSifirla = function () { gscBelirteci = { deger: '', bitis: 0 }; };
