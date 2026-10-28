@@ -104,3 +104,29 @@ test('Google arama verisi: imzalı anahtarla okunur, eksik ayar ve izin hatası 
     if (eski.a === undefined) delete process.env.GSC_ANAHTAR; else process.env.GSC_ANAHTAR = eski.a;
   }
 });
+
+test('ziyaretler: giriş kaynağı, süre ve sırayla yapılanlar; kaynak özeti', () => {
+  const { istatistikDerle } = require('../api/panel.js');
+  const O = (oturum, zaman, tur, deger, kaynak) => ({ oturum, olusturuldu: '2026-10-20T10:' + zaman + 'Z', tur, deger: deger || null, kaynak: kaynak || null, cihaz: 'telefon', ulke: 'TR' });
+  const d = istatistikDerle([
+    O('a', '00:00', 'ziyaret', null, 'google.com'),
+    O('a', '00:10', 'bolum', 'hakkinda'),
+    O('a', '00:20', 'bolum', 'yayinlar'),
+    O('a', '01:00', 'tiklama', 'Kitap çağrısı'),
+    O('a', '01:01', 'tiklama', 'Kitap çağrısı'),
+    O('b', '05:00', 'ziyaret'),
+    O('c', '06:00', 'bolum', 'hakkinda')
+  ]);
+  assert.strictEqual(d.ziyaretler.length, 3);
+  const a = d.ziyaretler[2];
+  assert.strictEqual(a.kaynak, 'google.com');
+  assert.strictEqual(a.sure, 61);
+  assert.deepStrictEqual(a.adimlar.map(x => [x.tur, x.ad, x.adet]), [['bolum', 'hakkinda', 1], ['bolum', 'yayinlar', 1], ['tiklama', 'Kitap çağrısı', 2]]);
+  assert.strictEqual(d.ziyaretler[1].kaynak, 'doğrudan');
+  assert.strictEqual(d.ziyaretler[0].kaynak, 'bilinmiyor');
+  assert.deepStrictEqual(d.kaynakOzeti.find(x => x.ad === 'google.com'), { ad: 'google.com', ziyaret: 1, ortBolum: 2, tiklayan: 1, son: '2026-10-20T10:00:00Z' });
+  assert.deepStrictEqual(d.bolumOzeti.find(x => x.ad === 'hakkinda'), { ad: 'hakkinda', n: 2, kisi: 2, son: '2026-10-20T10:06:00Z' });
+  assert.strictEqual(d.bolumListesi[1].kaynak, 'google.com');
+  assert.strictEqual(d.tiklamaOzeti[0].n, 2);
+  assert.strictEqual(d.hareketler.length, 1);
+});
