@@ -235,24 +235,117 @@ function dogrula(v) {
 function jsonMetni(x) { return JSON.stringify(x, null, 2) + '\n'; }
 
 /* ---------- istatistik ---------- */
-// Supabase'deki bb_ozet fonksiyonunu çağırır; panele yalnızca toplamlar gider.
-async function istatistik(res, b) {
-  var url = process.env.SUPABASE_URL || '';
-  var anahtar = process.env.SUPABASE_ANAHTAR || '';
-  if (!url || !anahtar) return hata(res, 500, 'Sunucuda SUPABASE_URL ve SUPABASE_ANAHTAR tanımlı değil.');
-  var gun = Math.min(Math.max(parseInt(b.gun, 10) || 30, 1), 365);
-  var r = await fetch(url.replace(/\/+$/, '') + '/rest/v1/rpc/bb_ozet', {
-    method: 'POST',
+// Supabase'deki bb_ozet fonksiyonu toplamları verir. Buna ek olarak son tıklamalar
+// zamanlarıyla okunur; her tıklamanın "nereden gelindi" bilgisi, aynı oturumun
+// siteye ilk girişindeki kaynaktan alınır. Aynı kişinin aynı öğeye art arda
+// tıklamaları tek hareket sayılır.
+var TEKRAR_SANIYE = 120;
+var HAREKET_SINIRI = 500;
+
+function supabaseIstek(url, anahtar, yol, secenek) {
+  secenek = secenek || {};
+  return fetch(url.replace(/\/+$/, '') + yol, {
+    method: secenek.method || 'GET',
     headers: {
       'apikey': anahtar,
       'Authorization': 'Bearer ' + anahtar,
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify({ p_gun: gun }),
+    body: secenek.body ? JSON.stringify(secenek.body) : undefined,
     signal: AbortSignal.timeout(12000)
   });
-  var veri = await r.json().catch(function () { return null; });
-  if (!r.ok) return hata(res, 502, 'İstatistik okunamadı: ' + ((veri && veri.message) || ('HTTP ' + r.status)));
+}
+
+// Türkiye takvimine göre, bugünden geriye 'gun' günlük aralığın ilk günü (YYYY-MM-DD).
+function baslangicGunu(gun, simdi) {
+  var bugun = (simdi || new Date()).toLocaleDateString('sv-SE', { timeZone: 'Europe/Istanbul' });
+  var d = new Date(bugun + 'T00:00:00Z');
+  d.setUTCDate(d.getUTCDate() - (gun - 1));
+  return d.toISOString().slice(0, 10);
+}
+
+// Tıklamaları (yeniden eskiye sıralı) hareketlere dönüştürür.
+function hareketleriKur(tiklamalar, ziyaretler) {
+  var kaynaklar = {};
+  (ziyaretler || []).forEach(function (z) {
+    if (!z.oturum) return;
+    if (!(z.oturum in kaynaklar)) kaynaklar[z.oturum] = null;
+    if (!kaynaklar[z.oturum] && z.kaynak) kaynaklar[z.oturum] = z.kaynak;
+  });
+
+  var hareketler = [];
+  var kisiler = {};
+  var eskidenYeniye = (tiklamalar || []).slice().reverse();
+  eskidenYeniye.forEach(function (t) {
+    var ad = t.deger || 'Adsız';
+    if (t.oturum) {
+      kisiler[ad] = kisiler[ad] || {};
+      kisiler[ad][t.oturum] = 1;
+    }
+    var son = hareketler[hareketler.length - 1];
+    var zaman = Date.parse(t.olusturuldu);
+    if (son && t.oturum && son.oturum === t.oturum && son.ad === ad &&
+        (zaman - Date.parse(son.son_zaman)) / 1000 <= TEKRAR_SANIYE) {
+      son.adet += 1;
+      son.son_zaman = t.olusturuldu;
+      return;
+    }
+    var kaynak;
+    if (!t.oturum || !(t.oturum in kaynaklar)) kaynak = 'bilinmiyor';
+    else kaynak = kaynaklar[t.oturum] || 'doğrudan';
+    hareketler.push({
+      zaman: t.olusturuldu, son_zaman: t.olusturuldu, ad: ad, adet: 1,
+      cihaz: t.cihaz || null, ulke: t.ulke || null, kaynak: kaynak, oturum: t.oturum || null
+    });
+  });
+
+  var kisiSayisi = {};
+  Object.keys(kisiler).forEach(function (ad) { kisiSayisi[ad] = Object.keys(kisiler[ad]).length; });
+  return {
+    hareketler: hareketler.reverse().map(function (h) {
+      return { zaman: h.zaman, ad: h.ad, adet: h.adet, cihaz: h.cihaz, ulke: h.ulke, kaynak: h.kaynak };
+    }),
+    kisiSayisi: kisiSayisi
+  };
+}
+
+async function istatistik(res, b) {
+  var url = process.env.SUPABASE_URL || '';
+  var anahtar = process.env.SUPABASE_ANAHTAR || '';
+  if (!url || !anahtar) return hata(res, 500, 'Sunucuda SUPABASE_URL ve SUPABASE_ANAHTAR tanımlı değil.');
+  var gun = Math.min(Math.max(parseInt(b.gun, 10) || 30, 1), 365);
+  var bas = baslangicGunu(gun);
+
+  var istekler = await Promise.all([
+    supabaseIstek(url, anahtar, '/rest/v1/rpc/bb_ozet', { method: 'POST', body: { p_gun: gun } }),
+    supabaseIstek(url, anahtar, '/rest/v1/bb_olaylar?select=olusturuldu,deger,cihaz,ulke,oturum' +
+      '&tur=eq.tiklama&gun=gte.' + bas + '&order=olusturuldu.desc&limit=' + HAREKET_SINIRI)
+  ]);
+  var veri = await istekler[0].json().catch(function () { return null; });
+  if (!istekler[0].ok) return hata(res, 502, 'İstatistik okunamadı: ' + ((veri && veri.message) || ('HTTP ' + istekler[0].status)));
+
+  // Hareketler okunamazsa özet yine gösterilir.
+  var tiklamalar = istekler[1].ok ? await istekler[1].json().catch(function () { return []; }) : [];
+  if (!Array.isArray(tiklamalar)) tiklamalar = [];
+
+  var oturumlar = [];
+  tiklamalar.forEach(function (t) {
+    var o = String(t.oturum || '').replace(/[^a-z0-9]/gi, '');
+    if (o && oturumlar.indexOf(o) < 0) oturumlar.push(o);
+  });
+  var ziyaretler = [];
+  if (oturumlar.length) {
+    var zr = await supabaseIstek(url, anahtar, '/rest/v1/bb_olaylar?select=oturum,kaynak' +
+      '&tur=eq.ziyaret&oturum=in.(' + oturumlar.join(',') + ')&order=olusturuldu.asc').catch(function () { return null; });
+    if (zr && zr.ok) ziyaretler = await zr.json().catch(function () { return []; });
+    if (!Array.isArray(ziyaretler)) ziyaretler = [];
+  }
+
+  var sonuc = hareketleriKur(tiklamalar, ziyaretler);
+  if (veri && Array.isArray(veri.tiklamalar)) {
+    veri.tiklamalar.forEach(function (x) { x.kisi = sonuc.kisiSayisi[x.ad] || 0; });
+  }
+  if (veri) veri.hareketler = sonuc.hareketler;
   return yanit(res, 200, { ok: true, ozet: veri });
 }
 
@@ -324,3 +417,5 @@ module.exports = async function handler(req, res) {
 };
 
 module.exports.dogrula = dogrula;
+module.exports.hareketleriKur = hareketleriKur;
+module.exports.baslangicGunu = baslangicGunu;

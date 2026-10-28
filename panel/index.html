@@ -92,6 +92,16 @@ main{max-width:980px;margin:0 auto;padding:22px 20px 80px}
 .satir span:last-child{font-family:var(--mono);color:var(--muted)}
 .satir .ad{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .bos-veri{color:var(--muted);font-size:14px}
+.hareketler{display:grid;gap:0}
+.hareket{display:grid;grid-template-columns:132px 1fr;gap:4px 14px;padding:9px 0;border-bottom:1px solid var(--line)}
+.hareket:last-child{border-bottom:0}
+.hareket time{font-family:var(--mono);font-size:12px;color:var(--muted);padding-top:2px}
+.hareket .ne{font-weight:600;font-size:14.5px}
+.hareket .tekrar{display:inline-block;margin-left:6px;font-family:var(--mono);font-size:11px;font-weight:400;color:var(--ochre)}
+.hareket .ayrinti{grid-column:2;font-size:13px;color:var(--muted)}
+.hareket-ust{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:10px}
+.hareket-ust select{padding:6px 9px;border:1px solid var(--line);border-radius:4px;background:#fff;font-size:13.5px;max-width:100%}
+@media (max-width:560px){.hareket{grid-template-columns:1fr}.hareket .ayrinti{grid-column:1}}
 .sure{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
 .sure button{border:1px solid var(--line);background:var(--surface);border-radius:4px;padding:5px 11px;cursor:pointer;font-size:13.5px}
 .sure button.aktif{border-color:var(--accent);color:var(--accent);font-weight:600}
@@ -461,22 +471,67 @@ main{max-width:980px;margin:0 auto;padding:22px 20px 80px}
   };
 
   /* ---------- istatistik ---------- */
-  var istGun = 30, istOzet = null, istYukleniyor = false;
+  var istGun = 30, istOzet = null, istYukleniyor = false, istSecili = '', istGoster = 25;
   var BOLUM_ADI = { hakkinda: 'Hakkımda', arastirma: 'Araştırma', calismalar: 'Çalışmalar', yontem: 'Yöntem', yayinlar: 'Yayınlar', iletisim: 'İletişim' };
 
   function istListe(baslik, kayitlar, adCevir) {
     var liste = (kayitlar || []).map(function (x) {
       return el('div', { class: 'satir' }, [
         el('span', { class: 'ad', text: adCevir ? adCevir(x.ad) : x.ad }),
-        el('span', { text: String(x.n) })
+        el('span', { text: x.kisi != null ? (x.n + ' tıklama · ' + x.kisi + ' kişi') : String(x.n) })
       ]);
     });
     return kart(baslik, [liste.length ? el('div', { class: 'siralama' }, liste) : el('p', { class: 'bos-veri', text: 'Henüz kayıt yok.' })]);
   }
 
+  var CIHAZ_ADI = { masaustu: 'Masaüstü', telefon: 'Telefon', tablet: 'Tablet' };
+  var zamanBicimi = new Intl.DateTimeFormat('tr-TR', { timeZone: 'Europe/Istanbul', day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+
+  function kaynakAdi(k) {
+    if (k === 'doğrudan') return 'Doğrudan giriş';
+    if (k === 'bilinmiyor') return 'Giriş kaydı yok';
+    return k;
+  }
+
+  function hareketKarti() {
+    var tum = istOzet.hareketler || [];
+    var adlar = [];
+    tum.forEach(function (h) { if (adlar.indexOf(h.ad) < 0) adlar.push(h.ad); });
+    adlar.sort(function (a, b) { return a.localeCompare(b, 'tr'); });
+    if (istSecili && adlar.indexOf(istSecili) < 0) istSecili = '';
+
+    var secim = el('select', { onchange: function () { istSecili = this.value; istGoster = 25; sekmeCiz(); } },
+      [el('option', { value: '', text: 'Tüm tıklamalar' })].concat(adlar.map(function (a) {
+        var o = el('option', { value: a, text: a });
+        if (a === istSecili) o.selected = true;
+        return o;
+      })));
+
+    var liste = tum.filter(function (h) { return !istSecili || h.ad === istSecili; });
+    var gorunen = liste.slice(0, istGoster).map(function (h) {
+      var ad = el('span', { class: 'ne', text: h.ad });
+      if (h.adet > 1) ad.appendChild(el('span', { class: 'tekrar', text: '×' + h.adet, title: 'Aynı kişi kısa sürede ' + h.adet + ' kez tıkladı; tek sayıldı.' }));
+      var ayrinti = [CIHAZ_ADI[h.cihaz] || h.cihaz, h.ulke, kaynakAdi(h.kaynak)].filter(Boolean).join(' · ');
+      return el('div', { class: 'hareket' }, [
+        el('time', { text: zamanBicimi.format(new Date(h.zaman)), datetime: h.zaman }),
+        ad,
+        el('span', { class: 'ayrinti', text: ayrinti })
+      ]);
+    });
+
+    var cocuklar = [el('div', { class: 'hareket-ust' }, [secim])];
+    if (!gorunen.length) cocuklar.push(el('p', { class: 'bos-veri', text: 'Bu aralıkta tıklama yok.' }));
+    else cocuklar.push(el('div', { class: 'hareketler' }, gorunen));
+    if (liste.length > istGoster) {
+      cocuklar.push(el('button', { type: 'button', class: 'ekle', text: 'Daha fazla göster (' + (liste.length - istGoster) + ')', onclick: function () { istGoster += 50; sekmeCiz(); } }));
+    }
+    return kart('Son hareketler', cocuklar,
+      'Her tıklama Türkiye saatiyle gösterilir. "Nereden" bilgisi o kişinin siteye girdiği kaynaktır; "Doğrudan giriş" adresi yazarak, yer iminden ya da kaynağını gizleyen bir uygulamadan (WhatsApp, e-posta gibi) gelindiğini gösterir. Aynı kişinin aynı öğeye iki dakika içindeki tekrar tıklamaları tek satırda ×sayı olarak görünür.');
+  }
+
   function istCiz(k) {
     var sure = el('div', { class: 'sure' }, [7, 30, 90, 365].map(function (g) {
-      var b = el('button', { type: 'button', text: g === 365 ? 'Son 1 yıl' : ('Son ' + g + ' gün'), onclick: function () { istGun = g; istOzet = null; sekmeCiz(); istYukle(); } });
+      var b = el('button', { type: 'button', text: g === 365 ? 'Son 1 yıl' : ('Son ' + g + ' gün'), onclick: function () { istGun = g; istOzet = null; istGoster = 25; sekmeCiz(); istYukle(); } });
       if (g === istGun) b.className = 'aktif';
       return b;
     }));
@@ -511,13 +566,12 @@ main{max-width:980px;margin:0 auto;padding:22px 20px 80px}
     k.appendChild(kart('Özet', [el('div', { class: 'sayilar' }, sayilar), cubuklar, eksen],
       'Ziyaret: sayfanın her açılışı. Oturum: aynı sekmede yapılan gezinmelerin tamamı tek sayılır. Sütunların üzerine gelince günün sayısı görünür.'));
 
+    k.appendChild(hareketKarti());
     k.appendChild(istListe('Açılan bölümler', istOzet.bolumler, function (ad) { return BOLUM_ADI[ad] || ad; }));
     k.appendChild(istListe('Tıklamalar', istOzet.tiklamalar));
     k.appendChild(istListe('Nereden gelindi', istOzet.kaynaklar));
     k.appendChild(istListe('Ülkeler', istOzet.ulkeler));
-    k.appendChild(istListe('Cihazlar', istOzet.cihazlar, function (ad) {
-      return { masaustu: 'Masaüstü', telefon: 'Telefon', tablet: 'Tablet' }[ad] || ad;
-    }));
+    k.appendChild(istListe('Cihazlar', istOzet.cihazlar, function (ad) { return CIHAZ_ADI[ad] || ad; }));
     k.appendChild(kart('Gizlilik', [el('p', { class: 'aciklama', text: 'Çerez, IP adresi ve kalıcı ziyaretçi kimliği tutulmaz. Oturum numarası sekme kapanınca silinir. Tarayıcısında izlenmeme tercihi açık olan ziyaretçiler hiç sayılmaz.' })]));
   }
 
