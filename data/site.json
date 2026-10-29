@@ -4,16 +4,22 @@
     "tanitim": "Almanca öğretimini sözcük sıklığı, materyal tasarımı; teknoloji ve büyük dil modelleri ekseninde ele alıyor; Türkiye ve Almanya'nın eğitim sistemlerini karşılaştırmalı bir bakışla inceliyorum.",
     "araclar": [
       {
+        "etiket": "Tez Atlası",
+        "baslik": "Anadolu Üniversitesi Almanca Öğretmenliği Programı Lisansüstü Tezleri",
+        "baglanti": "https://tezatlasi.bbasaran.net/",
+        "dugme": "Buradan"
+      },
+      {
+        "etiket": "İlan Radarı",
+        "baslik": "Almanca akademik kadro ilanları",
+        "baglanti": "https://ilan.bbasaran.net/",
+        "dugme": "Buradan"
+      },
+      {
         "etiket": "DaF Konuşma Asistanı",
         "baslik": "Almanca konuşma pratiği · B2",
         "baglanti": "https://daf-asistan.bbasaran.net",
         "dugme": "Asistanı aç"
-      },
-      {
-        "etiket": "ArSi: Araştırma Sihirbazı",
-        "baslik": "Araştırma konusu geliştirme aracı",
-        "baglanti": "https://arsi.bbasaran.net",
-        "dugme": "Sihirbazı aç"
       },
       {
         "etiket": "ArSİ 2209 Tübitak Proje Geliştirme",
@@ -22,10 +28,10 @@
         "dugme": "Asistani Aç"
       },
       {
-        "etiket": "İlan Radarı",
-        "baslik": "Almanca akademik kadro ilanları",
-        "baglanti": "https://ilan.bbasaran.net/",
-        "dugme": "Buradan"
+        "etiket": "ArSi: Araştırma Sihirbazı",
+        "baslik": "Araştırma konusu geliştirme aracı",
+        "baglanti": "https://arsi.bbasaran.net",
+        "dugme": "Sihirbazı aç"
       }
     ],
     "bilgiler": [
