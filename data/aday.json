@@ -1,12 +1,66 @@
 {
   "aciklama": "OpenAlex'te bulunan ama yayinlar.json icinde gorunmeyen kayitlar. Siteye YANSIMAZ. Gozden gecirip gercekten yeni olanlari dogru kunyesiyle yayinlar.json icine tasiyin.",
-  "guncellendi": "2026-10-01",
+  "guncellendi": "2026-11-01",
   "adaylar": [
+    {
+      "yil": 2026,
+      "baslik": "The Resilience Responsibility Gap: how institutions distribute the burden of adaptation under AI-driven structural disruption",
+      "kaynak": "Frontiers in Psychology",
+      "doi": "https://doi.org/10.3389/fpsyg.2026.1974636"
+    },
+    {
+      "yil": 2026,
+      "baslik": "The Resilience Responsibility Gap",
+      "kaynak": "ScienceDB",
+      "doi": "https://doi.org/10.57760/sciencedb.0106g"
+    },
+    {
+      "yil": 2026,
+      "baslik": "Corpus, Not Curriculum: Computational Corpus Planning in National AI Strategies",
+      "kaynak": "ScienceDB",
+      "doi": "https://doi.org/10.57760/sciencedb.0103d"
+    },
+    {
+      "yil": 2026,
+      "baslik": "Co-Designing an AI Speaking Assistant",
+      "kaynak": "ScienceDB",
+      "doi": "https://doi.org/10.57760/sciencedb.00zuc"
+    },
+    {
+      "yil": 2026,
+      "baslik": "Supplementary data for: What must be learned in advance",
+      "kaynak": "ScienceDB",
+      "doi": "https://doi.org/10.57760/sciencedb.45238"
+    },
+    {
+      "yil": 2026,
+      "baslik": "Supplementary data for \"Can AI Help German Teachers Select Level-Appropriate Texts? A Cautious Framework for CEFR Estimation\"",
+      "kaynak": "ScienceDB",
+      "doi": "https://doi.org/10.57760/sciencedb.42064"
+    },
+    {
+      "yil": 2026,
+      "baslik": "Coded dataset and codebook (CDCF v1.0 and v1.1) for a comparative discourse analysis of \"family\" in the family-policy texts of Turkey and the German-speaking countries",
+      "kaynak": "ScienceDB",
+      "doi": "https://doi.org/10.57760/sciencedb.39987"
+    },
+    {
+      "yil": 2026,
+      "baslik": "Coding_Template_Reliability_64",
+      "kaynak": "ScienceDB",
+      "doi": "https://doi.org/10.57760/sciencedb.38956"
+    },
     {
       "yil": 2026,
       "baslik": "INTEGRATING ARTIFICIAL INTELLIGENCE INTO COMPARATIVE BIBLIOMETRIC STUDIES: FAMILY REPRESENTATIONS IN DOCTORAL RESEARCH (TURKEY–GERMANY, 2019–2024)",
       "kaynak": "PUPIL International Journal of Teaching Education and Learning",
       "doi": "https://doi.org/10.20319/ictel.2026.170171"
+    },
+    {
+      "yil": 2026,
+      "baslik": "Bibliographic Records from Web of Science Core Collection on Artificial Intelligence in Foreign Language Education and Language Teaching Research (n = 247)",
+      "kaynak": "ScienceDB",
+      "doi": "https://doi.org/10.57760/sciencedb.36507"
     },
     {
       "yil": 2026,
@@ -45,9 +99,33 @@
       "doi": "https://doi.org/10.30783/nevsosbilen.1082453"
     },
     {
+      "yil": 2022,
+      "baslik": "MEASURING WORD FREQUENCY IN LANGUAGE TEACHING TEXTBOOKS USING LEXITÜRK",
+      "kaynak": "International online journal of education and teaching",
+      "doi": ""
+    },
+    {
       "yil": 2020,
       "baslik": "A Descriptive Analysis of Online Seminars Attended by Turkish Teachers in Germany during the Covid-19 Epidemic Period",
       "kaynak": "DergiPark (Istanbul University)",
+      "doi": ""
+    },
+    {
+      "yil": 2017,
+      "baslik": "Yabancı Dil Öğretiminde Teknoloji Kullanımına İlişkin Hazırlanmış Lisansüstü Tez",
+      "kaynak": "Journal of Turkish Studies",
+      "doi": "https://doi.org/10.7827/turkishstudies.12126"
+    },
+    {
+      "yil": 2017,
+      "baslik": "Teknolojik Gelişme ve Araştırma Arasında Yabancı Dil Öğretimi İçin Kritik Bir B",
+      "kaynak": "Journal of Turkish Studies",
+      "doi": "https://doi.org/10.7827/turkishstudies.12127"
+    },
+    {
+      "yil": 2008,
+      "baslik": "Der wortschatz, die qual der wahl für den türkischen lehrbuchautor?",
+      "kaynak": "Estudios filológicos alemanes: revista del Grupo de Investigación Filología Alemana",
       "doi": ""
     }
   ]
