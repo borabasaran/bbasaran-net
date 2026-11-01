@@ -3,72 +3,6 @@
   "guncellendi": "2026-11-01",
   "adaylar": [
     {
-      "yil": 2026,
-      "baslik": "The Resilience Responsibility Gap",
-      "kaynak": "ScienceDB",
-      "doi": "https://doi.org/10.57760/sciencedb.0106g"
-    },
-    {
-      "yil": 2026,
-      "baslik": "Corpus, Not Curriculum: Computational Corpus Planning in National AI Strategies",
-      "kaynak": "ScienceDB",
-      "doi": "https://doi.org/10.57760/sciencedb.0103d"
-    },
-    {
-      "yil": 2026,
-      "baslik": "Co-Designing an AI Speaking Assistant",
-      "kaynak": "ScienceDB",
-      "doi": "https://doi.org/10.57760/sciencedb.00zuc"
-    },
-    {
-      "yil": 2026,
-      "baslik": "Supplementary data for: What must be learned in advance",
-      "kaynak": "ScienceDB",
-      "doi": "https://doi.org/10.57760/sciencedb.45238"
-    },
-    {
-      "yil": 2026,
-      "baslik": "Supplementary data for \"Can AI Help German Teachers Select Level-Appropriate Texts? A Cautious Framework for CEFR Estimation\"",
-      "kaynak": "ScienceDB",
-      "doi": "https://doi.org/10.57760/sciencedb.42064"
-    },
-    {
-      "yil": 2026,
-      "baslik": "Coded dataset and codebook (CDCF v1.0 and v1.1) for a comparative discourse analysis of \"family\" in the family-policy texts of Turkey and the German-speaking countries",
-      "kaynak": "ScienceDB",
-      "doi": "https://doi.org/10.57760/sciencedb.39987"
-    },
-    {
-      "yil": 2026,
-      "baslik": "Coding_Template_Reliability_64",
-      "kaynak": "ScienceDB",
-      "doi": "https://doi.org/10.57760/sciencedb.38956"
-    },
-    {
-      "yil": 2026,
-      "baslik": "INTEGRATING ARTIFICIAL INTELLIGENCE INTO COMPARATIVE BIBLIOMETRIC STUDIES: FAMILY REPRESENTATIONS IN DOCTORAL RESEARCH (TURKEY–GERMANY, 2019–2024)",
-      "kaynak": "PUPIL International Journal of Teaching Education and Learning",
-      "doi": "https://doi.org/10.20319/ictel.2026.170171"
-    },
-    {
-      "yil": 2026,
-      "baslik": "Bibliographic Records from Web of Science Core Collection on Artificial Intelligence in Foreign Language Education and Language Teaching Research (n = 247)",
-      "kaynak": "ScienceDB",
-      "doi": "https://doi.org/10.57760/sciencedb.36507"
-    },
-    {
-      "yil": 2026,
-      "baslik": "Social cognitive agency in AI adoption: critical thinking as the cognitive amplifier for self-regulation in building AI self-efficacy",
-      "kaynak": "Interactive Learning Environments",
-      "doi": "https://doi.org/10.1080/10494820.2026.2651861"
-    },
-    {
-      "yil": 2026,
-      "baslik": "ACADEMIC REPRESENTATIONS OF THE FAMILY IN DOCTORAL RESEARCH: A COMPARATIVE STUDY OF TURKEY AND GERMANY (2019–2024)",
-      "kaynak": "PUPIL International Journal of Teaching Education and Learning",
-      "doi": "https://doi.org/10.20319/ictel.2026.0405"
-    },
-    {
       "yil": 2025,
       "baslik": "Enhancing Readability Assessment for Language Learners: A Comparative Study of AI and Traditional Metrics in German Textbooks",
       "kaynak": "European Journal of Educational Research",
@@ -124,6 +58,17 @@
     }
   ],
   "yoksayilanlar": [
-    "The Resilience Responsibility Gap: how institutions distribute the burden of adaptation under AI-driven structural disruption"
+    "The Resilience Responsibility Gap: how institutions distribute the burden of adaptation under AI-driven structural disruption",
+    "The Resilience Responsibility Gap",
+    "Corpus, Not Curriculum: Computational Corpus Planning in National AI Strategies",
+    "Co-Designing an AI Speaking Assistant",
+    "Supplementary data for: What must be learned in advance",
+    "Supplementary data for \"Can AI Help German Teachers Select Level-Appropriate Texts? A Cautious Framework for CEFR Estimation\"",
+    "Coded dataset and codebook (CDCF v1.0 and v1.1) for a comparative discourse analysis of \"family\" in the family-policy texts of Turkey and the German-speaking countries",
+    "Coding_Template_Reliability_64",
+    "INTEGRATING ARTIFICIAL INTELLIGENCE INTO COMPARATIVE BIBLIOMETRIC STUDIES: FAMILY REPRESENTATIONS IN DOCTORAL RESEARCH (TURKEY–GERMANY, 2019–2024)",
+    "Bibliographic Records from Web of Science Core Collection on Artificial Intelligence in Foreign Language Education and Language Teaching Research (n = 247)",
+    "ACADEMIC REPRESENTATIONS OF THE FAMILY IN DOCTORAL RESEARCH: A COMPARATIVE STUDY OF TURKEY AND GERMANY (2019–2024)",
+    "Social cognitive agency in AI adoption: critical thinking as the cognitive amplifier for self-regulation in building AI self-efficacy"
   ]
 }
