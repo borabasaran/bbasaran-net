@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Bora Başaran'ın Almanca Öğretmenliği öğrencileri ve araştırmacılar için geliştirdiği çevrimiçi araçlar: Tez Atlası, İlan Radarı, DaF Konuşma Asistanı, ArSi ve daha fazlası.">
+<meta name="author" content="Bora Başaran">
+<meta name="theme-color" content="#07262A">
+<meta property="og:title" content="Atölye · Bora Başaran">
+<meta property="og:description" content="Öğrenciler ve araştırmacılar için geliştirilen araçlar, tanıtımları ve deneyleriyle bir arada.">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="tr_TR">
+<meta property="og:site_name" content="Bora Başaran">
+<meta property="og:url" content="https://bbasaran.net/atolye/">
+<link rel="canonical" href="https://bbasaran.net/atolye/">
+<title>Atölye · Bora Başaran</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,700;1,6..96,400&family=IBM+Plex+Mono:wght@400;500&family=Source+Sans+3:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/atolye/atolye.css">
+</head>
+<body class="at-govde">
+
+<header class="at-ust">
+  <a class="at-ad" href="/">Bora Başaran</a>
+  <span class="at-iz">Atölye <span id="atSayi"></span></span>
+  <span class="at-bosluk"></span>
+  <a class="at-geri" href="/">← Ana sayfa</a>
+</header>
+
+<main class="at-ana" id="atolye">
+  <div class="at-arac-cubugu">
+    <span class="at-rozet">Atölye <b id="atRozet">00</b></span>
+    <label class="at-ara">
+      <svg aria-hidden="true" width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="7" cy="7" r="5"></circle><path d="M11 11l3.5 3.5"></path></svg>
+      <span class="sr-only">Araç ara</span>
+      <input id="atAra" type="search" placeholder="Bir sonraki merakını bul…" autocomplete="off">
+    </label>
+    <div class="at-sekme" role="tablist" aria-label="Görünüm">
+      <button type="button" role="tab" data-gorunum="akis" aria-selected="true">Akış</button>
+      <button type="button" role="tab" data-gorunum="yakin" aria-selected="false">Yakından</button>
+      <button type="button" role="tab" data-gorunum="izgara" aria-selected="false">Izgara</button>
+    </div>
+  </div>
+
+  <section class="at-sahne" id="atSahne" aria-live="polite">
+    <p class="at-yukleniyor">Atölye hazırlanıyor…</p>
+  </section>
+
+  <div class="at-alt-cubuk">
+    <div class="at-sekme" role="tablist" aria-label="Kategori" id="atKategori">
+      <button type="button" role="tab" data-kategori="hepsi" aria-selected="true">Tümü</button>
+      <button type="button" role="tab" data-kategori="ogrenci" aria-selected="false">Öğrenciler için</button>
+      <button type="button" role="tab" data-kategori="arastirma" aria-selected="false">Araştırma</button>
+      <button type="button" role="tab" data-kategori="etkinlik" aria-selected="false">Etkinlik ve yayın</button>
+    </div>
+    <div class="at-gezinme">
+      <button type="button" class="at-ok" id="atOnceki" aria-label="Önceki araç">←</button>
+      <span class="at-sayac" id="atSayac">00 / 00</span>
+      <button type="button" class="at-ok" id="atSonraki" aria-label="Sonraki araç">→</button>
+    </div>
+  </div>
+
+  <noscript><p class="at-yukleniyor">Atölye için tarayıcınızda JavaScript açık olmalı. Araçlara <a href="/">ana sayfadaki</a> kutulardan da ulaşabilirsiniz.</p></noscript>
+</main>
+
+<footer class="wrap at-alt">
+  <span>© 2026 Bora Başaran · v1.11.0</span>
+  <span class="sep"></span>
+  <button id="theme" type="button" class="at-tema">Tema</button>
+</footer>
+
+<script src="/atolye/atolye.js"></script>
+</body>
+</html>

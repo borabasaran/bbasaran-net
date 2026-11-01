@@ -95,3 +95,41 @@ test('kapak araçları verilerden üretilir; bağlantısı olmayan kutu çıkmaz
   assert.match(html, /<span class="arac-git">Sihirbazı aç <span class="ok" aria-hidden="true">→<\/span><\/span>/);
   assert.doesNotMatch(html, /Henüz yok/);
 });
+
+test('vitrine alınmayan araç kapakta görünmez; sonda Atölye kutusu çıkar ve bütün araçları sayar', () => {
+  const v = veri();
+  v.site.kapak.araclar = [
+    { etiket: 'Tez Atlası', baslik: 'Tezler', baglanti: 'https://tezatlasi.bbasaran.net/', dugme: 'Aç' },
+    { etiket: 'Gizli Araç', baslik: 'Yalnızca atölyede', baglanti: 'https://gizli.bbasaran.net', dugme: 'Aç', vitrin: 'hayir' },
+    { etiket: 'Taslak', baslik: 'Bağlantısız', baglanti: '', dugme: '' }
+  ];
+  const html = sayfa.sayfayiUret(oku('index.html'), v);
+  assert.match(html, /Tez Atlası/);
+  assert.doesNotMatch(html, /Gizli Araç/);
+  assert.match(html, /<a class="probe arac-link arac-atolye" href="\/atolye\/">\n        <p class="probe-top">Atölye · 02 araç<\/p>/);
+});
+
+test('hiç bağlantılı araç yoksa Atölye kutusu da çıkmaz', () => {
+  const v = veri();
+  v.site.kapak.araclar = [{ etiket: 'Taslak', baslik: 'Bağlantısız', baglanti: '', dugme: '' }];
+  const html = sayfa.sayfayiUret(oku('index.html'), v);
+  assert.doesNotMatch(html, /arac-atolye/);
+});
+
+test('atölye ilgi özeti: araç adına göre gün gün sayılır, Atölye ön eki birleştirilir', () => {
+  const { say } = require('../api/atolye.js');
+  const simdi = Date.parse('2026-11-01T09:00:00Z');
+  const s = say([
+    { olusturuldu: '2026-11-01T08:00:00Z', deger: 'Tez Atlası' },
+    { olusturuldu: '2026-11-01T07:00:00Z', deger: 'Atölye: Tez Atlası' },
+    { olusturuldu: '2026-10-30T10:00:00Z', deger: 'İlan Radarı' },
+    { olusturuldu: '2026-10-30T10:00:00Z', deger: 'Atölye · 05 araç' },
+    { olusturuldu: '2026-10-30T10:00:00Z', deger: 'Dış bağlantı: avesis.anadolu.edu.tr' },
+    { olusturuldu: '2026-10-01T10:00:00Z', deger: 'Tez Atlası' }
+  ], simdi, 7);
+  assert.strictEqual(s.gunler.length, 7);
+  assert.strictEqual(s.gunler[6], '2026-11-01');
+  assert.deepStrictEqual(s.araclar['Tez Atlası'], [0, 0, 0, 0, 0, 0, 2]);
+  assert.deepStrictEqual(s.araclar['İlan Radarı'], [0, 0, 0, 0, 1, 0, 0]);
+  assert.strictEqual(Object.keys(s.araclar).length, 2);
+});

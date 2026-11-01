@@ -100,6 +100,10 @@ function nesne(v, ad) {
   if (!v || typeof v !== 'object' || Array.isArray(v)) throw new Error(ad + ' eksik.');
   return v;
 }
+var CIZIMLER = ['tez', 'arsi', 'daf', 'yontem', 'biblio', 'ilan', 'takvim', 'kitap', 'halka'];
+function secim(v, izinli, varsayilan) {
+  return izinli.indexOf(v) >= 0 ? v : varsayilan;
+}
 function baglantiUygun(u) {
   return u === '' || /^https?:\/\/[^\s"'<>]+$/i.test(u) || /^\/[^\s"'<>]*$/.test(u);
 }
@@ -141,7 +145,14 @@ function dogrula(v) {
           etiket: metin(x.etiket, 'Araç etiketi', 60),
           baslik: metin(x.baslik, 'Araç başlığı', 120),
           baglanti: bag,
-          dugme: metin(x.dugme, 'Araç düğmesi', 40)
+          dugme: metin(x.dugme, 'Araç düğmesi', 40),
+          // Atölye alanları: yalnızca tanınan değerler kabul edilir, gerisi varsayılana döner
+          kategori: secim(x.kategori, ['ogrenci', 'arastirma', 'etkinlik'], 'ogrenci'),
+          cizim: secim(x.cizim, CIZIMLER, 'tez'),
+          deney: secim(x.deney, ['', 'daf', 'arsi2209'], ''),
+          vitrin: secim(x.vitrin, ['', 'hayir'], ''),
+          durum: secim(x.durum, ['', 'yapim'], ''),
+          aciklama: metin(x.aciklama, 'Araç açıklaması', 600)
         };
       }),
       bilgiler: liste(k.bilgiler, 'Kapak bilgileri', 8).map(function (b, n) {

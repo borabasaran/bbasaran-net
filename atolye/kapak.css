@@ -1,0 +1,13 @@
+/* Ana sayfadaki Atölye ekleri: kapak şeridinin sonundaki Atölye kutusu
+   ve menüdeki Atölye bağlantısı. */
+
+/* Araç şeridinin sonunda kendiliğinden çıkan kutu */
+.arac-link.arac-atolye{border-color:rgba(214,164,74,.55);background:rgba(214,164,74,.08)}
+.arac-link.arac-atolye:hover{border-color:rgba(214,164,74,.9);background:rgba(214,164,74,.14)}
+
+/* Menüdeki bağlantı başka sayfaya gider. "ana" sınıfı onu kitap sayfalarından
+   ayrı tutar (app.js menüdeki .ana dışındaki bağlantıları sayfa sayar). */
+nav.bar a.ana.dis{color:var(--muted)}
+nav.bar a.ana.dis:hover{color:var(--ink)}
+nav.bar a.ana.dis::before{content:none}
+nav.bar a.ana.dis span{color:var(--accent)}
