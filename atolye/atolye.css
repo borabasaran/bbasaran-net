@@ -229,6 +229,13 @@
 .at-alt{width:100%;max-width:1320px;padding-inline:clamp(16px,3vw,40px)}
 .at-tema{font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;background:none;border:1px solid var(--line);color:var(--muted);padding:6px 12px;border-radius:2px;cursor:pointer;min-height:32px}
 
+/* 3B yığında arkadaki kartlar kabın düzleminin gerisinde kalır; kap imleci
+   yakalamasın ki arkadaki kartların üzerine gelmek de algılansın */
+@media (min-width:861px){
+  .at-yigin-ic{pointer-events:none}
+  .at-yigin-ic .at-kart{pointer-events:auto}
+}
+
 /* ---------- telefon ve tablet ----------
    3B yığın yerine parmakla kaydırılan, yerine oturan bir şerit. */
 @media (max-width:860px){

@@ -93,6 +93,7 @@
 <link rel="stylesheet" href="/sekme.css">
 <link rel="stylesheet" href="/kitap.css">
 <link rel="stylesheet" href="/artikel.css">
+<link rel="stylesheet" href="/atolye/atolye.css">
 <link rel="stylesheet" href="/atolye/kapak.css">
 </head>
 <body>
@@ -197,7 +198,7 @@
         <p class="arac-baslik">Araştırma konusu geliştirme aracı</p>
         <span class="arac-git">Sihirbazı aç <span class="ok" aria-hidden="true">→</span></span>
       </a>
-      <a class="probe arac-link arac-atolye" href="/atolye/">
+      <a class="probe arac-link arac-atolye" href="#atolye">
         <p class="probe-top">Atölye · 05 araç</p>
         <p class="arac-baslik">Bütün araçlar, tanıtımlar ve canlı deneyler</p>
         <span class="arac-git">Atölyeye gir <span class="ok" aria-hidden="true">→</span></span>
@@ -222,9 +223,9 @@
   <div class="wrap">
     <a href="#cover" class="ana">Anasayfa</a>
     <a href="#hakkinda">Hakkımda</a>
+    <a href="#atolye">Atölye</a>
     <a href="#arastirma">Araştırma</a>
     <a href="#calismalar">Çalışmalar</a>
-    <a href="/atolye/" class="ana dis">Atölye <span aria-hidden="true">↗</span></a>
     <a href="#yontem">Yöntem</a>
     <a href="#yayinlar">Yayınlar</a>
     <a href="#iletisim">İletişim</a>
@@ -252,9 +253,47 @@
   </div>
 </section>
 
+<section id="atolye" class="sayfa ruled" aria-label="Atölye">
+  <div class="wrap at-ev">
+    <p class="eyebrow reveal"><span class="no">02</span> Atölye</p>
+    <div class="at-ana" id="atolyeKok">
+      <div class="at-arac-cubugu">
+        <span class="at-rozet">Atölye <b id="atRozet">00</b></span>
+        <label class="at-ara">
+          <svg aria-hidden="true" width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="7" cy="7" r="5"></circle><path d="M11 11l3.5 3.5"></path></svg>
+          <span class="sr-only">Araç ara</span>
+          <input id="atAra" type="search" placeholder="Bir sonraki merakını bul…" autocomplete="off">
+        </label>
+        <div class="at-sekme" role="tablist" aria-label="Görünüm">
+          <button type="button" role="tab" data-gorunum="akis" aria-selected="true">Akış</button>
+          <button type="button" role="tab" data-gorunum="yakin" aria-selected="false">Yakından</button>
+          <button type="button" role="tab" data-gorunum="izgara" aria-selected="false">Izgara</button>
+        </div>
+      </div>
+      <div class="at-sahne" id="atSahne" aria-live="polite">
+        <p class="at-yukleniyor">Atölye hazırlanıyor…</p>
+      </div>
+      <div class="at-alt-cubuk">
+        <div class="at-sekme" role="tablist" aria-label="Kategori">
+          <button type="button" role="tab" data-kategori="hepsi" aria-selected="true">Tümü</button>
+          <button type="button" role="tab" data-kategori="ogrenci" aria-selected="false">Öğrenciler için</button>
+          <button type="button" role="tab" data-kategori="arastirma" aria-selected="false">Araştırma</button>
+          <button type="button" role="tab" data-kategori="etkinlik" aria-selected="false">Etkinlik ve yayın</button>
+        </div>
+        <div class="at-gezinme">
+          <button type="button" class="at-ok" id="atOnceki" aria-label="Önceki araç">←</button>
+          <span class="at-sayac" id="atSayac">00 / 00</span>
+          <button type="button" class="at-ok" id="atSonraki" aria-label="Sonraki araç">→</button>
+        </div>
+      </div>
+      <p class="at-kendi"><a href="/atolye/">Atölyeyi ayrı sayfada aç <span aria-hidden="true">↗</span></a></p>
+    </div>
+  </div>
+</section>
+
 <section id="arastirma" class="sayfa ruled">
   <div class="wrap">
-    <p class="eyebrow reveal"><span class="no">02</span> Araştırma alanları</p>
+    <p class="eyebrow reveal"><span class="no">03</span> Araştırma alanları</p>
 <!-- ARASTIRMA:BASLA -->
     <h2 class="mask">Dört bağlantılı hat</h2>
     <div class="grid two">
@@ -282,7 +321,7 @@
 <section class="sayfa pin" id="calismalar" aria-label="Çalışmalar">
   <div class="pin-stage">
     <div class="pin-head wrap">
-      <p class="eyebrow reveal"><span class="no">03</span> Çalışmalar</p>
+      <p class="eyebrow reveal"><span class="no">04</span> Çalışmalar</p>
 <!-- CALISMALAR:BASLA -->
       <h2 class="mask">Yürüttüğüm projeler ve geliştirdiğim sistemler</h2>
     </div>
@@ -353,7 +392,7 @@
 
 <section id="yontem" class="sayfa ruled">
   <div class="wrap">
-    <p class="eyebrow reveal"><span class="no">04</span> Yöntem</p>
+    <p class="eyebrow reveal"><span class="no">05</span> Yöntem</p>
 <!-- YONTEM:BASLA -->
     <h2 class="mask">Başvurduğum araçlar ve ölçütler</h2>
 
@@ -460,7 +499,7 @@
 
 <section id="yayinlar" class="sayfa ruled">
   <div class="wrap">
-    <p class="eyebrow reveal"><span class="no">05</span> Yayınlar</p>
+    <p class="eyebrow reveal"><span class="no">06</span> Yayınlar</p>
     <h2 class="mask">Makaleler ve kitap bölümleri</h2>
 
 <!-- YAYINLAR:BASLA -->
@@ -639,7 +678,7 @@
 
 <section id="iletisim" class="sayfa ruled">
   <div class="wrap">
-    <p class="eyebrow reveal"><span class="no">06</span> İletişim</p>
+    <p class="eyebrow reveal"><span class="no">07</span> İletişim</p>
 <!-- ILETISIM:BASLA -->
     <h2 class="mask">Mesaj gönderin</h2>
     <p class="lede muted reveal" style="--i:1">Formu doldurduğunuzda mesajınız bana iletilir. E-posta adresinizi yalnızca yanıt verebilmek için kullanırım.</p>
@@ -692,7 +731,7 @@
   <button type="button" id="onceki">← Önceki</button>
   <span class="kitap-no" id="sayfaNo">01 / 06</span>
   <button type="button" id="sonraki">Sonraki →</button>
-  <span class="kitap-alt kitap-surum">v1.11.0</span>
+  <span class="kitap-alt kitap-surum">v1.12.0</span>
 </div>
 
 <div class="ticker" aria-hidden="true">
@@ -705,7 +744,7 @@
 </div>
 
 <footer class="wrap">
-  <span>© 2026 Bora Başaran · v1.11.0</span>
+  <span>© 2026 Bora Başaran · v1.12.0</span>
   <span class="sep"></span>
   <button id="theme" style="font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;background:none;border:1px solid var(--line);color:var(--muted);padding:6px 12px;border-radius:2px;cursor:pointer">Tema</button>
 </footer>
@@ -713,5 +752,6 @@
 <script src="/app.js"></script>
 <script src="/artikel.js"></script>
 <script src="/araclar.js"></script>
+<script src="/atolye/atolye.js"></script>
 </body>
 </html>
