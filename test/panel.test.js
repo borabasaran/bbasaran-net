@@ -162,3 +162,22 @@ test('doğrulama: güvensiz bağlantı ve geçersiz yayın reddedilir, bilinmeye
   assert.equal(t.site.fazla, undefined);
   assert.deepEqual(t.site, JSON.parse(oku('data/site.json')), 'mevcut veri aynen korunur');
 });
+
+test('doğrulama: atölye alanlarında yalnızca tanınan değerler kalır, eski kayıtlar varsayılan alır', () => {
+  const v = {
+    site: JSON.parse(oku('data/site.json')), yayinlar: JSON.parse(oku('data/yayinlar.json')),
+    guncel: JSON.parse(oku('data/guncel.json')), aday: ADAY
+  };
+  v.site.kapak.araclar = [
+    { etiket: 'Eski', baslik: 'Alanları yok', baglanti: 'https://eski.bbasaran.net', dugme: 'Aç' },
+    { etiket: 'Kötü', baslik: 'Garip değerler', baglanti: 'https://k.bbasaran.net', dugme: 'Aç', kategori: '<script>', cizim: 'yok', deney: 'x', vitrin: 'belki', durum: 'kapali', aciklama: 'Metin' }
+  ];
+  const t = panel.dogrula(v).site.kapak.araclar;
+  assert.deepEqual(t[0], { etiket: 'Eski', baslik: 'Alanları yok', baglanti: 'https://eski.bbasaran.net', dugme: 'Aç', kategori: 'ogrenci', cizim: 'tez', deney: '', vitrin: '', durum: '', aciklama: '' });
+  assert.equal(t[1].kategori, 'ogrenci');
+  assert.equal(t[1].cizim, 'tez');
+  assert.equal(t[1].deney, '');
+  assert.equal(t[1].vitrin, '');
+  assert.equal(t[1].durum, '');
+  assert.equal(t[1].aciklama, 'Metin');
+});
