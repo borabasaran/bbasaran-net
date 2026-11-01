@@ -514,6 +514,18 @@
     menu.click();
   });
 
+  /* kapaktaki korpus alanı bir araç sözcüğüne tıklanınca o aracı yakından açar */
+  window.bbAtolye = {
+    ac: function (ad) {
+      var i = durum.araclar.map(function (a) { return a.ad; }).indexOf(ad);
+      if (i < 0) return;
+      durum.ara = ''; if (araKutusu) araKutusu.value = '';
+      kategoriSec('hepsi');
+      durum.sira = i;
+      gorunumSec('yakin');
+    }
+  };
+
   /* ---------- yükleme ---------- */
   fetch('/data/site.json', { cache: 'no-cache' }).then(function (r) { return r.json(); }).then(function (site) {
     durum.araclar = hazirla(site);
