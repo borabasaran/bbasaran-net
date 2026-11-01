@@ -104,8 +104,26 @@ var CIZIMLER = ['tez', 'arsi', 'daf', 'yontem', 'biblio', 'ilan', 'takvim', 'kit
 function secim(v, izinli, varsayilan) {
   return izinli.indexOf(v) >= 0 ? v : varsayilan;
 }
+function yayinBaglantisi(v, ad) {
+  var u = String(v == null ? '' : v).trim();
+  if (u !== '' && (!/^https:\/\/[^\s"'<>]+$/i.test(u) || u.length > 600)) throw new Error(ad + ': bağlantı https:// ile başlamalı.');
+  return u;
+}
+
 function baglantiUygun(u) {
   return u === '' || /^https?:\/\/[^\s"'<>]+$/i.test(u) || /^\/[^\s"'<>]*$/.test(u);
+}
+
+// DOI hangi biçimde yapıştırılırsa yapıştırılsın (10.x/..., doi:..., https://doi.org/...)
+// yalın 10.xxxx/... biçimine indirilir; DOI'ye benzemeyen değer reddedilir.
+function doiSadelestir(v, ad) {
+  var d = String(v == null ? '' : v).trim()
+    .replace(/^doi:\s*/i, '')
+    .replace(/^https?:\/\/(dx\.)?doi\.org\//i, '');
+  try { d = decodeURIComponent(d); } catch (e) { /* olduğu gibi kalır */ }
+  if (d === '') return '';
+  if (!/^10\.\d{4,9}\/[^\s"'<>]+$/.test(d) || d.length > 200) throw new Error(ad + ': DOI geçersiz (10.xxxx/... biçiminde olmalı).');
+  return d;
 }
 
 function yayinDogrula(k, ad) {
@@ -113,7 +131,7 @@ function yayinDogrula(k, ad) {
   var yil = Number(k.yil);
   if (!Number.isInteger(yil) || yil < 1950 || yil > 2100) throw new Error(ad + ': yıl geçersiz.');
   if (!String(k.baslik || '').trim()) throw new Error(ad + ': başlık boş olamaz.');
-  return {
+  var y = {
     yil: yil,
     baslik: metin(k.baslik, ad + ' başlığı', 600),
     yazarlar: metin(k.yazarlar, ad + ' yazarları', 600),
@@ -121,6 +139,12 @@ function yayinDogrula(k, ad) {
     ayrinti: metin(k.ayrinti, ad + ' ayrıntısı', 400),
     dizin: metin(k.dizin, ad + ' dizini', 40)
   };
+  // DOI ve bağlantı yalnızca doluysa yazılır; boş yayın kayıtları eskisi gibi kalır
+  var doi = doiSadelestir(k.doi, ad);
+  var bag = yayinBaglantisi(k.baglanti, ad);
+  if (doi) y.doi = doi;
+  if (bag) y.baglanti = bag;
+  return y;
 }
 
 // Gelen veriyi denetler ve beklenen biçime indirger (bilinmeyen alanlar atılır).
