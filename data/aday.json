@@ -4,12 +4,6 @@
   "adaylar": [
     {
       "yil": 2026,
-      "baslik": "The Resilience Responsibility Gap: how institutions distribute the burden of adaptation under AI-driven structural disruption",
-      "kaynak": "Frontiers in Psychology",
-      "doi": "https://doi.org/10.3389/fpsyg.2026.1974636"
-    },
-    {
-      "yil": 2026,
       "baslik": "The Resilience Responsibility Gap",
       "kaynak": "ScienceDB",
       "doi": "https://doi.org/10.57760/sciencedb.0106g"
@@ -128,5 +122,8 @@
       "kaynak": "Estudios filológicos alemanes: revista del Grupo de Investigación Filología Alemana",
       "doi": ""
     }
+  ],
+  "yoksayilanlar": [
+    "The Resilience Responsibility Gap: how institutions distribute the burden of adaptation under AI-driven structural disruption"
   ]
 }
