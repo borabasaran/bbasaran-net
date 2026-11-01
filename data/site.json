@@ -7,31 +7,61 @@
         "etiket": "Tez Atlası",
         "baslik": "Anadolu Üniversitesi Almanca Öğretmenliği Programı Lisansüstü Tezleri",
         "baglanti": "https://tezatlasi.bbasaran.net/",
-        "dugme": "Buradan"
+        "dugme": "Buradan",
+        "kategori": "ogrenci",
+        "cizim": "tez",
+        "deney": "",
+        "vitrin": "",
+        "durum": "",
+        "aciklama": "Almanca Öğretmenliği Programında 1987'den bu yana hazırlanan yüksek lisans ve doktora tezleri, danışmanlıklar ve istatistikler. Ders, danışman ve tez konusu seçerken Anabilim Dalının birikimini tek bakışta gösterir."
       },
       {
         "etiket": "İlan Radarı",
         "baslik": "Almanca akademik kadro ilanları",
         "baglanti": "https://ilan.bbasaran.net/",
-        "dugme": "Buradan"
+        "dugme": "Buradan",
+        "kategori": "arastirma",
+        "cizim": "ilan",
+        "deney": "",
+        "vitrin": "",
+        "durum": "",
+        "aciklama": "Almanca alanındaki akademik kadro ilanlarını düzenli olarak tarar ve tek bir listede toplar."
       },
       {
         "etiket": "DaF Konuşma Asistanı",
         "baslik": "Almanca konuşma pratiği · B2",
         "baglanti": "https://daf-asistan.bbasaran.net",
-        "dugme": "Asistanı aç"
+        "dugme": "Asistanı aç",
+        "kategori": "ogrenci",
+        "cizim": "daf",
+        "deney": "daf",
+        "vitrin": "",
+        "durum": "",
+        "aciklama": "B2 düzeyinde Almanca konuşma pratiği için yapay zekâ destekli bir muhatap. Öğretmen adayları gündelik konularda konuşur, dil düzeyine uygun sorular ve geri bildirim alır."
       },
       {
         "etiket": "ArSİ 2209 Tübitak Proje Geliştirme",
         "baslik": "Almanca Öğretmenliği Programı Öğrencilerinin Tübitak 2209 Proje Fikri geliştirme ortamı",
         "baglanti": "https://arsi2209.bbasaran.net",
-        "dugme": "Asistani Aç"
+        "dugme": "Asistani Aç",
+        "kategori": "ogrenci",
+        "cizim": "arsi",
+        "deney": "arsi2209",
+        "vitrin": "",
+        "durum": "",
+        "aciklama": "Almanca Öğretmenliği Programı öğrencilerinin TÜBİTAK 2209-A proje fikrini sokratik, sesli bir söyleşiyle adım adım geliştirdiği ortam."
       },
       {
         "etiket": "ArSi: Araştırma Sihirbazı",
         "baslik": "Araştırma konusu geliştirme aracı",
         "baglanti": "https://arsi.bbasaran.net",
-        "dugme": "Sihirbazı aç"
+        "dugme": "Sihirbazı aç",
+        "kategori": "ogrenci",
+        "cizim": "yontem",
+        "deney": "",
+        "vitrin": "",
+        "durum": "",
+        "aciklama": "Lisansüstü öğrencilerin araştırma konusunu aşama aşama netleştirmesine yardım eden sihirbaz."
       }
     ],
     "bilgiler": [
@@ -47,7 +77,7 @@
       {
         "baslik": "Alan",
         "satirlar": [
-          "Almancanın yabancı dil olarak öğretimi",
+          "Almanın yabancı dil olarak öğretimi",
           "Öğretmen eğitimi ve kapsayıcı sınıflar",
           "Ders kitabı çözümlemesi ve materyal tasarımı"
         ]

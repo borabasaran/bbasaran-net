@@ -16,6 +16,8 @@ Statik site, derleme adımı yok:
 - `app.js` — kapak, kitap kurgusu, okunabilirlik ölçer, form, ziyaret sayacı
 - `araclar.js` — kapaktaki bilgi ve araç satırlarını ikişerli kutulara böler, okları yönetir
 - `api/olay.js` — ziyaret istatistiklerini yazan sunucu işlevi
+- `atolye/` — Atölye sayfası (`bbasaran.net/atolye/`): araçların akış, yakından ve ızgara görünümleri
+- `api/atolye.js` — Atölye'deki ilgi çubukları için son yedi günün araç tıklama toplamları
 - `scripts/guncelle.mjs` — aylık güncelleyici
 - `scripts/uret.mjs` — sayfayı verilerden elle yeniden üretir
 - `robots.txt`, `sitemap.xml` — arama motorları için; panel ve API dizine alınmaz
@@ -32,6 +34,19 @@ npm test                # index.html ile verilerin uyumunu denetler
 Kapaktaki araç kutularının (`kapak.araclar`) sayı sınırı yoktur; her kutunun üst etiketi, başlığı, bağlantısı ve düğme yazısı vardır. Bağlantısı boş olan kutu sayfaya yazılmaz. Kapağın en üst satırında Retro Artikel Avcısı sola yaslı durur; altında Okunabilirlik ölçer solda sabit durur, yanında bağlantı kutuları ikişerli görünür ve büyük oklarla değişir (ölçer ve oyun sabittir, veriden gelmez). Bilgi satırında da "Linkler" kutusu solda sabittir, diğer bilgi kutuları ikişerli görünür ve oklarla değişir. Kaç kutu eklenirse eklensin kapağın yüksekliği değişmez. Kutu başlıkları kapakta tek satırdır.
 
 Yöntem maddelerinde `[[terim]]` yazımı vurgulu terim olarak gösterilir. Kapaktaki bilgi satırlarında birden fazla satır varsa kapakta sırayla döner. Çalışma kartına `baglanti` eklenirse kartta bir bağlantı görünür; `renk` alanı `yesil` ya da `sari` olabilir.
+
+## Atölye
+
+`bbasaran.net/atolye/` sayfası araçları kapaktaki kutularla aynı kayıttan (`kapak.araclar`) okur; panelde yapılan her değişiklik iki yerde birden görünür. Her araç kaydında kapak alanlarına ek olarak şunlar vardır:
+
+- `kategori`: `ogrenci`, `arastirma` ya da `etkinlik`
+- `aciklama`: Atölye'deki künyede görünen bir iki cümle (boşsa başlık kullanılır)
+- `cizim`: kartın üstündeki küçük hareketli çizim (`tez`, `arsi`, `daf`, `yontem`, `biblio`, `ilan`, `takvim`, `kitap`, `halka`)
+- `vitrin`: `hayir` ise araç kapakta görünmez, yalnızca Atölye'de yer alır
+- `durum`: `yapim` ise "yapım aşamasında" olarak gösterilir
+- `deney`: `daf` (düzeye göre örnek diyalog) ya da `arsi2209` (örnek sokratik akış); boşsa tanıtım gösterilir
+
+Kapaktaki araç şeridinin sonunda kendiliğinden bir Atölye kutusu çıkar. Bir araca doğrudan bağlantı `bbasaran.net/atolye/#tez-atlasi` biçimindedir. İlgi çubukları, kapaktan ve Atölye'den o araca yapılan tıklamaların son yedi günlük toplamıdır; hiç tıklama yoksa çubuk gösterilmez.
 
 ## İçerik paneli
 
