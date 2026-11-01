@@ -64,16 +64,25 @@
         "aciklama": "Lisansüstü öğrencilerin araştırma konusunu aşama aşama netleştirmesine yardım eden sihirbaz."
       }
     ],
-    "bilgiler": [
+    "kisayollar": [
       {
-        "baslik": "Linkler",
-        "satirlar": [
-          "[Almanca Öğretmenliği Programı](https://abp.anadolu.edu.tr/tr/program/dersler/163/13)",
-          "[Akademik Takvim](https://oidb.anadolu.edu.tr/akademik-takvim)",
-          "[XVIII. Türkischer Internationaler Germanistik Kongress](https://gerder.org.tr/index.php/main-kongreler?layout=edit&id=121)",
-          "[Almanca Öğretmenliği Programı Tübitak 2209 Tanıtımı](https://youtu.be/BEBIqDuBASo)"
-        ]
+        "etiket": "Almanca Öğretmenliği Programı",
+        "baglanti": "https://abp.anadolu.edu.tr/tr/program/dersler/163/13"
       },
+      {
+        "etiket": "Akademik Takvim",
+        "baglanti": "https://oidb.anadolu.edu.tr/akademik-takvim"
+      },
+      {
+        "etiket": "Germanistik Kongresi",
+        "baglanti": "https://gerder.org.tr/index.php/main-kongreler?layout=edit&id=121"
+      },
+      {
+        "etiket": "2209 Tanıtımı",
+        "baglanti": "https://youtu.be/BEBIqDuBASo"
+      }
+    ],
+    "bilgiler": [
       {
         "baslik": "Alan",
         "satirlar": [
