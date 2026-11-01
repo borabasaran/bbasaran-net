@@ -314,7 +314,7 @@ main{max-width:980px;margin:0 auto;padding:22px 20px 80px}
         alan('Unvan', s, 'unvan', { ipucu: 'Kalın yazılan ilk satır.' }),
         alan('Tanıtım', s, 'tanitim', { cok: true, satir: 4 })
       ]));
-      k.appendChild(kart('Kapaktaki araçlar', [listeDuzenle(s.araclar, {
+      k.appendChild(kart('Atölye araçları', [listeDuzenle(s.araclar, {
         ad: function (x) { return x.etiket || 'Adsız araç'; }, ekle: 'Araç ekle',
         yeni: function () { return { etiket: '', baslik: '', baglanti: '', dugme: '', kategori: 'ogrenci', cizim: 'tez', deney: '', vitrin: '', durum: '', aciklama: '' }; },
         ciz: function (x, ic, ad) {
@@ -327,17 +327,14 @@ main{max-width:980px;margin:0 auto;padding:22px 20px 80px}
             alan('Düğme yazısı', x, 'dugme', { yer: 'Örn. Sihirbazı aç' })
           ]));
           ic.appendChild(alan('Atölye açıklaması', x, 'aciklama', { cok: true, satir: 3, ipucu: 'Atölye sayfasında künyede ve tanıtımda görünen bir iki cümle. Boş bırakılırsa başlık kullanılır.' }));
-          ic.appendChild(el('div', { class: 'iki' }, [
-            alan('Kategori', x, 'kategori', { secenekler: [['ogrenci', 'Öğrenciler için'], ['arastirma', 'Araştırma'], ['etkinlik', 'Etkinlik ve yayın']] }),
-            alan('Kapakta (vitrinde)', x, 'vitrin', { secenekler: [['', 'Görünsün'], ['hayir', 'Yalnızca Atölye’de']] })
-          ]));
+          ic.appendChild(alan('Kategori', x, 'kategori', { secenekler: [['ogrenci', 'Öğrenciler için'], ['arastirma', 'Araştırma'], ['etkinlik', 'Etkinlik ve yayın']] }));
           ic.appendChild(el('div', { class: 'iki' }, [
             alan('Çizim', x, 'cizim', { secenekler: [['tez', 'Çubuklar (veri, arşiv)'], ['arsi', 'Ses dalgası (sesli)'], ['daf', 'Yazışma (konuşma)'], ['yontem', 'Düğümler (yöntem, aşama)'], ['biblio', 'Nokta bulutu (ağ)'], ['ilan', 'Radar (takip)'], ['takvim', 'Takvim (etkinlik)'], ['kitap', 'Kitaplar (yayın)'], ['halka', 'Halka (kapsayıcılık)']], ipucu: 'Atölyede kartın üstündeki küçük hareketli çizim.' }),
             alan('Durum', x, 'durum', { secenekler: [['', 'Aktif'], ['yapim', 'Yapım aşamasında']] })
           ]));
           ic.appendChild(alan('Atölye deneyi', x, 'deney', { secenekler: [['', 'Yok (tanıtım gösterilir)'], ['daf', 'Konuşma: düzeye göre örnek diyalog'], ['arsi2209', 'Sokratik akış: adım adım örnek sorular']], ipucu: 'Deney, aracın nasıl çalıştığını örnekle gösteren küçük bir etkileşimdir.' }));
         }
-      })], 'Kapağın altındaki bağlantı kutuları ve Atölye sayfasındaki araçlar; sayı sınırı yoktur. Kapakta ölçerin yanında ikişerli görünür, devamına büyük okla geçilir; en sonda kendiliğinden bir Atölye kutusu çıkar. Sıra buradaki sıradır. "Yalnızca Atölye’de" seçilen araç kapakta görünmez. Okunabilirlik ölçer ve Retro Artikel Avcısı sabittir, listede görünmez. Bağlantısı boş bırakılan araç hiçbir yerde gösterilmez.'));
+      })], 'Atölye sayfasındaki araçlar; sayı sınırı yoktur, sıra buradaki sıradır. Kapakta araçlar tek tek görünmez: ölçerin yanındaki tek Atölye kutusu araç sayısını ve adlarını kendiliğinden gösterir, araçların sözcükleri de kapaktaki sözcük alanına katılır. Okunabilirlik ölçer ve Retro Artikel Avcısı sabittir, listede görünmez. Bağlantısı boş bırakılan araç hiçbir yerde gösterilmez.'));
       k.appendChild(kart('Bilgi satırları', [listeDuzenle(s.bilgiler, {
         ad: function (b) { return b.baslik || 'Başlıksız'; }, ekle: 'Bilgi ekle', en: 6,
         yeni: function () { return { baslik: '', satirlar: [''] }; },

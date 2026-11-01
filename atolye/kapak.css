@@ -1,4 +1,4 @@
-/* Ana sayfadaki Atölye ekleri: kapak şeridinin sonundaki Atölye kutusu
+/* Ana sayfadaki Atölye ekleri: kapaktaki tek Atölye kutusu
    ve menüdeki Atölye bağlantısı. */
 
 /* Araç şeridinin sonunda kendiliğinden çıkan kutu */
@@ -14,3 +14,12 @@
 
 /* Kapaktaki korpus alanı (korpus.js): eski harf alanının yerini alır */
 #korpus{z-index:1;width:100%;height:100%;display:block}
+
+/* Kapakta tek Atölye kutusu: ölçerin yanındaki iki kutuluk alanı tek başına doldurur.
+   "Atölyeye gir" üst satırın sağına alınır; kutu eski kutularla aynı yükseklikte kalır. */
+.arac-serit .arac-atolye{grid-column:1/-1;grid-template-columns:minmax(0,1fr) auto;column-gap:16px}
+.arac-atolye .probe-top{grid-column:1;grid-row:1}
+.arac-atolye .arac-git{grid-column:2;grid-row:1;justify-self:end;color:var(--ochre)}
+.arac-atolye .arac-baslik,
+.arac-atolye .arac-adlar{grid-column:1/-1}
+.arac-atolye .arac-adlar{margin:0;font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:rgba(214,164,74,.8);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}

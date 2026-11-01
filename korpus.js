@@ -3,6 +3,8 @@
    alanları, çalışma kartları, Atölye'deki araçlar) çıkarılan sözcükler süzülür.
    Sık geçen sözcük daha büyük ve belirgindir; imleç mercek gibi çalışır, yaklaşılan
    sözcükler büyüyüp okunur hale gelir ve en yakındakinin kaynağı altında görünür.
+   Bir sözcüğe tıklanınca kaynağının bulunduğu sayfa açılır (yayın başlığından
+   gelen sözcük Yayınlar'ı, Atölye aracından gelen sözcük o aracı açar).
    Veriler data/site.json ve data/yayinlar.json dosyalarından okunur; panelden
    eklenen her yayın ve araç kendiliğinden alana katılır.
    Hareketi azaltma tercihi açık olan ziyaretçiye alan durağan çizilir. */
@@ -33,24 +35,24 @@
   function kucuk(s) { return String(s || '').toLocaleLowerCase('tr-TR'); }
 
   /* metni sözcüklere ayırır, her sözcüğün ilk görüldüğü kaynağı saklar */
-  function topla(metin, kaynak, sayac) {
+  function topla(metin, kaynak, hedef, sayac) {
     String(metin || '').split(/[^0-9A-Za-zÇĞİÖŞÜçğıöşüâîûÄäßẞ]+/).forEach(function (w) {
       if (w.length < 4) return;
       var k = kucuk(w);
       if (durak[k] || /^\d+$/.test(k)) return;
-      if (!sayac[k]) sayac[k] = { s: w, n: 0, kaynak: kaynak };
+      if (!sayac[k]) sayac[k] = { s: w, n: 0, kaynak: kaynak, hedef: hedef };
       sayac[k].n++;
     });
   }
 
   function hazirla(site, yayin) {
     var sayac = {};
-    (yayin.makaleler || []).forEach(function (m) { topla(m.baslik, 'Makale · ' + m.yil, sayac); });
-    (yayin.bolumler || []).forEach(function (m) { topla(m.baslik, 'Kitap bölümü · ' + m.yil, sayac); });
-    ((site.arastirma || {}).alanlar || []).forEach(function (a) { topla(a.baslik + ' ' + a.metin, 'Araştırma alanı', sayac); });
-    ((site.calismalar || {}).kartlar || []).forEach(function (k) { topla(k.baslik + ' ' + k.metin, 'Çalışma · ' + k.baslik, sayac); });
-    ((site.kapak || {}).araclar || []).forEach(function (a) { topla(a.etiket + ' ' + (a.aciklama || a.baslik), 'Atölye · ' + a.etiket, sayac); });
-    ((site.hakkinda || {}).paragraflar || []).forEach(function (p) { topla(p, 'Hakkımda', sayac); });
+    (yayin.makaleler || []).forEach(function (m) { topla(m.baslik, 'Makale · ' + m.yil, { bolum: 'yayinlar' }, sayac); });
+    (yayin.bolumler || []).forEach(function (m) { topla(m.baslik, 'Kitap bölümü · ' + m.yil, { bolum: 'yayinlar' }, sayac); });
+    ((site.arastirma || {}).alanlar || []).forEach(function (a) { topla(a.baslik + ' ' + a.metin, 'Araştırma alanı', { bolum: 'arastirma' }, sayac); });
+    ((site.calismalar || {}).kartlar || []).forEach(function (k) { topla(k.baslik + ' ' + k.metin, 'Çalışma · ' + k.baslik, { bolum: 'calismalar' }, sayac); });
+    ((site.kapak || {}).araclar || []).filter(function (a) { return String(a.baglanti || '').trim(); }).forEach(function (a) { topla(a.etiket + ' ' + (a.aciklama || a.baslik), 'Atölye · ' + a.etiket, { bolum: 'atolye', arac: a.etiket }, sayac); });
+    ((site.hakkinda || {}).paragraflar || []).forEach(function (p) { topla(p, 'Hakkımda', { bolum: 'hakkinda' }, sayac); });
     var liste = Object.keys(sayac).map(function (k) { return sayac[k]; });
     liste.sort(function (a, b) { return b.n - a.n || a.s.length - b.s.length; });
     return liste.slice(0, 160);
@@ -117,13 +119,54 @@
       ctx.font = yaziTipi(z, bo);
       ctx.fillStyle = 'rgba(' + (200 + 44 * z.p).toFixed(0) + ',' + (236 - 22 * z.p).toFixed(0) + ',' + (226 - 70 * z.p).toFixed(0) + ',' + Math.min(op, 0.92).toFixed(3) + ')';
       ctx.fillText(z.w.s, z.x, z.y);
+      /* tıklama için son çizilen ölçüler saklanır */
+      z.dw = ctx.measureText(z.w.s).width;
+      z.ds = bo;
     }
-    if (enYakin) {
+    var etiketli = imlecSozcuk || enYakin;
+    if (etiketli) {
+      var yazi = etiketli.w.kaynak.toLocaleUpperCase('tr-TR') + (imlecSozcuk ? '  →' : '');
       ctx.font = '500 10px "IBM Plex Mono", monospace';
-      ctx.fillStyle = 'rgba(214,164,74,0.85)';
-      ctx.fillText(enYakin.w.kaynak.toLocaleUpperCase('tr-TR'), enYakin.x, enYakin.y + 16);
+      /* etiket adın ya da başka bir yazının üstüne düşerse okunsun diye koyu bir zemin */
+      var en = ctx.measureText(yazi).width;
+      var lx = Math.max(8, Math.min(etiketli.x, G - en - 12));
+      ctx.fillStyle = 'rgba(4,30,32,0.72)';
+      ctx.fillRect(lx - 4, etiketli.y + 6, en + 8, 14);
+      ctx.fillStyle = imlecSozcuk ? 'rgba(232,190,110,0.98)' : 'rgba(214,164,74,0.85)';
+      ctx.fillText(yazi, lx, etiketli.y + 16);
     }
   }
+
+  /* bir noktanın üzerindeki sözcük: birden çoğu üst üsteyse en belirgini */
+  function sozcukBul(x, y) {
+    var bulunan = null;
+    for (var i = 0; i < zerreler.length; i++) {
+      var z = zerreler[i];
+      if (!z.dw) continue;
+      if (x >= z.x - 6 && x <= z.x + z.dw + 6 && y >= z.y - z.ds * 0.85 - 6 && y <= z.y + 8) {
+        if (!bulunan || z.p > bulunan.p) bulunan = z;
+      }
+    }
+    return bulunan;
+  }
+
+  /* adın, yazıların, kutuların ve düğmelerin üzerinde sözcük tıklaması devreye girmez */
+  function engel(t) {
+    return !!(t && t.closest && t.closest('a,button,input,textarea,select,label,canvas#artikel,.probe,.facts,.tagline,.masthead i,.serit-ok,.arac-serit-kap,.cover-top,.cover-foot'));
+  }
+
+  function git(h) {
+    if (!h || !h.bolum) return;
+    var menu = document.querySelector('nav.bar a[href="#' + h.bolum + '"]');
+    if (menu) menu.click();
+    else {
+      var hedef = document.getElementById(h.bolum);
+      if (hedef) hedef.scrollIntoView({ behavior: azHareket ? 'auto' : 'smooth' });
+    }
+    if (h.arac) setTimeout(function () { if (window.bbAtolye) window.bbAtolye.ac(h.arac); }, 400);
+  }
+
+  var imlecSozcuk = null;
 
   function dongu() {
     if (!calismali()) { calisiyor = false; return; }
@@ -152,9 +195,20 @@
     var k = kapak.getBoundingClientRect();
     fx = e.clientX - k.left;
     fy = e.clientY - k.top;
+    var z = engel(e.target) ? null : sozcukBul(fx, fy);
+    if (z !== imlecSozcuk) {
+      imlecSozcuk = z;
+      kapak.style.cursor = z ? 'pointer' : '';
+    }
     if (azHareket) ciz(false);
   }, { passive: true });
-  kapak.addEventListener('pointerleave', function () { fx = fy = -9999; if (azHareket) ciz(false); });
+  kapak.addEventListener('click', function (e) {
+    if (engel(e.target)) return;
+    var k = kapak.getBoundingClientRect();
+    var z = sozcukBul(e.clientX - k.left, e.clientY - k.top);
+    if (z) { e.preventDefault(); git(z.w.hedef); }
+  });
+  kapak.addEventListener('pointerleave', function () { fx = fy = -9999; imlecSozcuk = null; kapak.style.cursor = ''; if (azHareket) ciz(false); });
 
   Promise.all([
     fetch('/data/site.json').then(function (r) { return r.json(); }),
