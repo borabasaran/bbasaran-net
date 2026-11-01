@@ -110,6 +110,10 @@
     if (a.classList.contains('arac-link')) {
       var ust = a.querySelector('.probe-top');
       ad = ust ? ust.textContent.trim() : 'Kapak aracı';
+    } else if (a.classList.contains('pub-git') || a.classList.contains('pub-adres')) {
+      var y = a.closest('li');
+      var t = y ? y.querySelector('.pub-t') : null;
+      ad = 'Yayın: ' + (t ? t.textContent.trim() : '');
     } else if (a.classList.contains('bant')) {
       ad = 'Kitap çağrısı';
     } else if (a.classList.contains('card-git')) {
