@@ -177,6 +177,9 @@ main{max-width:980px;margin:0 auto;padding:22px 20px 80px}
   var veri = null, surum = '', temel = '';
   var etkin = 'kapak';
   var listeler = {};
+  // DOI önerileri: OpenAlex kayıtları oturumda bir kez çekilir
+  var ORCID = '0000-0003-0251-5895';
+  var doiDurum = { kayitlar: null, yukleniyor: false, hata: '', gecilen: [] };
 
   var SEKMELER = [
     ['kapak', 'Kapak'], ['hakkinda', 'Hakkımda'], ['arastirma', 'Araştırma'], ['calismalar', 'Çalışmalar'],
@@ -304,6 +307,67 @@ main{max-width:980px;margin:0 auto;padding:22px 20px 80px}
 
   function kart(baslik, cocuklar, aciklama) {
     return el('section', { class: 'kart' }, [el('h2', { text: baslik }), aciklama ? el('p', { class: 'aciklama', text: aciklama }) : null].concat(cocuklar));
+  }
+
+  /* ---------- DOI önerileri ---------- */
+  function doiAra() {
+    doiDurum.yukleniyor = true; doiDurum.hata = '';
+    var url = 'https://api.openalex.org/works?filter=author.orcid:' + ORCID + '&per-page=200&select=display_name,publication_year,doi,primary_location';
+    fetch(url).then(function (r) {
+      if (!r.ok) throw new Error('OpenAlex yanıt vermedi (' + r.status + ')');
+      return r.json();
+    }).then(function (d) {
+      doiDurum.kayitlar = (d.results || []).map(function (w) {
+        return { yil: w.publication_year || 0, baslik: w.display_name || '', doi: w.doi || '', kaynak: (w.primary_location && w.primary_location.source && w.primary_location.source.display_name) || '' };
+      });
+    }).catch(function (e) {
+      doiDurum.hata = e.message || 'Bağlantı kurulamadı';
+    }).then(function () {
+      doiDurum.yukleniyor = false;
+      if (etkin === 'yayinlar') sekmeCiz();
+    });
+  }
+
+  function doiKarti(y) {
+    var aciklama = 'OpenAlex\'teki kayıtlarınız, listede DOI\'si boş olan yayınlarla başlıktan eşleştirilir. Hiçbir şey kendiliğinden değişmez: önerileri gözden geçirip ekleyin, sonra kaydedin.';
+    if (!doiDurum.kayitlar && !doiDurum.yukleniyor && !doiDurum.hata) doiAra();
+    if (doiDurum.yukleniyor) return kart('DOI önerileri', [el('p', { class: 'aciklama', text: 'OpenAlex\'te aranıyor…' })], aciklama);
+    if (doiDurum.hata) return kart('DOI önerileri', [
+      el('p', { class: 'aciklama', text: 'Arama yapılamadı: ' + doiDurum.hata }),
+      el('button', { class: 'btn kucuk', type: 'button', text: 'Yeniden dene', onclick: function () { doiAra(); sekmeCiz(); } })
+    ], aciklama);
+    var bos = y.makaleler.concat(y.bolumler).filter(function (x) { return !String(x.doi || '').trim(); }).length;
+    var oneriler = window.Sayfa.doiOnerileri(y, doiDurum.kayitlar).filter(function (o) { return doiDurum.gecilen.indexOf(o.oge.baslik + '|' + o.doi) < 0; });
+    function ekle(o) { o.oge.doi = o.doi; degisti(); }
+    var kutu = el('div');
+    var kesinler = oneriler.filter(function (o) { return o.kesin; });
+    if (kesinler.length > 1) {
+      kutu.appendChild(el('div', { class: 'dugmeler', style: 'margin-bottom:10px' }, [
+        el('button', { class: 'btn kucuk', type: 'button', text: 'Başlığı birebir aynı olanların hepsini ekle (' + kesinler.length + ')', onclick: function () {
+          kesinler.forEach(ekle); sekmeCiz(); mesaj(kesinler.length + ' DOI eklendi. Siteye yansıması için kaydedin.', 'iyi');
+        } })
+      ]));
+    }
+    oneriler.forEach(function (o) {
+      kutu.appendChild(el('div', { class: 'aday' }, [
+        el('p', {}, [el('b', { text: o.yil + ' · ' + o.baslik })]),
+        o.kesin ? null : el('p', { class: 'kaynak', text: 'OpenAlex\'teki başlık: ' + o.kaynakBaslik + (o.kaynak ? ' (' + o.kaynak + ')' : '') }),
+        el('p', { class: 'kaynak' }, [
+          o.kesin ? 'Başlık birebir aynı · ' : 'Olası eşleşme, başlıkları karşılaştırın · ',
+          el('a', { href: 'https://doi.org/' + o.doi, target: '_blank', rel: 'noopener', text: 'DOI ' + o.doi })
+        ]),
+        el('div', { class: 'dugmeler' }, [
+          el('button', { class: 'btn kucuk', type: 'button', text: 'DOI\'yi ekle', onclick: function () { ekle(o); sekmeCiz(); mesaj('DOI eklendi. Siteye yansıması için kaydedin.', 'iyi'); } }),
+          el('button', { class: 'btn kucuk sil', type: 'button', text: 'Geç', onclick: function () { doiDurum.gecilen.push(o.oge.baslik + '|' + o.doi); sekmeCiz(); } })
+        ])
+      ]));
+    });
+    if (!oneriler.length) {
+      kutu.appendChild(el('p', { class: 'aciklama', text: bos
+        ? 'DOI\'si boş ' + bos + ' yayın için OpenAlex\'te eşleşme bulunamadı. Bunların DOI\'sini yayının kendi alanına elle girebilirsiniz.'
+        : 'Bütün yayınlarda DOI var.' }));
+    }
+    return kart('DOI önerileri' + (oneriler.length ? ' (' + oneriler.length + ')' : ''), [kutu], aciklama);
   }
 
   /* ---------- sekmeler ---------- */
@@ -450,6 +514,7 @@ main{max-width:980px;margin:0 auto;padding:22px 20px 80px}
         });
         k.appendChild(kart('Yeni yayın adayları', [kutu], 'Aylık görev OpenAlex\'te bulup listede göremediği kayıtlar. Aynı çalışmanın çeviri başlıklı kaydı da olabilir; yalnızca gerçekten yeni olanları ekleyin. Yok saydıklarınız bir daha önerilmez.'));
       }
+      k.appendChild(doiKarti(y));
       function yayinListesi(grup, baslik, tekil) {
         listeler[grup] = listeDuzenle(y[grup], {
           ad: function (x) { return (x.yil || '?') + ' · ' + (x.baslik || 'Başlıksız'); }, ekle: tekil + ' ekle', basa: true,
