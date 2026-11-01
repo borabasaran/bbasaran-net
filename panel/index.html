@@ -422,7 +422,7 @@ main{max-width:980px;margin:0 auto;padding:22px 20px 80px}
         var kutu = el('div');
         a.adaylar.forEach(function (x) {
           function tasi(grup) {
-            y[grup].unshift({ yil: x.yil || new Date().getFullYear(), baslik: x.baslik, yazarlar: '', kaynak: x.kaynak || '', ayrinti: '', dizin: '' });
+            y[grup].unshift({ yil: x.yil || new Date().getFullYear(), baslik: x.baslik, yazarlar: '', kaynak: x.kaynak || '', ayrinti: '', dizin: '', doi: x.doi || '', baglanti: '' });
             yoksay();
             listeler[grup].yeniden(0);
             var ilk = listeler[grup].querySelector('details');
@@ -453,7 +453,7 @@ main{max-width:980px;margin:0 auto;padding:22px 20px 80px}
       function yayinListesi(grup, baslik, tekil) {
         listeler[grup] = listeDuzenle(y[grup], {
           ad: function (x) { return (x.yil || '?') + ' · ' + (x.baslik || 'Başlıksız'); }, ekle: tekil + ' ekle', basa: true,
-          yeni: function () { return { yil: new Date().getFullYear(), baslik: '', yazarlar: '', kaynak: '', ayrinti: '', dizin: '' }; },
+          yeni: function () { return { yil: new Date().getFullYear(), baslik: '', yazarlar: '', kaynak: '', ayrinti: '', dizin: '', doi: '', baglanti: '' }; },
           ciz: function (x, ic, ad) {
             var dizinler = DIZINLER.slice();
             if (x.dizin && dizinler.indexOf(x.dizin) < 0) dizinler.push(x.dizin);
@@ -467,9 +467,13 @@ main{max-width:980px;margin:0 auto;padding:22px 20px 80px}
               alan(grup === 'makaleler' ? 'Dergi' : 'Kitap', x, 'kaynak'),
               alan(grup === 'makaleler' ? 'Cilt, sayı, sayfa' : 'Editör, yayınevi, sayfa', x, 'ayrinti', { yer: grup === 'makaleler' ? '12(1), 1–20' : 'Ed. A. Soyad · Yayınevi, Şehir, 1–14' })
             ]));
+            ic.appendChild(el('div', { class: 'iki' }, [
+              alan('DOI', x, 'doi', { yer: '10.1080/10494820.2026.0000000', ipucu: 'Herhangi bir biçimde yapıştırabilirsiniz (doi.org adresi de olur). Varsa başlık DOI\'ye gider.' }),
+              alan('Bağlantı (DOI yoksa)', x, 'baglanti', { yer: 'https://...', ipucu: 'DOI yoksa yayının açıldığı sayfa: dergi, yayınevi ya da açık arşiv.' })
+            ]));
           }
         });
-        k.appendChild(kart(baslik + ' (' + y[grup].length + ')', [listeler[grup]], 'Sitede yıla göre yeniden eskiye sıralanır.'));
+        k.appendChild(kart(baslik + ' (' + y[grup].length + ')', [listeler[grup]], 'Sitede yıla göre yeniden eskiye sıralanır. DOI ya da bağlantı girilen yayının başlığı tıklanabilir olur.'));
       }
       yayinListesi('makaleler', 'Makaleler', 'Makale');
       yayinListesi('bolumler', 'Kitap bölümleri', 'Kitap bölümü');

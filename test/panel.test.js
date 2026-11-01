@@ -181,3 +181,28 @@ test('doğrulama: atölye alanlarında yalnızca tanınan değerler kalır, eski
   assert.equal(t[1].durum, '');
   assert.equal(t[1].aciklama, 'Metin');
 });
+
+test('doğrulama: DOI her biçimden yalın hale gelir, geçersiz DOI ve güvensiz yayın bağlantısı reddedilir', () => {
+  const veri = () => ({
+    site: JSON.parse(oku('data/site.json')), yayinlar: JSON.parse(oku('data/yayinlar.json')),
+    guncel: JSON.parse(oku('data/guncel.json')), aday: ADAY
+  });
+  for (const giris of ['10.1080/abc.1', 'doi:10.1080/abc.1', 'https://doi.org/10.1080/abc.1', 'https://dx.doi.org/10.1080%2Fabc.1', '  10.1080/abc.1  ']) {
+    const v = veri();
+    v.yayinlar.makaleler[0].doi = giris;
+    assert.equal(panel.dogrula(v).yayinlar.makaleler[0].doi, '10.1080/abc.1', giris);
+  }
+  let v = veri();
+  v.yayinlar.makaleler[0].doi = 'bir dergi';
+  assert.throws(() => panel.dogrula(v), /DOI geçersiz/);
+  v = veri();
+  v.yayinlar.bolumler[0].baglanti = 'javascript:alert(1)';
+  assert.throws(() => panel.dogrula(v), /bağlantı/);
+  v = veri();
+  v.yayinlar.bolumler[0].baglanti = 'http://acik.example';
+  assert.throws(() => panel.dogrula(v), /https/);
+  v = veri();
+  const t = panel.dogrula(v).yayinlar.makaleler[0];
+  assert.equal('doi' in t, false, 'boş DOI kayda yazılmaz');
+  assert.equal('baglanti' in t, false, 'boş bağlantı kayda yazılmaz');
+});
