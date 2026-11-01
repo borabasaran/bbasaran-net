@@ -37,16 +37,15 @@ Yöntem maddelerinde `[[terim]]` yazımı vurgulu terim olarak gösterilir. Kapa
 
 ## Atölye
 
-`bbasaran.net/atolye/` sayfası araçları kapaktaki kutularla aynı kayıttan (`kapak.araclar`) okur; panelde yapılan her değişiklik iki yerde birden görünür. Her araç kaydında kapak alanlarına ek olarak şunlar vardır:
+Atölye, ana sayfada kapaktan sonraki ilk sayfadır; aynı içerik `bbasaran.net/atolye/` adresinde tek başına da açılır. Araçlar panelde "Atölye araçları" listesinden (`kapak.araclar`) okunur. Kapakta araçlar tek tek sıralanmaz; okunabilirlik ölçerin yanındaki tek Atölye kutusu araç sayısını ve adlarını kendiliğinden gösterir. Kapaktaki sözcük alanında bir sözcüğe tıklamak, sözcüğün geldiği bölümü açar (Atölye aracından gelen sözcük o aracı yakından açar). Her araç kaydında şu alanlar da vardır:
 
 - `kategori`: `ogrenci`, `arastirma` ya da `etkinlik`
 - `aciklama`: Atölye'deki künyede görünen bir iki cümle (boşsa başlık kullanılır)
 - `cizim`: kartın üstündeki küçük hareketli çizim (`tez`, `arsi`, `daf`, `yontem`, `biblio`, `ilan`, `takvim`, `kitap`, `halka`)
-- `vitrin`: `hayir` ise araç kapakta görünmez, yalnızca Atölye'de yer alır
 - `durum`: `yapim` ise "yapım aşamasında" olarak gösterilir
 - `deney`: `daf` (düzeye göre örnek diyalog) ya da `arsi2209` (örnek sokratik akış); boşsa tanıtım gösterilir
 
-Kapaktaki araç şeridinin sonunda kendiliğinden bir Atölye kutusu çıkar. Bir araca doğrudan bağlantı `bbasaran.net/atolye/#tez-atlasi` biçimindedir. İlgi çubukları, kapaktan ve Atölye'den o araca yapılan tıklamaların son yedi günlük toplamıdır; hiç tıklama yoksa çubuk gösterilmez.
+Bir araca doğrudan bağlantı `bbasaran.net/atolye/#tez-atlasi` biçimindedir. İlgi çubukları, kapaktan ve Atölye'den o araca yapılan tıklamaların son yedi günlük toplamıdır; hiç tıklama yoksa çubuk gösterilmez.
 
 ## İçerik paneli
 
