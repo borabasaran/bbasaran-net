@@ -72,7 +72,7 @@ test('kapakta numaralı kısayol satırı çıkar; eski bilgi kutuları görünm
   const html = sayfa.sayfayiUret(oku('index.html'), v);
   const blok = html.slice(html.indexOf('<!-- KAPAK:BASLA -->'), html.indexOf('<!-- KAPAK:BITTI -->'));
   assert.match(blok, /<nav class="kisayol" aria-label="Kısayollar">/);
-  assert.match(blok, /<li><a href="https:\/\/oidb\.example\/takvim\?a=1&amp;b=2" target="_blank" rel="noopener"><span class="no">01<\/span> Akademik &lt;Takvim&gt; <span class="ok" aria-hidden="true">↗<\/span><\/a><\/li>/);
+  assert.match(blok, /<li><a href="https:\/\/oidb\.example\/takvim\?a=1&amp;b=2" target="_blank" rel="noopener"><span class="no">01<\/span> Akademik &lt;Takvim&gt; <span class="ok" aria-hidden="true">↗<\/span><\/a><\/li>/);
   assert.match(blok, /<li><a href="\/atolye\/"><span class="no">02<\/span> Atölye<\/a><\/li>/, 'site içi bağlantı aynı sekmede, işaretsiz');
   assert.doesNotMatch(blok, /javascript|Kötü|bos\.example/);
   assert.doesNotMatch(blok, /class="facts"|fact-v/, 'eski bilgi kutuları kapakta yok');
