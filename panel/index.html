@@ -212,6 +212,7 @@ main{max-width:980px;margin:0 auto;padding:22px 20px 80px}
   function temizVeri() {
     var v = JSON.parse(JSON.stringify(veri));
     v.site.kapak.bilgiler.forEach(function (b) { b.satirlar = b.satirlar.map(function (s) { return s.trim(); }).filter(Boolean); });
+    v.site.kapak.kisayollar = (v.site.kapak.kisayollar || []).map(function (x) { return { etiket: String(x.etiket || '').trim(), baglanti: String(x.baglanti || '').trim() }; }).filter(function (x) { return x.etiket || x.baglanti; });
     v.site.iletisim.konular = v.site.iletisim.konular.map(function (s) { return s.trim(); }).filter(Boolean);
     ['makaleler', 'bolumler'].forEach(function (g) { v.yayinlar[g].forEach(function (k) { k.yil = parseInt(k.yil, 10) || 0; }); });
     return v;
@@ -399,7 +400,18 @@ main{max-width:980px;margin:0 auto;padding:22px 20px 80px}
           ic.appendChild(alan('Atölye deneyi', x, 'deney', { secenekler: [['', 'Yok (tanıtım gösterilir)'], ['daf', 'Konuşma: düzeye göre örnek diyalog'], ['arsi2209', 'Sokratik akış: adım adım örnek sorular']], ipucu: 'Deney, aracın nasıl çalıştığını örnekle gösteren küçük bir etkileşimdir.' }));
         }
       })], 'Atölye sayfasındaki araçlar; sayı sınırı yoktur, sıra buradaki sıradır. Kapakta araçlar tek tek görünmez: ölçerin yanındaki tek Atölye kutusu araç sayısını ve adlarını kendiliğinden gösterir, araçların sözcükleri de kapaktaki sözcük alanına katılır. Okunabilirlik ölçer ve Retro Artikel Avcısı sabittir, listede görünmez. Bağlantısı boş bırakılan araç hiçbir yerde gösterilmez.'));
-      k.appendChild(kart('Bilgi satırları', [listeDuzenle(s.bilgiler, {
+      s.kisayollar = s.kisayollar || [];
+      k.appendChild(kart('Kısayollar', [listeDuzenle(s.kisayollar, {
+        ad: function (x) { return x.etiket || 'Adsız kısayol'; }, ekle: 'Kısayol ekle', en: 6,
+        yeni: function () { return { etiket: '', baglanti: '' }; },
+        ciz: function (x, ic, ad) {
+          ic.appendChild(el('div', { class: 'iki' }, [
+            alan('Ad', x, 'etiket', { yer: 'Örn. Akademik Takvim', degisince: ad, ipucu: 'Kısa tutun; satır tek sırada okunur.' }),
+            alan('Bağlantı', x, 'baglanti', { yer: 'https://...', ipucu: 'https:// ile başlamalı. Site içi bir sayfa için / ile başlayabilir.' })
+          ]));
+        }
+      })], 'Kapakta tanıtım cümlesinin altındaki numaralı satır (en fazla 6). Numaralar sıradan kendiliğinden gelir; dış bağlantılar yeni sekmede açılır.'));
+      k.appendChild(kart('Eski bilgi kutuları', [listeDuzenle(s.bilgiler, {
         ad: function (b) { return b.baslik || 'Başlıksız'; }, ekle: 'Bilgi ekle', en: 6,
         yeni: function () { return { baslik: '', satirlar: [''] }; },
         ciz: function (b, ic, ad) {
@@ -409,7 +421,7 @@ main{max-width:980px;margin:0 auto;padding:22px 20px 80px}
           ]));
           ic.appendChild(satirAlani('Satırlar', b, 'satirlar', 'Her satır ayrı bir ifade. Sırayla dönen kutuda ilk satır önce görünür, diğerleri sırayla gelir; listelenen kutuda hepsi alt alta görünür. Bağlantı için: [Görünecek yazı](https://adres)'));
         }
-      })], 'Kapaktaki küçük bilgi kutuları (en fazla 6). Başlığı "Linkler" olan kutu solda sabit durur; diğerleri ikişerli görünür, devamına büyük okla geçilir.'));
+      })], 'Bu kutular artık kapakta gösterilmiyor; metinler kaybolmasın diye burada duruyor. Aynı konular Araştırma sayfasında ve kapaktaki sözcük alanında yer alıyor.'));
     },
     hakkinda: function (k) {
       var s = veri.site.hakkinda;
