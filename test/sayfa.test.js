@@ -124,3 +124,19 @@ test('atölye ilgi özeti: araç adına göre gün gün sayılır, Atölye ön e
   assert.deepStrictEqual(s.araclar['İlan Radarı'], [0, 0, 0, 0, 1, 0, 0]);
   assert.strictEqual(Object.keys(s.araclar).length, 2);
 });
+
+test('yayın: DOI varsa başlık ve künye işareti doi.org adresine gider; yoksa bağlantı, ikisi de yoksa düz metin', () => {
+  const v = veri();
+  v.yayinlar.makaleler = [
+    { yil: 2026, baslik: 'DOI Makalesi', yazarlar: '', kaynak: 'Dergi', ayrinti: '1(1)', dizin: 'SSCI', doi: '10.1080/1049.2026.123', baglanti: 'https://baska.example' },
+    { yil: 2025, baslik: 'Bağlantılı Makale', yazarlar: '', kaynak: 'Dergi', ayrinti: '', dizin: '', doi: '', baglanti: 'https://dergipark.org.tr/x?a=1&b=2' },
+    { yil: 2024, baslik: 'Düz Makale', yazarlar: '', kaynak: 'Dergi', ayrinti: '', dizin: '' }
+  ];
+  const html = sayfa.sayfayiUret(oku('index.html'), v);
+  assert.match(html, /<a class="pub-git" href="https:\/\/doi\.org\/10\.1080\/1049\.2026\.123" target="_blank" rel="noopener">DOI Makalesi<\/a>/);
+  assert.match(html, /<a class="pub-adres" href="https:\/\/doi\.org\/10\.1080\/1049\.2026\.123"[^>]*>DOI <span class="pub-doi">10\.1080\/1049\.2026\.123<\/span> <span aria-hidden="true">↗<\/span><\/a>/);
+  assert.doesNotMatch(html, /baska\.example/, 'DOI varsa bağlantı kullanılmaz');
+  assert.match(html, /<a class="pub-git" href="https:\/\/dergipark\.org\.tr\/x\?a=1&amp;b=2"/);
+  assert.match(html, />Bağlantı <span aria-hidden="true">↗<\/span><\/a>/);
+  assert.match(html, /<p class="pub-t">Düz Makale<\/p>/);
+});
