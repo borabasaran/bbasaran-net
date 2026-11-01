@@ -202,7 +202,31 @@ test('doğrulama: DOI her biçimden yalın hale gelir, geçersiz DOI ve güvensi
   v.yayinlar.bolumler[0].baglanti = 'http://acik.example';
   assert.throws(() => panel.dogrula(v), /https/);
   v = veri();
+  v.yayinlar.makaleler[0].doi = '';
+  v.yayinlar.makaleler[0].baglanti = '  ';
   const t = panel.dogrula(v).yayinlar.makaleler[0];
   assert.equal('doi' in t, false, 'boş DOI kayda yazılmaz');
   assert.equal('baglanti' in t, false, 'boş bağlantı kayda yazılmaz');
+});
+
+test('doğrulama: kısayollar yalnızca ad ve güvenli bağlantıyla kalır, eski veride boş liste olur', () => {
+  const veri = () => ({
+    site: JSON.parse(oku('data/site.json')), yayinlar: JSON.parse(oku('data/yayinlar.json')),
+    guncel: JSON.parse(oku('data/guncel.json')), aday: ADAY
+  });
+  let v = veri();
+  v.site.kapak.kisayollar[0].fazla = 'x';
+  assert.deepEqual(Object.keys(panel.dogrula(v).site.kapak.kisayollar[0]), ['etiket', 'baglanti']);
+  v = veri();
+  v.site.kapak.kisayollar[0].baglanti = 'javascript:alert(1)';
+  assert.throws(() => panel.dogrula(v), /Kısayol 1: bağlantı/);
+  v = veri();
+  v.site.kapak.kisayollar[0].baglanti = 'http://acik.example';
+  assert.throws(() => panel.dogrula(v), /https/);
+  v = veri();
+  v.site.kapak.kisayollar[1].etiket = '  ';
+  assert.throws(() => panel.dogrula(v), /Kısayol 2: ad boş/);
+  v = veri();
+  delete v.site.kapak.kisayollar;
+  assert.deepEqual(panel.dogrula(v).site.kapak.kisayollar, []);
 });
