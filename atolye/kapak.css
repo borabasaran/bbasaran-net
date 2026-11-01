@@ -5,9 +5,9 @@
 .arac-link.arac-atolye{border-color:rgba(214,164,74,.55);background:rgba(214,164,74,.08)}
 .arac-link.arac-atolye:hover{border-color:rgba(214,164,74,.9);background:rgba(214,164,74,.14)}
 
-/* Menüdeki bağlantı başka sayfaya gider. "ana" sınıfı onu kitap sayfalarından
-   ayrı tutar (app.js menüdeki .ana dışındaki bağlantıları sayfa sayar). */
-nav.bar a.ana.dis{color:var(--muted)}
-nav.bar a.ana.dis:hover{color:var(--ink)}
-nav.bar a.ana.dis::before{content:none}
-nav.bar a.ana.dis span{color:var(--accent)}
+/* Ana sayfadaki Atölye bölümü: kitap sayfasının içinde biraz daha geniş durur */
+#atolye .wrap.at-ev{max-width:1240px}
+#atolye .at-ana{max-width:none;padding-inline:0;padding-bottom:0}
+#atolye .at-kendi{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;text-align:right}
+#atolye .at-kendi a{color:var(--muted);text-decoration:none}
+#atolye .at-kendi a:hover{color:var(--accent)}

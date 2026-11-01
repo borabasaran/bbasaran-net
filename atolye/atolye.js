@@ -12,6 +12,9 @@
   var araKutusu = document.getElementById('atAra');
   var azHareket = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var dar = window.matchMedia('(max-width: 860px)');
+  var dokunmatik = window.matchMedia('(hover: none)');
+  /* bbasaran.net/atolye/ kendi sayfası mı, yoksa ana sayfadaki Atölye bölümü mü */
+  var bagimsiz = document.body.classList.contains('at-govde');
 
   var KATEGORI = { ogrenci: 'Öğrenciler için', arastirma: 'Araştırma', etkinlik: 'Etkinlik ve yayın' };
   var MANSET = {
@@ -233,6 +236,52 @@
       }, 90);
     }, { passive: true });
 
+    /* masaüstünde: imleç bir kartın üzerinde durunca o kart öne gelir.
+       Kartlar yer değiştirince imlecin altına başka kart girebilir; zincirleme
+       değişim olmasın diye her değişimden sonra kısa bir kilit ve imlecin
+       biraz hareket etmesi beklenir. */
+    var kilit = 0, imX = 0, imY = 0, sonX = -999, sonY = -999, bekleyen = null;
+    function oneGetir(i) {
+      if (i === durum.sira || i < 0 || i >= kartlar.length) return false;
+      durum.sira = i;
+      kilit = Date.now() + 480;
+      sonX = imX; sonY = imY;
+      akisGuncelle(liste, kartlar, kunyeKap, false);
+      return true;
+    }
+    yigin.addEventListener('mousemove', function (e) { imX = e.clientX; imY = e.clientY; });
+    kartlar.forEach(function (k, i) {
+      k.addEventListener('mouseenter', function () {
+        if (dar.matches || dokunmatik.matches) return;
+        clearTimeout(bekleyen);
+        bekleyen = setTimeout(function () {
+          if (Date.now() < kilit) return;
+          if (Math.abs(imX - sonX) + Math.abs(imY - sonY) < 24) return;
+          if (k.matches(':hover')) oneGetir(i);
+        }, 140);
+      });
+      k.addEventListener('mouseleave', function () { clearTimeout(bekleyen); });
+    });
+    /* tekerlekle kaydırınca sıradaki kart öne gelir; son karta gelince
+       tekerlek yeniden sayfayı kaydırır (ana sayfada sayfayı çevirir) */
+    var teker = 0, tekerZaman = 0;
+    yigin.addEventListener('wheel', function (e) {
+      if (dar.matches) return;
+      var d = Math.abs(e.deltaY) >= Math.abs(e.deltaX) ? e.deltaY : e.deltaX;
+      var yon = d > 0 ? 1 : -1;
+      var hedef = durum.sira + yon;
+      if (hedef < 0 || hedef >= kartlar.length) return;
+      e.preventDefault();
+      e.stopPropagation();
+      var simdi = Date.now();
+      if (simdi - tekerZaman > 220) teker = 0;
+      tekerZaman = simdi;
+      teker += Math.abs(d);
+      if (teker < 40 || simdi < kilit - 200) return;
+      teker = 0;
+      oneGetir(hedef);
+    }, { passive: false });
+
     sahne.appendChild(kap);
     akisGuncelle(liste, kartlar, kunyeKap, false);
     if (dar.matches && kartlar[durum.sira]) {
@@ -323,7 +372,7 @@
     }
     var kunyeSatirlari = [
       'adres: ' + alanAdi(a.baglanti),
-      'kategori: ' + KATEGORI[a.kategori] + '   durum: ' + (a.yapim ? 'yapım aşamasında' : 'hizmette')
+      'kategori: ' + KATEGORI[a.kategori] + '   durum: ' + (a.yapim ? 'Yapım aşamasında' : 'Aktif')
     ];
 
     if (d) {
@@ -362,7 +411,7 @@
       panel
     ]));
     sayacGuncelle(liste);
-    try { history.replaceState(null, '', '#' + a.id); } catch (e) {}
+    if (bagimsiz) { try { history.replaceState(null, '', '#' + a.id); } catch (e) {} }
   }
 
   /* ---------- IZGARA ---------- */
@@ -398,7 +447,7 @@
     if (durum.gorunum === 'yakin') yakinCiz(liste);
     else if (durum.gorunum === 'izgara') izgaraCiz(liste);
     else akisCiz(liste);
-    if (durum.gorunum !== 'yakin') { try { history.replaceState(null, '', location.pathname); } catch (e) {} }
+    if (bagimsiz && durum.gorunum !== 'yakin') { try { history.replaceState(null, '', location.pathname); } catch (e) {} }
   }
 
   function gorunumSec(g) {
@@ -439,32 +488,45 @@
   /* sahnedeyken sol ve sağ ok tuşları araçlar arasında gezdirir */
   sahne.addEventListener('keydown', function (e) {
     if (e.target && /^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName)) return;
-    if (e.key === 'ArrowRight') { e.preventDefault(); adim(1); }
-    else if (e.key === 'ArrowLeft') { e.preventDefault(); adim(-1); }
+    if (e.key === 'ArrowRight') { e.preventDefault(); e.stopPropagation(); adim(1); }
+    else if (e.key === 'ArrowLeft') { e.preventDefault(); e.stopPropagation(); adim(-1); }
   });
   var olcuZaman = null;
   dar.addEventListener ? dar.addEventListener('change', function () { clearTimeout(olcuZaman); olcuZaman = setTimeout(ciz, 80); }) : null;
 
   /* tema: ana sayfadaki düğmeyle aynı davranış */
-  var tema = document.getElementById('theme');
+  var tema = bagimsiz ? document.getElementById('theme') : null;
   if (tema) tema.addEventListener('click', function () {
     var cur = kok.getAttribute('data-theme');
     var koyu = cur === 'dark' || (!cur && window.matchMedia('(prefers-color-scheme: dark)').matches);
     kok.setAttribute('data-theme', koyu ? 'light' : 'dark');
   });
 
+  /* kapaktaki Atölye kutusu: ana sayfa kitap gibi çevrildiğinde menüdeki
+     Atölye bağlantısına tıklamış gibi davranır; öbür durumda bağlantı
+     sayfayı #atolye bölümüne kaydırır */
+  if (!bagimsiz) document.addEventListener('click', function (e) {
+    var a = e.target && e.target.closest ? e.target.closest('a.arac-atolye') : null;
+    if (!a || !kok.classList.contains('kitap')) return;
+    var menu = document.querySelector('nav.bar a[href="#atolye"]');
+    if (!menu) return;
+    e.preventDefault();
+    menu.click();
+  });
+
   /* ---------- yükleme ---------- */
   fetch('/data/site.json', { cache: 'no-cache' }).then(function (r) { return r.json(); }).then(function (site) {
     durum.araclar = hazirla(site);
     document.getElementById('atRozet').textContent = iki(durum.araclar.length);
-    document.getElementById('atSayi').textContent = '· ' + iki(durum.araclar.length) + ' araç';
-    var hedef = (location.hash || '').slice(1);
+    var sayi = document.getElementById('atSayi');
+    if (sayi) sayi.textContent = '· ' + iki(durum.araclar.length) + ' araç';
+    var hedef = bagimsiz ? (location.hash || '').slice(1) : '';
     if (hedef) {
       var i = durum.araclar.map(function (a) { return a.id; }).indexOf(hedef);
       if (i >= 0) { durum.sira = i; durum.gorunum = 'yakin'; }
     }
     gorunumSec(durum.gorunum);
-    olay('bolum', 'atolye');
+    if (bagimsiz) olay('bolum', 'atolye');
     /* ilgi özeti gelince yeniden çizilir; gelmezse çubuklar görünmez */
     fetch('/api/atolye').then(function (r) { return r.ok ? r.json() : null; }).then(function (ilgi) {
       if (ilgi && ilgi.araclar && Object.keys(ilgi.araclar).length) { durum.ilgi = ilgi; ciz(); }

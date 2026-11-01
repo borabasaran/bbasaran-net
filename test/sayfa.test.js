@@ -106,7 +106,7 @@ test('vitrine alınmayan araç kapakta görünmez; sonda Atölye kutusu çıkar 
   const html = sayfa.sayfayiUret(oku('index.html'), v);
   assert.match(html, /Tez Atlası/);
   assert.doesNotMatch(html, /Gizli Araç/);
-  assert.match(html, /<a class="probe arac-link arac-atolye" href="\/atolye\/">\n        <p class="probe-top">Atölye · 02 araç<\/p>/);
+  assert.match(html, /<a class="probe arac-link arac-atolye" href="#atolye">\n        <p class="probe-top">Atölye · 02 araç<\/p>/);
 });
 
 test('hiç bağlantılı araç yoksa Atölye kutusu da çıkmaz', () => {
