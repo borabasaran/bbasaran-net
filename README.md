@@ -49,7 +49,7 @@ Bir araca doğrudan bağlantı `bbasaran.net/atolye/#tez-atlasi` biçimindedir. 
 
 ## İçerik paneli
 
-`bbasaran.net/panel` adresindeki panelden tüm metinler tarayıcıdan düzenlenebilir. Panel kaydettiğinde `data/` altındaki dosyaları ve `index.html`'i tek bir commit olarak `main` dalına yazar; Vercel siteyi bir iki dakika içinde günceller. Yayın adayları Yayınlar sekmesinde görünür: "ekle" ile listeye alınır, "Yok say" ile bir daha önerilmez. Her yayına `doi` ya da `baglanti` girilebilir; girilen yayının başlığı tıklanabilir olur, DOI varsa doi.org adresine gider. Adaydan eklenen yayının DOI'si kendiliğinden gelir. **İstatistik** sekmesi ziyaret sayılarını gösterir.
+`bbasaran.net/panel` adresindeki panelden tüm metinler tarayıcıdan düzenlenebilir. Panel kaydettiğinde `data/` altındaki dosyaları ve `index.html`'i tek bir commit olarak `main` dalına yazar; Vercel siteyi bir iki dakika içinde günceller. Yayın adayları Yayınlar sekmesinde görünür: "ekle" ile listeye alınır, "Yok say" ile bir daha önerilmez. Her yayına `doi` ya da `baglanti` girilebilir; girilen yayının başlığı tıklanabilir olur, DOI varsa doi.org adresine gider. Adaydan eklenen yayının DOI'si kendiliğinden gelir. Yayınlar sekmesindeki "DOI önerileri" kartı, OpenAlex'teki kayıtları DOI'si boş yayınlarla başlıktan eşleştirir; öneriler onaylanınca eklenir. **İstatistik** sekmesi ziyaret sayılarını gösterir.
 
 - `panel/index.html` — panel arayüzü
 - `api/panel.js` — şifreyi denetleyen, GitHub'a yazan ve istatistik özetini okuyan sunucu işlevi

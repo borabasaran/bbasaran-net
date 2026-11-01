@@ -140,3 +140,29 @@ test('yayın: DOI varsa başlık ve künye işareti doi.org adresine gider; yoks
   assert.match(html, />Bağlantı <span aria-hidden="true">↗<\/span><\/a>/);
   assert.match(html, /<p class="pub-t">Düz Makale<\/p>/);
 });
+
+test('DOI önerileri: birebir başlık kesin, benzer başlık olası; DOI\'si olan yayın ve kullanılmış DOI önerilmez', () => {
+  const y = {
+    makaleler: [
+      { yil: 2026, baslik: 'Human Reliability vs. Machine Consistency: Evaluating AI-Based Grading' },
+      { yil: 2025, baslik: 'Smart Graders? Untersuchung des Potenzials', doi: '10.1/var' },
+      { yil: 2024, baslik: 'Yapay zekâ ve öğretmen eğitimi üzerine bir inceleme' },
+      { yil: 2020, baslik: 'Hiç eşleşmeyecek başka bir çalışma başlığı' }
+    ],
+    bolumler: [{ yil: 2023, baslik: 'Diplomatik Üstünlük: Almanca Dil Yeterliği' }]
+  };
+  const kayit = [
+    { yil: 2026, baslik: 'Human reliability vs. machine consistency: evaluating AI-based grading', doi: 'https://doi.org/10.1007/s1' },
+    { yil: 2025, baslik: 'Yapay Zekâ ve Öğretmen Eğitimi Üzerine İnceleme', doi: 'https://doi.org/10.2/y' },
+    { yil: 2025, baslik: 'Smart Graders', doi: 'https://doi.org/10.1/VAR' },
+    { yil: 2010, baslik: 'Diplomatik Üstünlük: Almanca Dil Yeterliği ve Dış İlişkiler', doi: 'https://doi.org/10.3/z' },
+    { yil: 2024, baslik: 'Kayıtsız', doi: '' }
+  ];
+  const o = sayfa.doiOnerileri(y, kayit);
+  assert.deepEqual(o.map((x) => [x.baslik.slice(0, 12), x.doi, x.kesin]), [
+    ['Human Reliab', '10.1007/s1', true],
+    ['Yapay zekâ v', '10.2/y', false]
+  ]);
+  assert.equal(o[0].oge, y.makaleler[0], 'öneri listedeki kayda bağlıdır');
+  assert.equal(sayfa.doiYalin('doi:10.5/a'), '10.5/a');
+});
