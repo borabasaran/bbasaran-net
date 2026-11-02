@@ -123,7 +123,7 @@
       z.dw = ctx.measureText(z.w.s).width;
       z.ds = bo;
     }
-    var etiketli = imlecSozcuk || enYakin;
+    var etiketli = imlecSozcuk || (arayuzUstunde ? null : enYakin);
     if (etiketli) {
       var yazi = etiketli.w.kaynak.toLocaleUpperCase('tr-TR') + (imlecSozcuk ? '  →' : '');
       ctx.font = '500 10px "IBM Plex Mono", monospace';
@@ -152,7 +152,7 @@
 
   /* adın, yazıların, kutuların ve düğmelerin üzerinde sözcük tıklaması devreye girmez */
   function engel(t) {
-    return !!(t && t.closest && t.closest('a,button,input,textarea,select,label,canvas#artikel,.probe,.facts,.tagline,.masthead i,.serit-ok,.arac-serit-kap,.cover-top,.cover-foot'));
+    return !!(t && t.closest && t.closest('a,button,input,textarea,select,label,canvas#artikel,.probe,.facts,.kisayol,.tagline,.masthead i,.serit-ok,.arac-serit-kap,.cover-top,.cover-foot'));
   }
 
   function git(h) {
@@ -166,7 +166,7 @@
     if (h.arac) setTimeout(function () { if (window.bbAtolye) window.bbAtolye.ac(h.arac); }, 400);
   }
 
-  var imlecSozcuk = null;
+  var imlecSozcuk = null, arayuzUstunde = false;
 
   function dongu() {
     if (!calismali()) { calisiyor = false; return; }
@@ -195,7 +195,8 @@
     var k = kapak.getBoundingClientRect();
     fx = e.clientX - k.left;
     fy = e.clientY - k.top;
-    var z = engel(e.target) ? null : sozcukBul(fx, fy);
+    arayuzUstunde = engel(e.target);
+    var z = arayuzUstunde ? null : sozcukBul(fx, fy);
     if (z !== imlecSozcuk) {
       imlecSozcuk = z;
       kapak.style.cursor = z ? 'pointer' : '';

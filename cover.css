@@ -408,3 +408,39 @@ html.katlanir .cover-body{gap:clamp(14px,2.6vh,32px);padding-block:clamp(10px,2.
 .serit-ok:focus-visible{outline:2px solid var(--ochre);outline-offset:3px}
 .serit-ok[hidden]{display:none}
 @media (max-width:699px){.serit-ok{width:38px;height:38px;font-size:20px}}
+
+/* ===== KISAYOL SATIRI =====
+   Tanıtım cümlesinin altında, kitap künyesi gibi numaralı tek satır (lib/sayfa.js). */
+.kisayol{
+  display:flex;align-items:baseline;flex-wrap:wrap;gap:8px 26px;
+  max-width:1000px;min-width:0;padding-top:11px;
+  border-top:1px solid rgba(232,240,237,.2);
+  animation:fade .8s ease both;
+}
+.kisayol-k{font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--ochre);margin:0}
+.kisayol ol{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:8px 24px}
+.kisayol li{line-height:1.35}
+.kisayol a{
+  font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--cover-ink);text-decoration:none;white-space:nowrap;
+  padding-bottom:2px;border-bottom:1px solid transparent;
+  transition:color .25s,border-color .25s;
+}
+.kisayol a .no{color:rgba(232,240,237,.5);margin-right:4px;font-variant-numeric:tabular-nums}
+.kisayol a .ok{color:var(--ochre);display:inline-block;transition:transform .3s var(--ease)}
+.kisayol a:hover,.kisayol a:focus-visible{color:var(--ochre);border-bottom-color:currentColor}
+.kisayol a:hover .ok{transform:translate(2px,-2px)}
+.kisayol a:focus-visible{outline:2px solid var(--ochre);outline-offset:3px}
+/* ölçerin notu tek satıra sığsın, kapak alt kenarda kırpılmasın */
+.araclar .olcer .probe-note{letter-spacing:.04em}
+/* telefonda tek satır: yana kaydırılır, sağ kenar yumuşakça söner */
+@media (max-width:699px){
+  .kisayol{flex-wrap:nowrap;gap:12px;padding-top:7px;width:100%;max-width:100%;overflow:hidden}
+  .kisayol-k{font-size:8.5px;letter-spacing:.16em;flex:none}
+  .kisayol ol{flex-wrap:nowrap;gap:16px;overflow-x:auto;scrollbar-width:none;min-width:0;padding-right:24px;
+    -webkit-mask-image:linear-gradient(90deg,#000 82%,transparent);mask-image:linear-gradient(90deg,#000 82%,transparent)}
+  .kisayol ol::-webkit-scrollbar{display:none}
+  .kisayol a{font-size:10px;letter-spacing:.06em}
+  .kisayol a .no{margin-right:2px}
+}
+@media (prefers-reduced-motion:reduce){.kisayol{animation:none}.kisayol a .ok{transition:none}}

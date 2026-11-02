@@ -182,7 +182,7 @@ main{max-width:980px;margin:0 auto;padding:22px 20px 80px}
   var doiDurum = { kayitlar: null, yukleniyor: false, hata: '', gecilen: [] };
 
   var SEKMELER = [
-    ['kapak', 'Kapak'], ['hakkinda', 'Hakkımda'], ['arastirma', 'Araştırma'], ['calismalar', 'Çalışmalar'],
+    ['kapak', 'Kapak'], ['atolye', 'Atölye'], ['hakkinda', 'Hakkımda'], ['arastirma', 'Araştırma'], ['calismalar', 'Çalışmalar'],
     ['yontem', 'Yöntem'], ['yayinlar', 'Yayınlar'], ['guncel', 'Güncel çağrı'], ['iletisim', 'İletişim'],
     ['istatistik', 'İstatistik']
   ];
@@ -212,6 +212,7 @@ main{max-width:980px;margin:0 auto;padding:22px 20px 80px}
   function temizVeri() {
     var v = JSON.parse(JSON.stringify(veri));
     v.site.kapak.bilgiler.forEach(function (b) { b.satirlar = b.satirlar.map(function (s) { return s.trim(); }).filter(Boolean); });
+    v.site.kapak.kisayollar = (v.site.kapak.kisayollar || []).map(function (x) { return { etiket: String(x.etiket || '').trim(), baglanti: String(x.baglanti || '').trim() }; }).filter(function (x) { return x.etiket || x.baglanti; });
     v.site.iletisim.konular = v.site.iletisim.konular.map(function (s) { return s.trim(); }).filter(Boolean);
     ['makaleler', 'bolumler'].forEach(function (g) { v.yayinlar[g].forEach(function (k) { k.yil = parseInt(k.yil, 10) || 0; }); });
     return v;
@@ -372,12 +373,8 @@ main{max-width:980px;margin:0 auto;padding:22px 20px 80px}
 
   /* ---------- sekmeler ---------- */
   var cizimler = {
-    kapak: function (k) {
+    atolye: function (k) {
       var s = veri.site.kapak;
-      k.appendChild(kart('Kapak', [
-        alan('Unvan', s, 'unvan', { ipucu: 'Kalın yazılan ilk satır.' }),
-        alan('Tanıtım', s, 'tanitim', { cok: true, satir: 4 })
-      ]));
       k.appendChild(kart('Atölye araçları', [listeDuzenle(s.araclar, {
         ad: function (x) { return x.etiket || 'Adsız araç'; }, ekle: 'Araç ekle',
         yeni: function () { return { etiket: '', baslik: '', baglanti: '', dugme: '', kategori: 'ogrenci', cizim: 'tez', deney: '', vitrin: '', durum: '', aciklama: '' }; },
@@ -398,8 +395,26 @@ main{max-width:980px;margin:0 auto;padding:22px 20px 80px}
           ]));
           ic.appendChild(alan('Atölye deneyi', x, 'deney', { secenekler: [['', 'Yok (tanıtım gösterilir)'], ['daf', 'Konuşma: düzeye göre örnek diyalog'], ['arsi2209', 'Sokratik akış: adım adım örnek sorular']], ipucu: 'Deney, aracın nasıl çalıştığını örnekle gösteren küçük bir etkileşimdir.' }));
         }
-      })], 'Atölye sayfasındaki araçlar; sayı sınırı yoktur, sıra buradaki sıradır. Kapakta araçlar tek tek görünmez: ölçerin yanındaki tek Atölye kutusu araç sayısını ve adlarını kendiliğinden gösterir, araçların sözcükleri de kapaktaki sözcük alanına katılır. Okunabilirlik ölçer ve Retro Artikel Avcısı sabittir, listede görünmez. Bağlantısı boş bırakılan araç hiçbir yerde gösterilmez.'));
-      k.appendChild(kart('Bilgi satırları', [listeDuzenle(s.bilgiler, {
+      })], 'Ana sayfadaki Atölye bölümünde ve bbasaran.net/atolye/ sayfasında görünen araçlar; sayı sınırı yoktur, sıra buradaki sıradır. Kapakta araçlar tek tek görünmez: ölçerin yanındaki tek Atölye kutusu araç sayısını ve adlarını kendiliğinden gösterir, araçların sözcükleri de kapaktaki sözcük alanına katılır. Okunabilirlik ölçer ve Retro Artikel Avcısı sabittir, listede görünmez. Bağlantısı boş bırakılan araç hiçbir yerde gösterilmez.'));
+    },
+    kapak: function (k) {
+      var s = veri.site.kapak;
+      k.appendChild(kart('Kapak', [
+        alan('Unvan', s, 'unvan', { ipucu: 'Kalın yazılan ilk satır.' }),
+        alan('Tanıtım', s, 'tanitim', { cok: true, satir: 4 })
+      ]));
+      s.kisayollar = s.kisayollar || [];
+      k.appendChild(kart('Kısayollar', [listeDuzenle(s.kisayollar, {
+        ad: function (x) { return x.etiket || 'Adsız kısayol'; }, ekle: 'Kısayol ekle', en: 6,
+        yeni: function () { return { etiket: '', baglanti: '' }; },
+        ciz: function (x, ic, ad) {
+          ic.appendChild(el('div', { class: 'iki' }, [
+            alan('Ad', x, 'etiket', { yer: 'Örn. Akademik Takvim', degisince: ad, ipucu: 'Kısa tutun; satır tek sırada okunur.' }),
+            alan('Bağlantı', x, 'baglanti', { yer: 'https://...', ipucu: 'https:// ile başlamalı. Site içi bir sayfa için / ile başlayabilir.' })
+          ]));
+        }
+      })], 'Kapakta tanıtım cümlesinin altındaki numaralı satır (en fazla 6). Numaralar sıradan kendiliğinden gelir; dış bağlantılar yeni sekmede açılır.'));
+      k.appendChild(kart('Eski bilgi kutuları', [listeDuzenle(s.bilgiler, {
         ad: function (b) { return b.baslik || 'Başlıksız'; }, ekle: 'Bilgi ekle', en: 6,
         yeni: function () { return { baslik: '', satirlar: [''] }; },
         ciz: function (b, ic, ad) {
@@ -409,7 +424,7 @@ main{max-width:980px;margin:0 auto;padding:22px 20px 80px}
           ]));
           ic.appendChild(satirAlani('Satırlar', b, 'satirlar', 'Her satır ayrı bir ifade. Sırayla dönen kutuda ilk satır önce görünür, diğerleri sırayla gelir; listelenen kutuda hepsi alt alta görünür. Bağlantı için: [Görünecek yazı](https://adres)'));
         }
-      })], 'Kapaktaki küçük bilgi kutuları (en fazla 6). Başlığı "Linkler" olan kutu solda sabit durur; diğerleri ikişerli görünür, devamına büyük okla geçilir.'));
+      })], 'Bu kutular artık kapakta gösterilmiyor; metinler kaybolmasın diye burada duruyor. Aynı konular Araştırma sayfasında ve kapaktaki sözcük alanında yer alıyor.'));
     },
     hakkinda: function (k) {
       var s = veri.site.hakkinda;
@@ -576,7 +591,7 @@ main{max-width:980px;margin:0 auto;padding:22px 20px 80px}
   var gscVeri = null, gscYukleniyor = false;
   var istSekme = (function () { try { return localStorage.getItem('bb_ist_sekme') || 'ziyaretler'; } catch (x) { return 'ziyaretler'; } })(), istGosterim = {}, istSecim = { bolum: '', kaynak: '', yalnizEylem: true };
   function gosterim(ad) { return istGosterim[ad] || 25; }
-  var BOLUM_ADI = { hakkinda: 'Hakkımda', arastirma: 'Araştırma', calismalar: 'Çalışmalar', yontem: 'Yöntem', yayinlar: 'Yayınlar', iletisim: 'İletişim' };
+  var BOLUM_ADI = { atolye: 'Atölye', hakkinda: 'Hakkımda', arastirma: 'Araştırma', calismalar: 'Çalışmalar', yontem: 'Yöntem', yayinlar: 'Yayınlar', iletisim: 'İletişim' };
 
   function istListe(baslik, kayitlar, adCevir) {
     var liste = (kayitlar || []).map(function (x) {

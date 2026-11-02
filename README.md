@@ -31,13 +31,13 @@ node scripts/uret.mjs   # index.html'i verilerden yeniden üretir
 npm test                # index.html ile verilerin uyumunu denetler
 ```
 
-Kapaktaki araç kutularının (`kapak.araclar`) sayı sınırı yoktur; her kutunun üst etiketi, başlığı, bağlantısı ve düğme yazısı vardır. Bağlantısı boş olan kutu sayfaya yazılmaz. Kapağın en üst satırında Retro Artikel Avcısı sola yaslı durur; altında Okunabilirlik ölçer solda sabit durur, yanında bağlantı kutuları ikişerli görünür ve büyük oklarla değişir (ölçer ve oyun sabittir, veriden gelmez). Bilgi satırında da "Linkler" kutusu solda sabittir, diğer bilgi kutuları ikişerli görünür ve oklarla değişir. Kaç kutu eklenirse eklensin kapağın yüksekliği değişmez. Kutu başlıkları kapakta tek satırdır.
+Kapağın en üst satırında Retro Artikel Avcısı sola yaslı durur; altında Okunabilirlik ölçer solda, yanında tek ve geniş Atölye kutusu durur (ölçer ve oyun sabittir, veriden gelmez). Tanıtım cümlesinin altında numaralı bir kısayol satırı (`kapak.kisayollar`: `etiket`, `baglanti`, en fazla 6) durur; dış bağlantılar yeni sekmede açılır ve ↗ ile işaretlenir, telefonda satır yana kaydırılır. Eski bilgi kutuları (`kapak.bilgiler`) veride ve panelde durur, kapakta gösterilmez. Kaç kutu eklenirse eklensin kapağın yüksekliği değişmez. Kutu başlıkları kapakta tek satırdır.
 
-Yöntem maddelerinde `[[terim]]` yazımı vurgulu terim olarak gösterilir. Kapaktaki bilgi satırlarında birden fazla satır varsa kapakta sırayla döner. Çalışma kartına `baglanti` eklenirse kartta bir bağlantı görünür; `renk` alanı `yesil` ya da `sari` olabilir.
+Yöntem maddelerinde `[[terim]]` yazımı vurgulu terim olarak gösterilir. Çalışma kartına `baglanti` eklenirse kartta bir bağlantı görünür; `renk` alanı `yesil` ya da `sari` olabilir.
 
 ## Atölye
 
-Atölye, ana sayfada kapaktan sonraki ilk sayfadır; aynı içerik `bbasaran.net/atolye/` adresinde tek başına da açılır. Araçlar panelde "Atölye araçları" listesinden (`kapak.araclar`) okunur. Kapakta araçlar tek tek sıralanmaz; okunabilirlik ölçerin yanındaki tek Atölye kutusu araç sayısını ve adlarını kendiliğinden gösterir. Kapaktaki sözcük alanında bir sözcüğe tıklamak, sözcüğün geldiği bölümü açar (Atölye aracından gelen sözcük o aracı yakından açar). Her araç kaydında şu alanlar da vardır:
+Atölye, ana sayfada kapaktan sonraki ilk sayfadır; aynı içerik `bbasaran.net/atolye/` adresinde tek başına da açılır. Araçlar panelin **Atölye** sekmesindeki "Atölye araçları" listesinden (`kapak.araclar`) okunur; sayı sınırı yoktur, bağlantısı boş olan araç gösterilmez. Kapakta araçlar tek tek sıralanmaz; okunabilirlik ölçerin yanındaki tek Atölye kutusu araç sayısını ve adlarını kendiliğinden gösterir. Kapaktaki sözcük alanında bir sözcüğe tıklamak, sözcüğün geldiği bölümü açar (Atölye aracından gelen sözcük o aracı yakından açar). Her araç kaydında şu alanlar da vardır:
 
 - `kategori`: `ogrenci`, `arastirma` ya da `etkinlik`
 - `aciklama`: Atölye'deki künyede görünen bir iki cümle (boşsa başlık kullanılır)

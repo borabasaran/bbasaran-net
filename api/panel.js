@@ -179,6 +179,15 @@ function dogrula(v) {
           aciklama: metin(x.aciklama, 'Araç açıklaması', 600)
         };
       }),
+      kisayollar: liste(k.kisayollar || [], 'Kısayollar', 6).map(function (x, n) {
+        nesne(x, 'Kısayol');
+        var ad = 'Kısayol ' + (n + 1);
+        var etiket = metin(x.etiket, ad + ' adı', 60);
+        var bag = String(x.baglanti == null ? '' : x.baglanti).trim();
+        if (!etiket.trim()) throw new Error(ad + ': ad boş olamaz.');
+        if (!/^(https:\/\/[^\s"'<>]+|\/[^\s"'<>]*)$/i.test(bag) || bag.length > 600) throw new Error(ad + ': bağlantı https:// ile başlamalı.');
+        return { etiket: etiket, baglanti: bag };
+      }),
       bilgiler: liste(k.bilgiler, 'Kapak bilgileri', 8).map(function (b, n) {
         nesne(b, 'Kapak bilgisi');
         var bilgi = {
