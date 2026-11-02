@@ -182,7 +182,7 @@ main{max-width:980px;margin:0 auto;padding:22px 20px 80px}
   var doiDurum = { kayitlar: null, yukleniyor: false, hata: '', gecilen: [] };
 
   var SEKMELER = [
-    ['kapak', 'Kapak'], ['hakkinda', 'Hakkımda'], ['arastirma', 'Araştırma'], ['calismalar', 'Çalışmalar'],
+    ['kapak', 'Kapak'], ['atolye', 'Atölye'], ['hakkinda', 'Hakkımda'], ['arastirma', 'Araştırma'], ['calismalar', 'Çalışmalar'],
     ['yontem', 'Yöntem'], ['yayinlar', 'Yayınlar'], ['guncel', 'Güncel çağrı'], ['iletisim', 'İletişim'],
     ['istatistik', 'İstatistik']
   ];
@@ -373,12 +373,8 @@ main{max-width:980px;margin:0 auto;padding:22px 20px 80px}
 
   /* ---------- sekmeler ---------- */
   var cizimler = {
-    kapak: function (k) {
+    atolye: function (k) {
       var s = veri.site.kapak;
-      k.appendChild(kart('Kapak', [
-        alan('Unvan', s, 'unvan', { ipucu: 'Kalın yazılan ilk satır.' }),
-        alan('Tanıtım', s, 'tanitim', { cok: true, satir: 4 })
-      ]));
       k.appendChild(kart('Atölye araçları', [listeDuzenle(s.araclar, {
         ad: function (x) { return x.etiket || 'Adsız araç'; }, ekle: 'Araç ekle',
         yeni: function () { return { etiket: '', baslik: '', baglanti: '', dugme: '', kategori: 'ogrenci', cizim: 'tez', deney: '', vitrin: '', durum: '', aciklama: '' }; },
@@ -399,7 +395,14 @@ main{max-width:980px;margin:0 auto;padding:22px 20px 80px}
           ]));
           ic.appendChild(alan('Atölye deneyi', x, 'deney', { secenekler: [['', 'Yok (tanıtım gösterilir)'], ['daf', 'Konuşma: düzeye göre örnek diyalog'], ['arsi2209', 'Sokratik akış: adım adım örnek sorular']], ipucu: 'Deney, aracın nasıl çalıştığını örnekle gösteren küçük bir etkileşimdir.' }));
         }
-      })], 'Atölye sayfasındaki araçlar; sayı sınırı yoktur, sıra buradaki sıradır. Kapakta araçlar tek tek görünmez: ölçerin yanındaki tek Atölye kutusu araç sayısını ve adlarını kendiliğinden gösterir, araçların sözcükleri de kapaktaki sözcük alanına katılır. Okunabilirlik ölçer ve Retro Artikel Avcısı sabittir, listede görünmez. Bağlantısı boş bırakılan araç hiçbir yerde gösterilmez.'));
+      })], 'Ana sayfadaki Atölye bölümünde ve bbasaran.net/atolye/ sayfasında görünen araçlar; sayı sınırı yoktur, sıra buradaki sıradır. Kapakta araçlar tek tek görünmez: ölçerin yanındaki tek Atölye kutusu araç sayısını ve adlarını kendiliğinden gösterir, araçların sözcükleri de kapaktaki sözcük alanına katılır. Okunabilirlik ölçer ve Retro Artikel Avcısı sabittir, listede görünmez. Bağlantısı boş bırakılan araç hiçbir yerde gösterilmez.'));
+    },
+    kapak: function (k) {
+      var s = veri.site.kapak;
+      k.appendChild(kart('Kapak', [
+        alan('Unvan', s, 'unvan', { ipucu: 'Kalın yazılan ilk satır.' }),
+        alan('Tanıtım', s, 'tanitim', { cok: true, satir: 4 })
+      ]));
       s.kisayollar = s.kisayollar || [];
       k.appendChild(kart('Kısayollar', [listeDuzenle(s.kisayollar, {
         ad: function (x) { return x.etiket || 'Adsız kısayol'; }, ekle: 'Kısayol ekle', en: 6,
@@ -588,7 +591,7 @@ main{max-width:980px;margin:0 auto;padding:22px 20px 80px}
   var gscVeri = null, gscYukleniyor = false;
   var istSekme = (function () { try { return localStorage.getItem('bb_ist_sekme') || 'ziyaretler'; } catch (x) { return 'ziyaretler'; } })(), istGosterim = {}, istSecim = { bolum: '', kaynak: '', yalnizEylem: true };
   function gosterim(ad) { return istGosterim[ad] || 25; }
-  var BOLUM_ADI = { hakkinda: 'Hakkımda', arastirma: 'Araştırma', calismalar: 'Çalışmalar', yontem: 'Yöntem', yayinlar: 'Yayınlar', iletisim: 'İletişim' };
+  var BOLUM_ADI = { atolye: 'Atölye', hakkinda: 'Hakkımda', arastirma: 'Araştırma', calismalar: 'Çalışmalar', yontem: 'Yöntem', yayinlar: 'Yayınlar', iletisim: 'İletişim' };
 
   function istListe(baslik, kayitlar, adCevir) {
     var liste = (kayitlar || []).map(function (x) {
