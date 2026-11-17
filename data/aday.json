@@ -1,38 +1,7 @@
 {
   "aciklama": "OpenAlex'te bulunan ama yayinlar.json icinde gorunmeyen kayitlar. Siteye YANSIMAZ. Gozden gecirip gercekten yeni olanlari dogru kunyesiyle yayinlar.json icine tasiyin.",
   "guncellendi": "2026-11-01",
-  "adaylar": [
-    {
-      "yil": 2022,
-      "baslik": "MEASURING WORD FREQUENCY IN LANGUAGE TEACHING TEXTBOOKS USING LEXITÜRK",
-      "kaynak": "International online journal of education and teaching",
-      "doi": ""
-    },
-    {
-      "yil": 2020,
-      "baslik": "A Descriptive Analysis of Online Seminars Attended by Turkish Teachers in Germany during the Covid-19 Epidemic Period",
-      "kaynak": "DergiPark (Istanbul University)",
-      "doi": ""
-    },
-    {
-      "yil": 2017,
-      "baslik": "Yabancı Dil Öğretiminde Teknoloji Kullanımına İlişkin Hazırlanmış Lisansüstü Tez",
-      "kaynak": "Journal of Turkish Studies",
-      "doi": "https://doi.org/10.7827/turkishstudies.12126"
-    },
-    {
-      "yil": 2017,
-      "baslik": "Teknolojik Gelişme ve Araştırma Arasında Yabancı Dil Öğretimi İçin Kritik Bir B",
-      "kaynak": "Journal of Turkish Studies",
-      "doi": "https://doi.org/10.7827/turkishstudies.12127"
-    },
-    {
-      "yil": 2008,
-      "baslik": "Der wortschatz, die qual der wahl für den türkischen lehrbuchautor?",
-      "kaynak": "Estudios filológicos alemanes: revista del Grupo de Investigación Filología Alemana",
-      "doi": ""
-    }
-  ],
+  "adaylar": [],
   "yoksayilanlar": [
     "The Resilience Responsibility Gap: how institutions distribute the burden of adaptation under AI-driven structural disruption",
     "The Resilience Responsibility Gap",
@@ -49,6 +18,11 @@
     "Enhancing Readability Assessment for Language Learners: A Comparative Study of AI and Traditional Metrics in German Textbooks",
     "Smart Graders? Exploring the Potential of Language Models in Foreign Language Evaluation",
     "Die Lesbarkeit; noch ein weiterer Indikator für DaF-Lehrwerke?",
-    "ATTITUDES AND PERCEPTION OF LANGUAGE LEARNERS REGARDING MOBILE LEARNING"
+    "ATTITUDES AND PERCEPTION OF LANGUAGE LEARNERS REGARDING MOBILE LEARNING",
+    "MEASURING WORD FREQUENCY IN LANGUAGE TEACHING TEXTBOOKS USING LEXITÜRK",
+    "A Descriptive Analysis of Online Seminars Attended by Turkish Teachers in Germany during the Covid-19 Epidemic Period",
+    "Yabancı Dil Öğretiminde Teknoloji Kullanımına İlişkin Hazırlanmış Lisansüstü Tez",
+    "Teknolojik Gelişme ve Araştırma Arasında Yabancı Dil Öğretimi İçin Kritik Bir B",
+    "Der wortschatz, die qual der wahl für den türkischen lehrbuchautor?"
   ]
 }
