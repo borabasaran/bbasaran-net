@@ -3,30 +3,6 @@
   "guncellendi": "2026-11-01",
   "adaylar": [
     {
-      "yil": 2025,
-      "baslik": "Enhancing Readability Assessment for Language Learners: A Comparative Study of AI and Traditional Metrics in German Textbooks",
-      "kaynak": "European Journal of Educational Research",
-      "doi": "https://doi.org/10.12973/eu-jer.15.1.101"
-    },
-    {
-      "yil": 2025,
-      "baslik": "Smart Graders? Exploring the Potential of Language Models in Foreign Language Evaluation",
-      "kaynak": "DergiPark (Istanbul University)",
-      "doi": ""
-    },
-    {
-      "yil": 2023,
-      "baslik": "Die Lesbarkeit; noch ein weiterer Indikator für DaF-Lehrwerke?",
-      "kaynak": "Diyalog Interkulturelle Zeitschrift Für Germanistik",
-      "doi": "https://doi.org/10.37583/diyalog.1407754"
-    },
-    {
-      "yil": 2022,
-      "baslik": "ATTITUDES AND PERCEPTION OF LANGUAGE LEARNERS REGARDING MOBILE LEARNING",
-      "kaynak": "Nevşehir Hacı Bektaş Veli Üniversitesi SBE Dergisi",
-      "doi": "https://doi.org/10.30783/nevsosbilen.1082453"
-    },
-    {
       "yil": 2022,
       "baslik": "MEASURING WORD FREQUENCY IN LANGUAGE TEACHING TEXTBOOKS USING LEXITÜRK",
       "kaynak": "International online journal of education and teaching",
@@ -69,6 +45,10 @@
     "INTEGRATING ARTIFICIAL INTELLIGENCE INTO COMPARATIVE BIBLIOMETRIC STUDIES: FAMILY REPRESENTATIONS IN DOCTORAL RESEARCH (TURKEY–GERMANY, 2019–2024)",
     "Bibliographic Records from Web of Science Core Collection on Artificial Intelligence in Foreign Language Education and Language Teaching Research (n = 247)",
     "ACADEMIC REPRESENTATIONS OF THE FAMILY IN DOCTORAL RESEARCH: A COMPARATIVE STUDY OF TURKEY AND GERMANY (2019–2024)",
-    "Social cognitive agency in AI adoption: critical thinking as the cognitive amplifier for self-regulation in building AI self-efficacy"
+    "Social cognitive agency in AI adoption: critical thinking as the cognitive amplifier for self-regulation in building AI self-efficacy",
+    "Enhancing Readability Assessment for Language Learners: A Comparative Study of AI and Traditional Metrics in German Textbooks",
+    "Smart Graders? Exploring the Potential of Language Models in Foreign Language Evaluation",
+    "Die Lesbarkeit; noch ein weiterer Indikator für DaF-Lehrwerke?",
+    "ATTITUDES AND PERCEPTION OF LANGUAGE LEARNERS REGARDING MOBILE LEARNING"
   ]
 }
